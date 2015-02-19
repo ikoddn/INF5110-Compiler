@@ -1,3 +1,4 @@
+<!DOCTYPE project>
 <!-- Build file for INF5110/INF9110 Obligatory exercise -->
 <project name="INF5110/INF9110 Obligatory exercise" default="menu" basedir=".">
 	<target name="menu" >
