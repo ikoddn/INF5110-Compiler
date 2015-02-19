@@ -1,0 +1,46 @@
+program {
+
+  class Complex {
+     var Real : float;
+     var Imag : float;
+  }
+
+  proc Swap(ref a : int, ref b : int) {
+     var tmp : int;
+     tmp := a;
+     a := b;
+     b := tmp;
+  }
+
+  proc Add : Complex (a : Complex, b : Complex) {
+     var retval : Complex;
+     retval := new Complex;
+     retval.Real := a.Real + b.Real;
+     retval.Imag := a.Imag + b.Imag;
+     
+     return retval;
+  }
+
+  proc Max : int (a : int, b : int) {
+     if a > b then {
+        return a;
+     }
+     
+     return b;
+  }
+
+  proc Main() {
+     proc Square : float (val : float) {
+        return val # 2.0;
+     }
+     var num : float;
+     num := 6.480740;
+     print_float( num );
+     print_str( " squared is " );
+     print_float( Square( num ) );
+   
+    return;
+  }
+
+}
+
