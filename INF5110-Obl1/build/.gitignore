@@ -1,1 +1,4 @@
-/classes/
+/oblig1parser/
+/.gitignore
+/compiler/
+/syntaxtree/
