@@ -25,7 +25,7 @@ terminal String                 STRING_LITERAL;
 
 /* Non terminals */
 non terminal Program			program;
-non terminal List<Decl>			decl_list;
+non terminal List<Decl>			decl_list_opt, decl_list;
 non terminal Decl				decl;
 non terminal ClassDecl			class_decl;
 non terminal VarDecl			var_decl;
@@ -35,9 +35,20 @@ non terminal DataType			type;
 
 /* The grammar */
 program
-	::= PROGRAM LBRACK decl_list:dl RBRACK
+	::= PROGRAM LBRACK decl_list_opt:dl RBRACK
 		{:
 			RESULT = new Program(dl);
+		:}
+;
+
+decl_list_opt
+	::= decl_list:dl
+		{:
+			RESULT = dl;
+		:}
+	|	// empty (no declarations)
+		{:
+			RESULT = new LinkedList<Decl>();
 		:}
 ;
 
