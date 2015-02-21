@@ -1,0 +1,7 @@
+program {
+  class Complex {
+     var Real : float;
+	 var Real : float;
+  }
+}
+

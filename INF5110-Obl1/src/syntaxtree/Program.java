@@ -1,20 +1,27 @@
 package syntaxtree;
+
 import java.util.List;
 
-public class Program {
+public class Program extends AstNode {
 
-    List<ClassDecl> decls;
+	private List<Decl> decls;
 
-    public Program(List<ClassDecl> decls) {
-        this.decls = decls;
-    }
+	public Program(List<Decl> decls) {
+		this.decls = decls;
+	}
 
-    public String printAst(){
-        StringBuilder sb = new StringBuilder();
-        for (ClassDecl decl : decls) {
-            sb.append(decl.printAst());
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
+	@Override
+	public String getAstString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("(PROGRAM\n");
+
+		for (Decl decl : decls) {
+			sb.append(decl.getAstString());
+			sb.append("\n");
+		}
+
+		sb.append(")");
+
+		return sb.toString();
+	}
 }
