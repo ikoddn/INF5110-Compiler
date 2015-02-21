@@ -34,31 +34,92 @@ non terminal DataType			type;
 
 
 /* The grammar */
-program         ::= PROGRAM LBRACK decl_list:dl RBRACK				{: RESULT = new Program(dl); :};
+program
+	::= PROGRAM LBRACK decl_list:dl RBRACK
+		{:
+			RESULT = new Program(dl);
+		:}
+;
 
-decl_list       ::= decl:d											{: List<Decl> l = new LinkedList<Decl>();
-																	   l.add(d);
-																	   RESULT = l; :} 
-                |   decl_list:dl decl:d 							{: dl.add(d);
-																	   RESULT = dl; :};
+decl_list
+	::= decl:d
+		{:
+			List<Decl> l = new LinkedList<Decl>();
+			l.add(d);
+			RESULT = l;
+		:}
+	|	decl_list:dl decl:d
+		{:
+			dl.add(d);
+			RESULT = dl;
+		:}
+;
 
-decl            ::= class_decl:sd									{: RESULT = sd; :};
+decl
+	::= class_decl:sd
+		{:
+			RESULT = sd;
+		:}
+;
                                   
-class_decl      ::= CLASS ID:name LBRACK var_list_opt:vl RBRACK		{: RESULT = new ClassDecl(name, vl); :};
+class_decl
+	::= CLASS ID:name LBRACK var_list_opt:vl RBRACK
+		{:
+			RESULT = new ClassDecl(name, vl);
+		:}
+;
 
-var_list_opt	::= var_list:vl										{: RESULT = vl; :}
-				|													{: RESULT = new LinkedList<VarDecl>(); :};
+var_list_opt
+	::= var_list:vl
+		{:
+			RESULT = vl;
+		:}
+	|	// empty (no variable declarations)
+		{:
+			RESULT = new LinkedList<VarDecl>();
+		:}
+;
 				
-var_list		::= var_decl:vd										{: List<VarDecl> l = new LinkedList<VarDecl>();
-																	   l.add(vd);
-																	   RESULT = l; :}
-				|   var_list:vl var_decl:vd							{: vl.add(vd);
-																	   RESULT = vl; :};
+var_list
+	::= var_decl:vd
+		{:
+			List<VarDecl> l = new LinkedList<VarDecl>();
+			l.add(vd);
+			RESULT = l;
+		:}
+	|	var_list:vl var_decl:vd
+		{:
+			vl.add(vd);
+			RESULT = vl;
+		:}
+;
 				
-var_decl		::= VARIABLE ID:name COLON type:t SEMI				{: RESULT = new VarDecl(name, t); :};
+var_decl
+	::= VARIABLE ID:name COLON type:t SEMI
+		{:
+			RESULT = new VarDecl(name, t);
+		:}
+;
 
-type			::= BOOL											{: RESULT = new BoolType(); :}
-				|   FLOAT											{: RESULT = new FloatType(); :}
-				|	INT												{: RESULT = new IntType(); :}
-				|	STRING											{: RESULT = new StringType(); :}
-				|   ID:name											{: RESULT = new ClassType(name); :};
+type
+	::= BOOL
+		{:
+			RESULT = new BoolType();
+		:}
+	|	FLOAT
+		{:
+			RESULT = new FloatType();
+		:}
+	|	INT
+		{:
+			RESULT = new IntType();
+		:}
+	|	STRING
+		{:
+			RESULT = new StringType();
+		:}
+	|	ID:name
+		{:
+			RESULT = new ClassType(name);
+		:}
+;
