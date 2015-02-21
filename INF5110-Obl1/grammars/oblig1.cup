@@ -24,7 +24,7 @@ non terminal List<Decl>			decl_list;
 non terminal Decl				decl;
 non terminal ClassDecl			class_decl;
 non terminal VarDecl			var_decl;
-non terminal List<VarDecl>		var_decl_list;
+non terminal List<VarDecl>		var_list_opt, var_list;
 
 
 /* The grammar */
@@ -38,11 +38,15 @@ decl_list       ::= decl:d											{: List<Decl> l = new LinkedList<Decl>();
 
 decl            ::= class_decl:sd									{: RESULT = sd; :};
                                   
-class_decl      ::= CLASS ID:name LBRACK var_decl_list:vl RBRACK	{: RESULT = new ClassDecl(name, vl); :};
+class_decl      ::= CLASS ID:name LBRACK var_list_opt:vl RBRACK		{: RESULT = new ClassDecl(name, vl); :};
 
-var_decl_list	::= var_decl:vd var_decl_list:vl					{: List<VarDecl> l = new LinkedList<VarDecl>();
+var_list_opt	::= var_list:vl										{: RESULT = vl; :}
+				|													{: RESULT = new LinkedList<VarDecl>(); :};
+				
+var_list		::= var_decl:vd										{: List<VarDecl> l = new LinkedList<VarDecl>();
 																	   l.add(vd);
 																	   RESULT = l; :}
-				|   ; //empty										
+				|   var_list:vl var_decl:vd							{: vl.add(vd);
+																	   RESULT = vl; :};
 				
 var_decl		::= VARIABLE ID:name COLON ID:type SEMI				{: RESULT = new VarDecl(name, type); :};
