@@ -12,21 +12,21 @@ public class ClassDecl extends Decl {
 	}
 
 	@Override
-	public String getAstString() {
+	public String createAstString(int indentations) {
+		String indentationString = generateIndentation(indentations);
+		
 		StringBuilder sb = new StringBuilder();
+		sb.append(indentationString);
 		sb.append("(CLASS_DECL (NAME ");
 		sb.append(name);
 		sb.append(")\n");
 
-		if (varDecls != null) {
-			for (VarDecl varDecl : varDecls) {
-				if (varDecl != null) {
-					sb.append(varDecl.getAstString());
-					sb.append("\n");
-				}
-			}
+		for (VarDecl varDecl : varDecls) {
+			sb.append(varDecl.createAstString(indentations + 1));
+			sb.append("\n");
 		}
 
+		sb.append(indentationString);
 		sb.append(")");
 
 		return sb.toString();

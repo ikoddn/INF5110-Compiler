@@ -22,7 +22,7 @@ public class Compiler {
 		Program program = (Program) parser.parse().value;
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
 				this.outFilename));
-		bufferedWriter.write(program.getAstString());
+		bufferedWriter.write(program.createAstString());
 		bufferedWriter.close();
 	}
 

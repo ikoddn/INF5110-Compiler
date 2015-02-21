@@ -1,7 +1,6 @@
 program {
   class Complex {
      var Real : float;
-	 var Real : float;
+	 var Imag : float;
   }
 }
-

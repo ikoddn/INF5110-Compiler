@@ -10,16 +10,24 @@ public class Program extends AstNode {
 		this.decls = decls;
 	}
 
+	public String createAstString() {
+		return createAstString(0);
+	}
+
 	@Override
-	public String getAstString() {
+	public String createAstString(int indentations) {
+		String indentationString = generateIndentation(indentations);
+
 		StringBuilder sb = new StringBuilder();
+		sb.append(indentationString);
 		sb.append("(PROGRAM\n");
 
 		for (Decl decl : decls) {
-			sb.append(decl.getAstString());
+			sb.append(decl.createAstString(indentations + 1));
 			sb.append("\n");
 		}
 
+		sb.append(indentationString);
 		sb.append(")");
 
 		return sb.toString();

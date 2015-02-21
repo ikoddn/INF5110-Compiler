@@ -10,8 +10,9 @@ public class VarDecl extends Decl {
 	}
 
 	@Override
-	public String getAstString() {
+	public String createAstString(int indentations) {
 		StringBuilder sb = new StringBuilder();
+		sb.append(generateIndentation(indentations));
 		sb.append("(VAR_DECL (TYPE ");
 		sb.append(type);
 		sb.append(") (NAME ");
