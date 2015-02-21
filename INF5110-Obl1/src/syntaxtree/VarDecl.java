@@ -1,12 +1,14 @@
 package syntaxtree;
 
+import syntaxtree.datatypes.DataType;
+
 public class VarDecl extends Decl {
 
-	private String type;
+	private DataType dataType;
 
-	public VarDecl(String name, String type) {
+	public VarDecl(String name, DataType dataType) {
 		super(name);
-		this.type = type;
+		this.dataType = dataType;
 	}
 
 	@Override
@@ -14,7 +16,7 @@ public class VarDecl extends Decl {
 		StringBuilder sb = new StringBuilder();
 		sb.append(generateIndentation(indentations));
 		sb.append("(VAR_DECL (TYPE ");
-		sb.append(type);
+		sb.append(dataType.getName());
 		sb.append(") (NAME ");
 		sb.append(name);
 		sb.append("))");

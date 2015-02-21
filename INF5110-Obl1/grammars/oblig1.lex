@@ -34,6 +34,10 @@ Identifier = [:jletter:] [:jletterdigit:]*
 		":"								{ return symbol(sym.COLON); }
         ";"                             { return symbol(sym.SEMI); }
 		"var"							{ return symbol(sym.VARIABLE); }
+		"bool"							{ return symbol(sym.BOOL); }
+		"float"							{ return symbol(sym.FLOAT); }
+		"int"							{ return symbol(sym.INT); }
+		"string"						{ return symbol(sym.STRING); }
         {Identifier}                    { return symbol(sym.ID,yytext()); }
 }
 
