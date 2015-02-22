@@ -28,12 +28,14 @@ Identifier = [:jletter:] [:jletterdigit:]*
         "program"                       { return symbol(sym.PROGRAM); }
         "class"                         { return symbol(sym.CLASS); }
 		"proc"							{ return symbol(sym.PROCEDURE); }
+		"ref"							{ return symbol(sym.REFERENCE); }
         "{"                             { return symbol(sym.LBRACK); }
         "}"                             { return symbol(sym.RBRACK); }
         "("                             { return symbol(sym.LPAR); }
         ")"                             { return symbol(sym.RPAR); }
 		":"								{ return symbol(sym.COLON); }
         ";"                             { return symbol(sym.SEMI); }
+		","								{ return symbol(sym.COMMA); }
 		"var"							{ return symbol(sym.VARIABLE); }
 		"bool"							{ return symbol(sym.BOOL); }
 		"float"							{ return symbol(sym.FLOAT); }

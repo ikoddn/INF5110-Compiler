@@ -4,6 +4,6 @@ program {
 		var Imag : float;
 	}
   
-	proc Swap() {
+	proc Swap(ref a : int, ref b : int) {
 	}
 }

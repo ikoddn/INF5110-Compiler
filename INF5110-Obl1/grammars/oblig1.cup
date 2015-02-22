@@ -14,7 +14,9 @@ terminal                        LBRACK, RBRACK;
 terminal                        LPAR, RPAR;
 terminal						COLON;
 terminal                        SEMI, RETURN;
+terminal						COMMA;
 terminal                        PROCEDURE;
+terminal						REFERENCE;
 terminal						VARIABLE;
 terminal						BOOL;
 terminal						FLOAT;
@@ -24,14 +26,17 @@ terminal String                 ID;
 terminal String                 STRING_LITERAL;
 
 /* Non terminals */
-non terminal Program			program;
-non terminal List<Decl>			decl_list_opt, decl_list;
-non terminal Decl				decl;
-non terminal ProcedureDecl		proc_decl;
-non terminal ClassDecl			class_decl;
-non terminal VarDecl			var_decl;
-non terminal List<VarDecl>		var_decl_list_opt, var_decl_list;
-non terminal DataType			type, proc_decl_type;
+non terminal Program				program;
+non terminal List<Decl>				decl_list_opt, decl_list;
+non terminal Decl					decl;
+non terminal ProcedureDecl			proc_decl;
+non terminal ClassDecl				class_decl;
+non terminal VarDecl				var_decl;
+non terminal List<VarDecl>			var_decl_list_opt, var_decl_list;
+non terminal DataType				type, proc_decl_type;
+non terminal ParameterDecl			param_decl;
+non terminal List<ParameterDecl>	param_decl_list, param_decl_list_opt;
+non terminal Boolean				param_decl_ref;
 
 
 /* The grammar */
@@ -83,9 +88,9 @@ decl
 ;
 
 proc_decl
-	::= PROCEDURE ID:name proc_decl_type:t LPAR RPAR LBRACK RBRACK
+	::= PROCEDURE ID:name proc_decl_type:t LPAR param_decl_list_opt:pl RPAR LBRACK RBRACK
 		{:
-			RESULT = new ProcedureDecl(name, t, new LinkedList<ParameterDecl>());
+			RESULT = new ProcedureDecl(name, t, pl);
 		:}
 ;
 
@@ -97,6 +102,49 @@ proc_decl_type
 	|	// empty
 		{:
 			RESULT = new VoidType();
+		:}
+;
+
+param_decl_list_opt
+	::=	param_decl_list:pl
+		{:
+			RESULT = pl;
+		:}
+	|	// empty
+		{:
+			RESULT = new LinkedList<ParameterDecl>();
+		:}
+;
+
+param_decl_list
+	::=	param_decl:pd
+		{:
+			List<ParameterDecl> l = new LinkedList<ParameterDecl>();
+			l.add(pd);
+			RESULT = l;
+		:}
+	|	param_decl_list:pl COMMA param_decl:pd
+		{:
+			pl.add(pd);
+			RESULT = pl;
+		:}
+;
+
+param_decl
+	::=	param_decl_ref:r ID:name COLON type:t
+		{:
+			RESULT = new ParameterDecl(r.booleanValue(), name, t);
+		:}
+;
+
+param_decl_ref
+	::=	REFERENCE
+		{:
+			RESULT = true;
+		:}
+	|	// empty
+		{:
+			RESULT = false;
 		:}
 ;
 
