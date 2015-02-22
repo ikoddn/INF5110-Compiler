@@ -88,9 +88,9 @@ decl
 ;
 
 proc_decl
-	::= PROCEDURE ID:name proc_decl_type:t LPAR param_decl_list_opt:pl RPAR LBRACK RBRACK
+	::= PROCEDURE ID:name proc_decl_type:t LPAR param_decl_list_opt:pl RPAR LBRACK decl_list_opt:dl RBRACK
 		{:
-			RESULT = new ProcedureDecl(name, t, pl);
+			RESULT = new ProcedureDecl(name, t, pl, dl);
 		:}
 ;
 

@@ -105,5 +105,17 @@ public class CompilerTest {
 			String procString = String.format(PROCEDURE, PARAMETER + ", " + PARAMETER, "");
 			parse(String.format(PROGRAM, procString));
 		}
+		
+		@Test
+		public void oneDeclInProcedure_success() throws Exception {
+			String procString = String.format(PROCEDURE, "", VARIABLE);
+			parse(String.format(PROGRAM, procString));
+		}
+		
+		@Test
+		public void twoDeclInProcedure_success() throws Exception {
+			String procString = String.format(PROCEDURE, "", VARIABLE + VARIABLE);
+			parse(String.format(PROGRAM, procString));
+		}
 	}
 }

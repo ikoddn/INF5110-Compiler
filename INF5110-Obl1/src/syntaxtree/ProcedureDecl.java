@@ -8,22 +8,23 @@ public class ProcedureDecl extends Decl {
 
 	private DataType returnType;
 	private List<ParameterDecl> parameterDecls;
+	private List<Decl> subDecls;
 
-	// private List<Decl> subDecls;
 	// private List<Statement> subStatements;
 
 	public ProcedureDecl(String name, DataType returnType,
-			List<ParameterDecl> parameterDecls) {
+			List<ParameterDecl> parameterDecls, List<Decl> subDecls) {
 		super(name);
 
 		this.returnType = returnType;
 		this.parameterDecls = parameterDecls;
+		this.subDecls = subDecls;
 	}
 
 	@Override
 	public String createAstString(int indentations) {
 		String indentation = generateIndentation(indentations);
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append(indentation);
 		sb.append("(PROC_DECL (TYPE ");
@@ -32,15 +33,24 @@ public class ProcedureDecl extends Decl {
 		sb.append(name);
 		sb.append(")");
 		sb.append(NEWLINE);
-		
+
 		for (ParameterDecl parameterDecl : parameterDecls) {
 			sb.append(parameterDecl.createAstString(indentations + 1));
 			sb.append(NEWLINE);
 		}
 		
+		if (!subDecls.isEmpty()) {
+			sb.append(NEWLINE);
+			
+			for (Decl decl : subDecls) {
+				sb.append(decl.createAstString(indentations + 1));
+				sb.append(NEWLINE);
+			}
+		}
+
 		sb.append(indentation);
 		sb.append(")");
-		
+
 		return sb.toString();
 	}
 }
