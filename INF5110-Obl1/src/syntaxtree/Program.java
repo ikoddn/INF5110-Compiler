@@ -1,5 +1,6 @@
 package syntaxtree;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class Program extends AstNode {
@@ -20,11 +21,19 @@ public class Program extends AstNode {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(indentationString);
-		sb.append("(PROGRAM\n");
-
-		for (Decl decl : decls) {
+		sb.append("(PROGRAM");
+		sb.append(NEWLINE);
+		
+		Iterator<Decl> it = decls.iterator();
+		while (it.hasNext()) {
+			Decl decl = it.next();
+			
 			sb.append(decl.createAstString(indentations + 1));
-			sb.append("\n");
+			sb.append(NEWLINE);
+			
+			if (it.hasNext()) {
+				sb.append(NEWLINE);
+			}
 		}
 
 		sb.append(indentationString);

@@ -2,7 +2,8 @@ package syntaxtree;
 
 public abstract class AstNode {
 
-	private final static String INDENTATION = "\t";
+	protected final static String INDENTATION = "\t";
+	protected final static String NEWLINE = "\n";
 	
 	public abstract String createAstString(int indentations);
 	

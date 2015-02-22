@@ -27,6 +27,7 @@ Identifier = [:jletter:] [:jletterdigit:]*
         {WhiteSpace}                    {}
         "program"                       { return symbol(sym.PROGRAM); }
         "class"                         { return symbol(sym.CLASS); }
+		"proc"							{ return symbol(sym.PROCEDURE); }
         "{"                             { return symbol(sym.LBRACK); }
         "}"                             { return symbol(sym.RBRACK); }
         "("                             { return symbol(sym.LPAR); }

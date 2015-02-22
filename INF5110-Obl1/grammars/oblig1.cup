@@ -27,10 +27,11 @@ terminal String                 STRING_LITERAL;
 non terminal Program			program;
 non terminal List<Decl>			decl_list_opt, decl_list;
 non terminal Decl				decl;
+non terminal ProcedureDecl		proc_decl;
 non terminal ClassDecl			class_decl;
 non terminal VarDecl			var_decl;
-non terminal List<VarDecl>		var_list_opt, var_list;
-non terminal DataType			type;
+non terminal List<VarDecl>		var_decl_list_opt, var_decl_list;
+non terminal DataType			type, proc_decl_type;
 
 
 /* The grammar */
@@ -67,21 +68,54 @@ decl_list
 ;
 
 decl
-	::= class_decl:sd
+	::= var_decl:d
 		{:
-			RESULT = sd;
+			RESULT = d;
+		:}
+	|	proc_decl:d
+		{:
+			RESULT = d;
+		:}
+	|	class_decl:d
+		{:
+			RESULT = d;
 		:}
 ;
-                                  
+
+proc_decl
+	::= PROCEDURE ID:name proc_decl_type:t LPAR RPAR LBRACK RBRACK
+		{:
+			RESULT = new ProcedureDecl(name, t, new LinkedList<ParameterDecl>());
+		:}
+;
+
+proc_decl_type
+	::=	COLON type:t
+		{:
+			RESULT = t;
+		:}
+	|	// empty
+		{:
+			RESULT = new VoidType();
+		:}
+;
+
+var_decl
+	::= VARIABLE ID:name COLON type:t SEMI
+		{:
+			RESULT = new VarDecl(name, t);
+		:}
+;
+
 class_decl
-	::= CLASS ID:name LBRACK var_list_opt:vl RBRACK
+	::= CLASS ID:name LBRACK var_decl_list_opt:vl RBRACK
 		{:
 			RESULT = new ClassDecl(name, vl);
 		:}
 ;
 
-var_list_opt
-	::= var_list:vl
+var_decl_list_opt
+	::= var_decl_list:vl
 		{:
 			RESULT = vl;
 		:}
@@ -91,24 +125,17 @@ var_list_opt
 		:}
 ;
 				
-var_list
+var_decl_list
 	::= var_decl:vd
 		{:
 			List<VarDecl> l = new LinkedList<VarDecl>();
 			l.add(vd);
 			RESULT = l;
 		:}
-	|	var_list:vl var_decl:vd
+	|	var_decl_list:vl var_decl:vd
 		{:
 			vl.add(vd);
 			RESULT = vl;
-		:}
-;
-				
-var_decl
-	::= VARIABLE ID:name COLON type:t SEMI
-		{:
-			RESULT = new VarDecl(name, t);
 		:}
 ;
 

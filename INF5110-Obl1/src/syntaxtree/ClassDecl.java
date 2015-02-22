@@ -19,11 +19,12 @@ public class ClassDecl extends Decl {
 		sb.append(indentationString);
 		sb.append("(CLASS_DECL (NAME ");
 		sb.append(name);
-		sb.append(")\n");
+		sb.append(")");
+		sb.append(NEWLINE);
 
 		for (VarDecl varDecl : varDecls) {
 			sb.append(varDecl.createAstString(indentations + 1));
-			sb.append("\n");
+			sb.append(NEWLINE);
 		}
 
 		sb.append(indentationString);

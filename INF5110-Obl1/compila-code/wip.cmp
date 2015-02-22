@@ -1,6 +1,9 @@
 program {
-  class Complex {
-     var Real : float;
-	 var Imag : float;
-  }
+	class Complex {
+		var Real : float;
+		var Imag : float;
+	}
+  
+	proc Swap() {
+	}
 }
