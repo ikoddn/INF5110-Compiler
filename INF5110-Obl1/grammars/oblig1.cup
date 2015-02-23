@@ -13,9 +13,15 @@ parser code {:
 	@Override
 	public void unrecovered_syntax_error(Symbol s) throws ParserSyntaxException {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Syntax error when reading \"");
-		sb.append(s.value);
-		sb.append("\" on line ");
+		sb.append("Syntax error ");
+		
+		if (s.value != null) {
+			sb.append("when reading \"");
+			sb.append(s.value.getClass());
+			sb.append("\" ");
+		}
+		
+		sb.append("on line ");
 		sb.append(s.left + 1);
 		sb.append(", column ");
 		sb.append(s.right + 1);

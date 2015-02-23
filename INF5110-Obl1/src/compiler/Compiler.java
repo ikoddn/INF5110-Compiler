@@ -21,7 +21,10 @@ public class Compiler {
 	public void compile() throws Exception {
 		InputStream inputStream = null;
 		inputStream = new FileInputStream(this.inFilename);
-		Program program = parse(inputStream);
+		Lexer lexer = new Lexer(inputStream);
+		parser parser = new parser(lexer);
+
+		Program program = (Program) parser.parse().value;
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
 				this.outFilename));
 
@@ -31,14 +34,6 @@ public class Compiler {
 		}
 
 		bufferedWriter.close();
-	}
-
-	// Testable code
-	public Program parse(InputStream input) throws Exception {
-		Lexer lexer = new Lexer(input);
-		parser parser = new parser(lexer);
-
-		return (Program) parser.parse().value;
 	}
 
 	public static void main(String[] args) {
