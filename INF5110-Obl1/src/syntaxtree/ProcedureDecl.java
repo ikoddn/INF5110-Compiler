@@ -1,5 +1,6 @@
 package syntaxtree;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import syntaxtree.datatypes.DataType;
@@ -24,44 +25,39 @@ public class ProcedureDecl extends Decl {
 	}
 
 	@Override
-	public String createAstString(int indentations) {
-		String indentation = generateIndentation(indentations);
+	public List<String> makeAstPrint() {
+		List<String> result = new LinkedList<String>();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(indentation);
-		sb.append("(PROC_DECL (TYPE ");
-		sb.append(returnType.getName());
-		sb.append(") (NAME ");
+		sb.append("(PROC_DECL ");
+		sb.append(returnType.makeAstPrint().get(0));
+		sb.append(" (NAME ");
 		sb.append(name);
 		sb.append(")");
-		sb.append(NEWLINE);
+		result.add(sb.toString());
 
 		for (ParameterDecl parameterDecl : parameterDecls) {
-			sb.append(parameterDecl.createAstString(indentations + 1));
-			sb.append(NEWLINE);
+			result.addAll(prependWithIndentation(parameterDecl.makeAstPrint()));
 		}
 
 		if (!subDecls.isEmpty()) {
-			sb.append(NEWLINE);
+			result.add("");
 
 			for (Decl decl : subDecls) {
-				sb.append(decl.createAstString(indentations + 1));
-				sb.append(NEWLINE);
+				result.addAll(prependWithIndentation(decl.makeAstPrint()));
 			}
 		}
-		
+
 		if (!subStatements.isEmpty()) {
-			sb.append(NEWLINE);
-			
+			result.add("");
+
 			for (Statement statement : subStatements) {
-				sb.append(statement.createAstString(indentations + 1));
-				sb.append(NEWLINE);
+				result.addAll(prependWithIndentation(statement.makeAstPrint()));
 			}
 		}
 
-		sb.append(indentation);
-		sb.append(")");
+		result.add(")");
 
-		return sb.toString();
+		return result;
 	}
 }

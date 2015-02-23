@@ -1,5 +1,8 @@
 package syntaxtree;
 
+import java.util.Arrays;
+import java.util.List;
+
 import syntaxtree.datatypes.DataType;
 
 public class ParameterDecl extends Decl {
@@ -15,21 +18,19 @@ public class ParameterDecl extends Decl {
 	}
 
 	@Override
-	public String createAstString(int indentations) {
+	public List<String> makeAstPrint() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(generateIndentation(indentations));
 		sb.append("(PARAM_DECL ");
 
 		if (reference) {
 			sb.append("ref ");
 		}
 
-		sb.append("(TYPE ");
-		sb.append(dataType.getName());
-		sb.append(") (NAME ");
+		sb.append(dataType.makeAstPrint().get(0));
+		sb.append(" (NAME ");
 		sb.append(name);
 		sb.append("))");
 
-		return sb.toString();
+		return Arrays.asList(sb.toString());
 	}
 }

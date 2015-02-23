@@ -9,5 +9,6 @@ program {
 
 		a := b;
 		b := tmp;
+		return;
 	}
 }

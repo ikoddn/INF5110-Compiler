@@ -1,34 +1,40 @@
 package syntaxtree.statements;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import syntaxtree.expressions.Expression;
 
 public class ReturnStatement extends Statement {
 
 	private Expression expression;
-	
+
 	public ReturnStatement() {
 		this(null);
 	}
-	
+
 	public ReturnStatement(Expression expression) {
 		this.expression = expression;
 	}
-	
+
 	@Override
-	public String createAstString(int indentations) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(generateIndentation(indentations));
-		sb.append("(RETURN_STMT");
-		
-		if (expression != null) {
-			sb.append(" (NAME ");
-			sb.append("--fix this--"); // TODO
-			sb.append(")");
+	public List<String> makeAstPrint() {
+		List<String> result;
+
+		if (expression == null) {
+			result = Arrays.asList("(RETURN_STMT)");
+		} else {
+			List<String> expressionAst = expression.makeAstPrint();
+
+			result = new LinkedList<String>();
+			result.add("(RETURN_STMT " + expressionAst.get(0));
+			result.addAll(prependWithIndentation(expressionAst.subList(1,
+					expressionAst.size())));
+			result.add(")");
 		}
-		
-		sb.append(")");
-		
-		return sb.toString();
+
+		return result;
 	}
 
 }

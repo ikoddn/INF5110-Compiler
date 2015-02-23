@@ -1,9 +1,13 @@
 package compiler;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
 
-import oblig1parser.*;
-import syntaxtree.*;
+import oblig1parser.Lexer;
+import oblig1parser.parser;
+import syntaxtree.Program;
 
 public class Compiler {
 	private String inFilename = null;
@@ -20,10 +24,15 @@ public class Compiler {
 		Program program = parse(inputStream);
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
 				this.outFilename));
-		bufferedWriter.write(program.createAstString(0));
+
+		for (String line : program.makeAstPrint()) {
+			bufferedWriter.write(line);
+			bufferedWriter.newLine();
+		}
+
 		bufferedWriter.close();
 	}
-	
+
 	// Testable code
 	public Program parse(InputStream input) throws Exception {
 		Lexer lexer = new Lexer(input);

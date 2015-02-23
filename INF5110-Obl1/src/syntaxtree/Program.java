@@ -1,6 +1,7 @@
 package syntaxtree;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Program extends AstNode {
@@ -11,34 +12,24 @@ public class Program extends AstNode {
 		this.decls = decls;
 	}
 
-	public String createAstString() {
-		return createAstString(0);
-	}
-
 	@Override
-	public String createAstString(int indentations) {
-		String indentationString = generateIndentation(indentations);
+	public List<String> makeAstPrint() {
+		List<String> result = new LinkedList<String>();
+		result.add("(PROGRAM");
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(indentationString);
-		sb.append("(PROGRAM");
-		sb.append(NEWLINE);
-		
 		Iterator<Decl> it = decls.iterator();
 		while (it.hasNext()) {
 			Decl decl = it.next();
-			
-			sb.append(decl.createAstString(indentations + 1));
-			sb.append(NEWLINE);
-			
+
+			result.addAll(prependWithIndentation(decl.makeAstPrint()));
+
 			if (it.hasNext()) {
-				sb.append(NEWLINE);
+				result.add("");
 			}
 		}
 
-		sb.append(indentationString);
-		sb.append(")");
+		result.add(")");
 
-		return sb.toString();
+		return result;
 	}
 }
