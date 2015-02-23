@@ -1,11 +1,27 @@
 package oblig1parser;
+
+import java.util.*;
 import java_cup.runtime.*;
+import parser.*;
 import syntaxtree.*;
 import syntaxtree.datatypes.*;
-import java.util.*;
+import syntaxtree.expressions.*;
+import syntaxtree.statements.*;
 
 parser code {:
 
+	@Override
+	public void unrecovered_syntax_error(Symbol s) throws ParserSyntaxException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Syntax error when reading \"");
+		sb.append(s.value);
+		sb.append("\" on line ");
+		sb.append(s.left + 1);
+		sb.append(", column ");
+		sb.append(s.right + 1);
+		
+		throw new ParserSyntaxException(sb.toString());
+	}
 :};
 
 /* Terminals */
@@ -13,8 +29,9 @@ terminal                        PROGRAM, CLASS;
 terminal                        LBRACK, RBRACK;
 terminal                        LPAR, RPAR;
 terminal						COLON;
-terminal                        SEMI, RETURN;
+terminal                        SEMI;
 terminal						COMMA;
+terminal						ASSIGN;
 terminal                        PROCEDURE;
 terminal						REFERENCE;
 terminal						VARIABLE;
@@ -22,6 +39,7 @@ terminal						BOOL;
 terminal						FLOAT;
 terminal						INT;
 terminal						STRING;
+terminal						RETURN;
 terminal String                 ID;
 terminal String                 STRING_LITERAL;
 
@@ -33,10 +51,16 @@ non terminal ProcedureDecl			proc_decl;
 non terminal ClassDecl				class_decl;
 non terminal VarDecl				var_decl;
 non terminal List<VarDecl>			var_decl_list_opt, var_decl_list;
-non terminal DataType				type, proc_decl_type;
+non terminal DataType				type, return_type;
 non terminal ParameterDecl			param_decl;
 non terminal List<ParameterDecl>	param_decl_list, param_decl_list_opt;
 non terminal Boolean				param_decl_ref;
+non terminal Statement				stmt;
+non terminal List<Statement>		stmt_list, stmt_list_opt;
+non terminal AssignStatement		assign_stmt;
+non terminal ReturnStatement		return_stmt;
+non terminal Expression				exp;
+non terminal Variable				var;
 
 
 /* The grammar */
@@ -88,13 +112,13 @@ decl
 ;
 
 proc_decl
-	::= PROCEDURE ID:name proc_decl_type:t LPAR param_decl_list_opt:pl RPAR LBRACK decl_list_opt:dl RBRACK
+	::= PROCEDURE ID:name return_type:t LPAR param_decl_list_opt:pl RPAR LBRACK decl_list_opt:dl stmt_list_opt:sl RBRACK
 		{:
-			RESULT = new ProcedureDecl(name, t, pl, dl);
+			RESULT = new ProcedureDecl(name, t, pl, dl, sl);
 		:}
 ;
 
-proc_decl_type
+return_type
 	::=	COLON type:t
 		{:
 			RESULT = t;
@@ -184,6 +208,74 @@ var_decl_list
 		{:
 			vl.add(vd);
 			RESULT = vl;
+		:}
+;
+
+exp
+	::=	var:v
+		{:
+			RESULT = v;
+		:}
+;
+
+var
+	::=	ID:name
+		{:
+			RESULT = new Variable(name);
+		:}
+;
+
+stmt_list_opt
+	::=	stmt_list:sl
+		{:
+			RESULT = sl;
+		:}
+	|	// empty
+		{:
+			RESULT = new LinkedList<Statement>();
+		:}
+;
+
+stmt_list
+	::=	stmt:s
+		{:
+			List<Statement> l = new LinkedList<Statement>();
+			l.add(s);
+			RESULT = l;
+		:}
+	|	stmt_list:sl stmt:s
+		{:
+			sl.add(s);
+			RESULT = sl;
+		:}
+;
+
+stmt
+	::= assign_stmt:s SEMI
+		{:
+			RESULT = s;
+		:}
+	|	return_stmt:s SEMI
+		{:
+			RESULT = s;
+		:}
+;
+
+assign_stmt
+	::=	var:v ASSIGN exp:e
+		{:
+			RESULT = new AssignStatement(v, e);
+		:}
+;
+
+return_stmt
+	::=	RETURN
+		{:
+			RESULT = new ReturnStatement();
+		:}
+	|	RETURN exp:e
+		{:
+			RESULT = new ReturnStatement(e);
 		:}
 ;
 

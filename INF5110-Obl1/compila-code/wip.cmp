@@ -6,5 +6,8 @@ program {
   
 	proc Swap(ref a : int, ref b : int) {
 		var tmp : int;
+
+		a := b;
+		b := tmp;
 	}
 }

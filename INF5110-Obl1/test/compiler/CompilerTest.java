@@ -19,11 +19,13 @@ public class CompilerTest {
 		
 		private static final String PROGRAM = "program { %s }";
 		private static final String CLASS = "class Foo { %s }";
-		private static final String VARIABLE = "var bar : int;";
-		private static final String PROCEDURE = "proc baz : int (%s) { %s }";
-		private static final String PROCEDURE_VOID = "proc baz (%s) { %s }";
-		private static final String PARAMETER = "qux : int";
-		private static final String PARAMETER_REF = "ref qux : int";
+		private static final String VARIABLE = "var foo : int;";
+		private static final String PROCEDURE = "proc foo : int (%s) { %s }";
+		private static final String PROCEDURE_VOID = "proc foo (%s) { %s }";
+		private static final String PARAMETER = "foo : int";
+		private static final String PARAMETER_REF = "ref foo : int";
+		private static final String RETURN_STATEMENT = "return %s";
+		private static final String ASSIGN_STATEMENT = "foo := bar";
 		
 		private void parse(String string) throws Exception {
 			Compiler compiler = new Compiler("", "");
@@ -115,6 +117,47 @@ public class CompilerTest {
 		@Test
 		public void twoDeclInProcedure_success() throws Exception {
 			String procString = String.format(PROCEDURE, "", VARIABLE + VARIABLE);
+			parse(String.format(PROGRAM, procString));
+		}
+		
+		@Test
+		public void simpleReturnStatementInProcedure_success() throws Exception {
+			String returnString = String.format(RETURN_STATEMENT, "") + ";";
+			String procString = String.format(PROCEDURE, "", returnString);
+			parse(String.format(PROGRAM, procString));
+		}
+		
+		@Test
+		public void expressionReturnStatementInProcedure_success() throws Exception {
+			String returnString = String.format(RETURN_STATEMENT, "foo") + ";";
+			String procString = String.format(PROCEDURE, "", returnString);
+			parse(String.format(PROGRAM, procString));
+		}
+		
+		@Test
+		public void assignStatementInProcedure_success() throws Exception {
+			String procString = String.format(PROCEDURE, "", ASSIGN_STATEMENT + ";");
+			parse(String.format(PROGRAM, procString));
+		}
+		
+		@Test
+		public void twoStatementsInProcedure_success() throws Exception {
+			String returnString = String.format(RETURN_STATEMENT, "") + ";";
+			String procString = String.format(PROCEDURE, "", returnString + returnString);
+			parse(String.format(PROGRAM, procString));
+		}
+		
+		@Test
+		public void declBeforeStatementInProcedure_success() throws Exception {
+			String statement = String.format(RETURN_STATEMENT, "") + ";";
+			String procString = String.format(PROCEDURE, "", VARIABLE + statement);
+			parse(String.format(PROGRAM, procString));
+		}
+		
+		@Test(expected = Exception.class)
+		public void declAfterStatementInProcedure_exceptionThrown() throws Exception {
+			String statement = String.format(RETURN_STATEMENT, "") + ";";
+			String procString = String.format(PROCEDURE, "", statement + VARIABLE);
 			parse(String.format(PROGRAM, procString));
 		}
 	}
