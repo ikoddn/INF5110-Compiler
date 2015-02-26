@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
+import oblig1parser.ClassParser;
 import oblig1parser.Lexer;
 import oblig1parser.parser;
 
@@ -32,109 +33,120 @@ public class ParserTest {
 		private static final String RETURN_STATEMENT = "return %s";
 		private static final String ASSIGN_STATEMENT = "foo := bar";
 
-		private Symbol parse(String string) throws Exception {
+		private Symbol parseProgram(String string) throws Exception {
 			Scanner scanner = new Lexer(toInputStream(string));
 			parser parser = new parser(scanner);
+			return parser.parse();
+		}
+		
+		private Symbol parseClass(String string) throws Exception {
+			Scanner scanner = new Lexer(toInputStream(string));
+			ClassParser parser = new ClassParser(scanner);
 			return parser.parse();
 		}
 
 		@Test
 		public void emptyProgram_success() throws Exception {
-			parse(String.format(PROGRAM, ""));
+			parseProgram(String.format(PROGRAM, ""));
+		}
+		
+		@Test
+		public void emptyClass_success() throws Exception {
+			parseClass(String.format(CLASS, ""));
 		}
 
 		@Test
 		public void variableDecl_success() throws Exception {
-			parse(String.format(PROGRAM, VARIABLE));
+			parseProgram(String.format(PROGRAM, VARIABLE));
 		}
 
 		@Test
-		public void emptyClass_success() throws Exception {
+		public void classInProgram_success() throws Exception {
 			String classString = String.format(CLASS, "");
-			parse(String.format(PROGRAM, classString));
+			parseProgram(String.format(PROGRAM, classString));
 		}
 
 		@Test
 		public void twoDeclInProgram_success() throws Exception {
 			String classString = String.format(CLASS, "");
-			parse(String.format(PROGRAM, VARIABLE + classString));
+			parseProgram(String.format(PROGRAM, VARIABLE + classString));
 		}
 
 		@Test
 		public void oneVariableDeclInClass_success() throws Exception {
 			String classString = String.format(CLASS, VARIABLE);
-			parse(String.format(PROGRAM, classString));
+			parseProgram(String.format(PROGRAM, classString));
 		}
 
 		@Test
 		public void twoVariableDeclInClass_success() throws Exception {
 			String classString = String.format(CLASS, VARIABLE + VARIABLE);
-			parse(String.format(PROGRAM, classString));
+			parseProgram(String.format(PROGRAM, classString));
 		}
 
 		@Test
 		public void emptyVoidProcedure_success() throws Exception {
 			String procString = String.format(PROCEDURE_VOID, "", "");
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test
 		public void emptyProcedure_success() throws Exception {
 			String procString = String.format(PROCEDURE, "", "");
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test
 		public void emptyProcedureOneParameter_success() throws Exception {
 			String procString = String.format(PROCEDURE, PARAMETER, "");
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test
 		public void emptyProcedureOneRefParameter_success() throws Exception {
 			String procString = String.format(PROCEDURE, PARAMETER_REF, "");
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test(expected = ParserSyntaxException.class)
 		public void emptyProcedureOneParameterCommaFirst_exceptionThrown()
 				throws Exception {
 			String procString = String.format(PROCEDURE, ", " + PARAMETER, "");
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test(expected = ParserSyntaxException.class)
 		public void emptyProcedureOneParameterCommaAfter_exceptionThrown()
 				throws Exception {
 			String procString = String.format(PROCEDURE, PARAMETER + ",", "");
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test
 		public void emptyProcedureTwoParameters_success() throws Exception {
 			String procString = String.format(PROCEDURE, PARAMETER + ", "
 					+ PARAMETER, "");
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test
 		public void oneDeclInProcedure_success() throws Exception {
 			String procString = String.format(PROCEDURE, "", VARIABLE);
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test
 		public void twoDeclInProcedure_success() throws Exception {
 			String procString = String.format(PROCEDURE, "", VARIABLE
 					+ VARIABLE);
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test
 		public void simpleReturnStatementInProcedure_success() throws Exception {
 			String returnString = String.format(RETURN_STATEMENT, "") + ";";
 			String procString = String.format(PROCEDURE, "", returnString);
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test
@@ -142,14 +154,14 @@ public class ParserTest {
 				throws Exception {
 			String returnString = String.format(RETURN_STATEMENT, "foo") + ";";
 			String procString = String.format(PROCEDURE, "", returnString);
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test
 		public void assignStatementInProcedure_success() throws Exception {
 			String procString = String.format(PROCEDURE, "", ASSIGN_STATEMENT
 					+ ";");
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test
@@ -157,7 +169,7 @@ public class ParserTest {
 			String returnString = String.format(RETURN_STATEMENT, "") + ";";
 			String procString = String.format(PROCEDURE, "", returnString
 					+ returnString);
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test
@@ -165,7 +177,7 @@ public class ParserTest {
 			String statement = String.format(RETURN_STATEMENT, "") + ";";
 			String procString = String.format(PROCEDURE, "", VARIABLE
 					+ statement);
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		@Test(expected = ParserSyntaxException.class)
@@ -174,7 +186,7 @@ public class ParserTest {
 			String statement = String.format(RETURN_STATEMENT, "") + ";";
 			String procString = String.format(PROCEDURE, "", statement
 					+ VARIABLE);
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 	}
 }
