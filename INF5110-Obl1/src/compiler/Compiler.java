@@ -10,6 +10,7 @@ import oblig1parser.parser;
 import syntaxtree.Program;
 
 public class Compiler {
+
 	private String inFilename = null;
 	private String outFilename = null;
 
@@ -19,14 +20,13 @@ public class Compiler {
 	}
 
 	public void compile() throws Exception {
-		InputStream inputStream = null;
-		inputStream = new FileInputStream(this.inFilename);
+		InputStream inputStream = new FileInputStream(inFilename);
 		Lexer lexer = new Lexer(inputStream);
 		parser parser = new parser(lexer);
 
 		Program program = (Program) parser.parse().value;
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
-				this.outFilename));
+				outFilename));
 
 		for (String line : program.makeAstPrint()) {
 			bufferedWriter.write(line);

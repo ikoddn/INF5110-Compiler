@@ -71,6 +71,8 @@ non terminal Variable				var;
 
 
 /* The grammar */
+start with program;
+
 program
 	::= PROGRAM LBRACK decl_list_opt:dl RBRACK
 		{:
