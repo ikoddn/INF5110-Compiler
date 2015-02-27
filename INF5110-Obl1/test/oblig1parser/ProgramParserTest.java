@@ -131,7 +131,7 @@ public class ProgramParserTest extends ParserTest {
 			String returnString = String.format(RETURN_STATEMENT, "new Foo")
 					+ ";";
 			String procString = String.format(PROCEDURE, "", returnString);
-			parse(String.format(PROGRAM, procString));
+			parseProgram(String.format(PROGRAM, procString));
 		}
 
 		// callStatementExpressionReturnStatementInProcedure_success() throws
@@ -144,7 +144,7 @@ public class ProgramParserTest extends ParserTest {
 				String returnString = String.format(RETURN_STATEMENT, literal)
 						+ ";";
 				String procString = String.format(PROCEDURE, "", returnString);
-				parse(String.format(PROGRAM, procString));
+				parseProgram(String.format(PROGRAM, procString));
 			}
 		}
 
