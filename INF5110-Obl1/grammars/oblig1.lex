@@ -38,6 +38,7 @@ Identifier = [:jletter:] [:jletterdigit:]*
 		","								{ return symbol(sym.COMMA); }
 		":="							{ return symbol(sym.ASSIGN); }
 		"return"						{ return symbol(sym.RETURN); }
+		"new"							{ return symbol(sym.NEW); }
 		"var"							{ return symbol(sym.VARIABLE); }
 		"bool"							{ return symbol(sym.BOOL); }
 		"float"							{ return symbol(sym.FLOAT); }

@@ -17,7 +17,7 @@ parser code {:
 		
 		if (s.value != null) {
 			sb.append("when reading \"");
-			sb.append(s.value.getClass());
+			sb.append(s.value);
 			sb.append("\" ");
 		}
 		
@@ -46,6 +46,7 @@ terminal						FLOAT;
 terminal						INT;
 terminal						STRING;
 terminal						RETURN;
+terminal						NEW;
 terminal String                 ID;
 terminal String                 STRING_LITERAL;
 
@@ -218,7 +219,11 @@ var_decl_list
 ;
 
 exp
-	::=	var:v
+	::=	NEW ID:name
+		{:
+			RESULT = new NewExpression(new ClassType(name));
+		:}
+	|	var:v
 		{:
 			RESULT = v;
 		:}

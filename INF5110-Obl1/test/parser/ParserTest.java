@@ -31,6 +31,17 @@ public class ParserTest {
 		private static final String PARAMETER_REF = "ref foo : int";
 		private static final String RETURN_STATEMENT = "return %s";
 		private static final String ASSIGN_STATEMENT = "foo := bar";
+		private static final String[] ARITHMETIC_OPERATORS = { "+", "-", "*",
+				"/", "#" };
+		private static final String[] LOGIC_OPERATORS = { "&&", "||" };
+		private static final String[] RELATIONAL_OPERATORS = { "<", "<=", ">",
+				">=", "=", "<>" };
+
+		private static final String FLOAT_LITERAL = "3.14";
+		private static final String INT_LITERAL = "42";
+		private static final String STRING_LITERAL = "\"Foo bar\"";
+		private static final String[] LITERALS = { FLOAT_LITERAL, INT_LITERAL,
+				STRING_LITERAL, "true", "false", "null" };
 
 		private Symbol parse(String string) throws Exception {
 			Scanner scanner = new Lexer(toInputStream(string));
@@ -138,11 +149,34 @@ public class ParserTest {
 		}
 
 		@Test
-		public void expressionReturnStatementInProcedure_success()
+		public void varExpressionReturnStatementInProcedure_success()
 				throws Exception {
 			String returnString = String.format(RETURN_STATEMENT, "foo") + ";";
 			String procString = String.format(PROCEDURE, "", returnString);
 			parse(String.format(PROGRAM, procString));
+		}
+
+		@Test
+		public void newExpressionReturnStatementInProcedure_success()
+				throws Exception {
+			String returnString = String.format(RETURN_STATEMENT, "new Foo")
+					+ ";";
+			String procString = String.format(PROCEDURE, "", returnString);
+			parse(String.format(PROGRAM, procString));
+		}
+
+		// callStatementExpressionReturnStatementInProcedure_success() throws
+		// Exception
+
+		@Test
+		public void literalExpressionReturnStatementInProcedure_success()
+				throws Exception {
+			for (String literal : LITERALS) {
+				String returnString = String.format(RETURN_STATEMENT, literal)
+						+ ";";
+				String procString = String.format(PROCEDURE, "", returnString);
+				parse(String.format(PROGRAM, procString));
+			}
 		}
 
 		@Test

@@ -5,8 +5,10 @@ import java.util.List;
 
 public class Variable extends Expression {
 
+	private String name;
+
 	public Variable(String name) {
-		super(name);
+		this.name = name;
 	}
 
 	@Override
