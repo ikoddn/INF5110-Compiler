@@ -1,4 +1,4 @@
-package parser;
+package oblig1parser;
 
 public class ParserSyntaxException extends Exception {
 

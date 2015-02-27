@@ -1,58 +1,27 @@
-package parser;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+package oblig1parser;
 
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
-import oblig1parser.ClassParser;
-import oblig1parser.Lexer;
-import oblig1parser.parser;
+import oblig1parser.ParserSyntaxException;
 
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 @RunWith(Enclosed.class)
-public class ParserTest {
-
-	private static InputStream toInputStream(String string) {
-		return new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8));
-	}
+public class ProgramParserTest extends ParserTest {
 
 	public static class ParseMethod {
-
-		private static final String PROGRAM = "program { %s }";
-		private static final String CLASS = "class Foo { %s }";
-		private static final String VARIABLE = "var foo : int;";
-		private static final String PROCEDURE = "proc foo : int (%s) { %s }";
-		private static final String PROCEDURE_VOID = "proc foo (%s) { %s }";
-		private static final String PARAMETER = "foo : int";
-		private static final String PARAMETER_REF = "ref foo : int";
-		private static final String RETURN_STATEMENT = "return %s";
-		private static final String ASSIGN_STATEMENT = "foo := bar";
 
 		private Symbol parseProgram(String string) throws Exception {
 			Scanner scanner = new Lexer(toInputStream(string));
 			parser parser = new parser(scanner);
 			return parser.parse();
 		}
-		
-		private Symbol parseClass(String string) throws Exception {
-			Scanner scanner = new Lexer(toInputStream(string));
-			ClassParser parser = new ClassParser(scanner);
-			return parser.parse();
-		}
 
 		@Test
 		public void emptyProgram_success() throws Exception {
 			parseProgram(String.format(PROGRAM, ""));
-		}
-		
-		@Test
-		public void emptyClass_success() throws Exception {
-			parseClass(String.format(CLASS, ""));
 		}
 
 		@Test

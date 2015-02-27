@@ -6,7 +6,6 @@ import java.util.List;
 public abstract class AstNode {
 
 	protected final static String INDENTATION = "\t";
-	protected final static String NEWLINE = "\n";
 
 	public abstract List<String> makeAstPrint();
 
