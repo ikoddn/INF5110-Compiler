@@ -32,26 +32,58 @@ parser code {:
 :};
 
 /* Terminals */
-terminal                        PROGRAM, CLASS;
+/* symbols */
 terminal                        LBRACK, RBRACK;
 terminal                        LPAR, RPAR;
-terminal						COLON;
-terminal                        SEMICOLON;
 terminal						DOT;
 terminal						COMMA;
-terminal						COLONEQUALS;
-terminal                        PROC;
-terminal						REF;
-terminal						VAR;
+terminal						COLON;
+terminal                        SEMICOLON;
+
+/* operators */
+terminal						ASTERISK;
+terminal						COLON_EQUAL;
+terminal						DOUBLE_AMP;
+terminal						DOUBLE_VBAR;
+terminal						EQUAL;
+terminal						GREATER;
+terminal						GREATER_EQUAL;
+terminal						HASH;
+terminal						LESS;
+terminal						LESS_EQUAL;
+terminal						LESS_GREATER;
+terminal						MINUS;
+terminal						PLUS;
+terminal						SLASH;
+
+/* keywords */
 terminal						BOOL;
+terminal						CLASS;
+terminal						DO;
+terminal						ELSE;
+terminal						FALSE;
 terminal						FLOAT;
+terminal						IF;
 terminal						INT;
-terminal						STRING;
-terminal						RETURN;
 terminal						NEW;
+terminal						NOT;
+terminal						NULL;
+terminal                        PROC;
+terminal                        PROGRAM;
+terminal						REF;
+terminal						RETURN;
+terminal						STRING;
+terminal						THEN;
+terminal						TRUE;
+terminal						VAR;
+terminal						WHILE;
+
+/* identifiers */
+terminal String                 ID;
+
+/* literals */
 terminal Float					FLOAT_LITERAL;
 terminal Integer				INT_LITERAL;
-terminal String                 ID;
 terminal String                 STRING_LITERAL;
 
 /* Non terminals */
@@ -303,7 +335,7 @@ stmt
 ;
 
 assign_stmt
-	::=	var:v COLONEQUALS exp:e
+	::=	var:v COLON_EQUAL exp:e
 		{:
 			RESULT = new AssignStatement(v, e);
 		:}

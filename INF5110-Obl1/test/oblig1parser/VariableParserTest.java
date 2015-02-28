@@ -46,8 +46,8 @@ public class VariableParserTest extends ParserTest {
 			assertEquals(name, parse(name).getName());
 		}
 		
-		@Test(expected = ScannerError.class)
-		public void digitsName_errorThrown() throws Exception {
+		@Test(expected = ParserSyntaxException.class)
+		public void digitsName_exceptionThrown() throws Exception {
 			parse("1234");
 		}
 		
