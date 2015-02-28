@@ -5,11 +5,16 @@ import java.util.List;
 
 public class ClassDecl extends Decl {
 
-	private List<VarDecl> varDecls;
+	private List<VariableDecl> variableDecls;
 
-	public ClassDecl(String name, List<VarDecl> varDecls) {
+	public ClassDecl(String name, List<VariableDecl> variableDecls) {
 		super(name);
-		this.varDecls = varDecls;
+
+		this.variableDecls = variableDecls;
+	}
+
+	public List<VariableDecl> getVariableDecls() {
+		return variableDecls;
 	}
 
 	@Override
@@ -22,8 +27,8 @@ public class ClassDecl extends Decl {
 		sb.append(")");
 		result.add(sb.toString());
 
-		for (VarDecl varDecl : varDecls) {
-			result.addAll(prependWithIndentation(varDecl.makeAstPrint()));
+		for (VariableDecl variableDecl : variableDecls) {
+			result.addAll(prependWithIndentation(variableDecl.makeAstPrint()));
 		}
 
 		result.add(")");

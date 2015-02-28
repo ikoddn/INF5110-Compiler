@@ -13,6 +13,10 @@ public abstract class DataType extends AstNode {
 		this.name = name;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	@Override
 	public List<String> makeAstPrint() {
 		StringBuilder sb = new StringBuilder();

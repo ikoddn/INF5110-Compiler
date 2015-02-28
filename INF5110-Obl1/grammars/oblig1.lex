@@ -1,5 +1,8 @@
 package oblig1parser;
+
 import java_cup.runtime.*;
+import oblig1parser.*;
+
 %%
 
 %class Lexer
@@ -8,20 +11,23 @@ import java_cup.runtime.*;
 %line
 %column
 %public
+
 %{
- StringBuffer string = new StringBuffer();
+	StringBuffer string = new StringBuffer();
 
-  private Symbol symbol(int type) {
-    return new Symbol(type, yyline, yycolumn);
-  }
-  private Symbol symbol(int type, Object value) {
-    return new Symbol(type, yyline, yycolumn, value);
-  }
+	private Symbol symbol(int type) {
+		return new Symbol(type, yyline, yycolumn);
+	}
 
+	private Symbol symbol(int type, Object value) {
+		return new Symbol(type, yyline, yycolumn, value);
+	}
 %}
+
 LineTerminator = \r|\n|\r\n
 WhiteSpace = {LineTerminator} | [ \t\f]
 Identifier = [:jletter:] [:jletterdigit:]*
+
 %%
 <YYINITIAL>{
         {WhiteSpace}                    {}
@@ -35,6 +41,7 @@ Identifier = [:jletter:] [:jletterdigit:]*
         ")"                             { return symbol(sym.RPAR); }
 		":"								{ return symbol(sym.COLON); }
         ";"                             { return symbol(sym.SEMI); }
+        "."								{ return symbol(sym.DOT); }
 		","								{ return symbol(sym.COMMA); }
 		":="							{ return symbol(sym.ASSIGN); }
 		"return"						{ return symbol(sym.RETURN); }
@@ -47,4 +54,4 @@ Identifier = [:jletter:] [:jletterdigit:]*
         {Identifier}                    { return symbol(sym.ID,yytext()); }
 }
 
-.                           { throw new Error("Illegal character '" + yytext() + "' at line " + yyline + ", column " + yycolumn + "."); }
+.                           			{ throw new ScannerError("Illegal character '" + yytext() + "' at line " + yyline + ", column " + yycolumn + "."); }

@@ -9,6 +9,7 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 import syntaxtree.ClassDecl;
+import syntaxtree.VariableDecl;
 
 @RunWith(Enclosed.class)
 public class ClassParserTest extends ParserTest {
@@ -23,8 +24,30 @@ public class ClassParserTest extends ParserTest {
 
 		@Test
 		public void emptyClass_success() throws Exception {
-			ClassDecl value = (ClassDecl) parse(String.format(CLASS, "")).value;
-			assertEquals(CLASS_NAME, value.getName());
+			String classString = String.format(CLASS, "");
+			ClassDecl classDecl = (ClassDecl) parse(classString).value;
+
+			assertEquals(CLASS_NAME, classDecl.getName());
+		}
+
+		@Test
+		public void oneVariableDeclInClass_success() throws Exception {
+			String classString = String.format(CLASS, VARIABLE);
+			ClassDecl classDecl = (ClassDecl) parse(classString).value;
+			VariableDecl variableDecl = classDecl.getVariableDecls().get(0);
+
+			assertEquals(VARIABLE_NAME, variableDecl.getName());
+		}
+
+		@Test
+		public void twoVariableDeclInClass_success() throws Exception {
+			String classString = String.format(CLASS, VARIABLE + VARIABLE);
+			ClassDecl classDecl = (ClassDecl) parse(classString).value;
+			VariableDecl variableDecl1 = classDecl.getVariableDecls().get(0);
+			VariableDecl variableDecl2 = classDecl.getVariableDecls().get(1);
+
+			assertEquals(VARIABLE_NAME, variableDecl1.getName());
+			assertEquals(VARIABLE_NAME, variableDecl2.getName());
 		}
 	}
 }

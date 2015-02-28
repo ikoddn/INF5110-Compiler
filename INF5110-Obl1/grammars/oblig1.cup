@@ -15,15 +15,16 @@ parser code {:
 		sb.append("Syntax error ");
 		
 		if (s.value != null) {
-			sb.append("when reading \"");
+			sb.append("when reading '");
 			sb.append(s.value);
-			sb.append("\" ");
+			sb.append("' ");
 		}
 		
 		sb.append("on line ");
 		sb.append(s.left + 1);
 		sb.append(", column ");
 		sb.append(s.right + 1);
+		sb.append(".");
 		
 		throw new ParserSyntaxException(sb.toString());
 	}
@@ -35,6 +36,7 @@ terminal                        LBRACK, RBRACK;
 terminal                        LPAR, RPAR;
 terminal						COLON;
 terminal                        SEMI;
+terminal						DOT;
 terminal						COMMA;
 terminal						ASSIGN;
 terminal                        PROCEDURE;
@@ -55,8 +57,8 @@ non terminal List<Decl>				decl_list_opt, decl_list;
 non terminal Decl					decl;
 non terminal ProcedureDecl			proc_decl;
 non terminal ClassDecl				class_decl;
-non terminal VarDecl				var_decl;
-non terminal List<VarDecl>			var_decl_list_opt, var_decl_list;
+non terminal VariableDecl			var_decl;
+non terminal List<VariableDecl>		var_decl_list_opt, var_decl_list;
 non terminal DataType				type, return_type;
 non terminal ParameterDecl			param_decl;
 non terminal List<ParameterDecl>	param_decl_list, param_decl_list_opt;
@@ -183,7 +185,7 @@ param_decl_ref
 var_decl
 	::= VARIABLE ID:name COLON type:t SEMI
 		{:
-			RESULT = new VarDecl(name, t);
+			RESULT = new VariableDecl(name, t);
 		:}
 ;
 
@@ -201,14 +203,14 @@ var_decl_list_opt
 		:}
 	|	// empty (no variable declarations)
 		{:
-			RESULT = new LinkedList<VarDecl>();
+			RESULT = new LinkedList<VariableDecl>();
 		:}
 ;
 				
 var_decl_list
 	::= var_decl:vd
 		{:
-			List<VarDecl> l = new LinkedList<VarDecl>();
+			List<VariableDecl> l = new LinkedList<VariableDecl>();
 			l.add(vd);
 			RESULT = l;
 		:}
@@ -231,7 +233,11 @@ exp
 ;
 
 var
-	::=	ID:name
+	::=	exp:e DOT ID:name
+		{:
+			RESULT = new Variable(name, e);
+		:}
+	|	ID:name
 		{:
 			RESULT = new Variable(name);
 		:}

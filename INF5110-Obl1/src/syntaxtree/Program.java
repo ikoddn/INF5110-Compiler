@@ -12,6 +12,10 @@ public class Program extends AstNode {
 		this.decls = decls;
 	}
 
+	public List<Decl> getDecls() {
+		return decls;
+	}
+
 	@Override
 	public List<String> makeAstPrint() {
 		List<String> result = new LinkedList<String>();

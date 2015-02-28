@@ -8,7 +8,22 @@ import java_cup.internal_error;
 
 public class ParserGenerator {
 
-	public static void generate(String cupFile, String prefix)
+	private CupFileGenerator cupGen;
+	private String outputBase;
+
+	public ParserGenerator(String cupFile, String outputBase) {
+		cupGen = new CupFileGenerator(cupFile);
+		this.outputBase = outputBase;
+	}
+
+	public void generate(String nonTerminal, String parserPrefix)
+			throws internal_error, Exception {
+		String newCupFile = outputBase + nonTerminal + ".cup";
+		cupGen.generateWithStartWith(nonTerminal, newCupFile);
+		generateParser(newCupFile, parserPrefix);
+	}
+
+	public static void generateParser(String cupFile, String prefix)
 			throws internal_error, IOException, Exception {
 
 		String parserName = prefix + "Parser";
@@ -31,10 +46,11 @@ public class ParserGenerator {
 	}
 
 	public static void main(String[] args) throws internal_error, Exception {
-		CupFileGenerator cupGen = new CupFileGenerator("grammars/oblig1.cup");
-		String outputBase = "test-grammars/";
-		
-		cupGen.generateWithStartWith("class_decl", outputBase + "class_decl.cup");
-		generate(outputBase + "class_decl.cup", "Class");
+		ParserGenerator pg = new ParserGenerator("grammars/oblig1.cup",
+				"test-grammars/");
+
+		pg.generate("class_decl", "Class");
+		pg.generate("exp", "Exp");
+		pg.generate("var", "Var");
 	}
 }
