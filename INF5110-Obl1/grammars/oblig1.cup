@@ -49,6 +49,7 @@ terminal						INT;
 terminal						STRING;
 terminal						RETURN;
 terminal						NEW;
+terminal Float					FLOAT_LITERAL;
 terminal Integer				INT_LITERAL;
 terminal String                 ID;
 terminal String                 STRING_LITERAL;
@@ -251,9 +252,13 @@ var
 ;
 
 literal
-	::=	INT_LITERAL:l
+	::=	INT_LITERAL:i
 		{:
-			RESULT = new IntLiteral(l);
+			RESULT = new IntLiteral(i);
+		:}
+	|	FLOAT_LITERAL:f
+		{:
+			RESULT = new FloatLiteral(f);
 		:}
 ;
 

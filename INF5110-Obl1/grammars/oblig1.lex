@@ -30,6 +30,7 @@ WhiteSpace		= {LineTerminator} | [ \t\f]
 LineComment		= "//" {InputCharacter}* {LineTerminator}?
 Identifier		= [:jletter:] [:jletterdigit:]*
 IntLiteral		= 0 | [1-9][0-9]*
+FloatLiteral	= {IntLiteral}.{IntLiteral}
 
 %%
 <YYINITIAL> {
@@ -57,6 +58,7 @@ IntLiteral		= 0 | [1-9][0-9]*
 	"string"						{ return symbol(sym.STRING); }
 	{Identifier}                    { return symbol(sym.ID, yytext()); }
 	{IntLiteral}					{ return symbol(sym.INT_LITERAL, new Integer(Integer.parseInt(yytext()))); }
+	{FloatLiteral}					{ return symbol(sym.FLOAT_LITERAL, new Float(Float.parseFloat(yytext()))); }
 }
 
 .                           		{ throw new ScannerError("Illegal character '" + yytext() + "' at line " + yyline + ", column " + yycolumn + "."); }

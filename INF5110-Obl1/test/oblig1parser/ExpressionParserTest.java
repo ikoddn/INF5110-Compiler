@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import syntaxtree.expressions.Expression;
 import syntaxtree.expressions.NewExpression;
 import syntaxtree.expressions.Variable;
+import syntaxtree.expressions.literals.FloatLiteral;
 import syntaxtree.expressions.literals.IntLiteral;
 
 @RunWith(Enclosed.class)
@@ -65,6 +66,14 @@ public class ExpressionParserTest extends ParserTest {
 			IntLiteral intLiteral = (IntLiteral) parse("" + number);
 			
 			assertEquals(number, intLiteral.getNumber().intValue());
+		}
+		
+		@Test
+		public void floatLiteral_success() throws Exception {
+			String literal = "3.14";
+			FloatLiteral floatLiteral = (FloatLiteral) parse(literal);
+			
+			assertEquals(literal, "" + floatLiteral.getNumber());
 		}
 
 		@Test
