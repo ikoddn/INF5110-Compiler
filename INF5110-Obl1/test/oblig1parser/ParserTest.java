@@ -34,13 +34,6 @@ public abstract class ParserTest {
 	public static final String[] RELATIONAL_OPERATORS = { "<", "<=", ">", ">=",
 			"=", "<>" };
 
-	public static final String FLOAT_LITERAL = "3.14";
-	public static final String INT_LITERAL = "42";
-	public static final String STRING_LITERAL = "\"Foo bar\"";
-	public static final String[] LITERALS = { FLOAT_LITERAL, INT_LITERAL,
-			STRING_LITERAL, Keyword.TRUE.toString(), Keyword.FALSE.toString(),
-			Keyword.NULL.toString() };
-
 	protected static InputStream toInputStream(String string) {
 		return new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8));
 	}

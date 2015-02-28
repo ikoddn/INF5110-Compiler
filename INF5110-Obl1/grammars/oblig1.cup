@@ -5,6 +5,7 @@ import java_cup.runtime.*;
 import syntaxtree.*;
 import syntaxtree.datatypes.*;
 import syntaxtree.expressions.*;
+import syntaxtree.expressions.literals.*;
 import syntaxtree.statements.*;
 
 parser code {:
@@ -39,15 +40,16 @@ terminal                        SEMI;
 terminal						DOT;
 terminal						COMMA;
 terminal						ASSIGN;
-terminal                        PROCEDURE;
-terminal						REFERENCE;
-terminal						VARIABLE;
+terminal                        PROC;
+terminal						REF;
+terminal						VAR;
 terminal						BOOL;
 terminal						FLOAT;
 terminal						INT;
 terminal						STRING;
 terminal						RETURN;
 terminal						NEW;
+terminal Integer				INT_LITERAL;
 terminal String                 ID;
 terminal String                 STRING_LITERAL;
 
@@ -63,6 +65,7 @@ non terminal DataType				type, return_type;
 non terminal ParameterDecl			param_decl;
 non terminal List<ParameterDecl>	param_decl_list, param_decl_list_opt;
 non terminal Boolean				param_decl_ref;
+non terminal Literal				literal;
 non terminal Statement				stmt;
 non terminal List<Statement>		stmt_list, stmt_list_opt;
 non terminal AssignStatement		assign_stmt;
@@ -122,7 +125,7 @@ decl
 ;
 
 proc_decl
-	::= PROCEDURE ID:name return_type:t LPAR param_decl_list_opt:pl RPAR LBRACK decl_list_opt:dl stmt_list_opt:sl RBRACK
+	::= PROC ID:name return_type:t LPAR param_decl_list_opt:pl RPAR LBRACK decl_list_opt:dl stmt_list_opt:sl RBRACK
 		{:
 			RESULT = new ProcedureDecl(name, t, pl, dl, sl);
 		:}
@@ -172,7 +175,7 @@ param_decl
 ;
 
 param_decl_ref
-	::=	REFERENCE
+	::=	REF
 		{:
 			RESULT = true;
 		:}
@@ -183,7 +186,7 @@ param_decl_ref
 ;
 
 var_decl
-	::= VARIABLE ID:name COLON type:t SEMI
+	::= VAR ID:name COLON type:t SEMI
 		{:
 			RESULT = new VariableDecl(name, t);
 		:}
@@ -222,7 +225,11 @@ var_decl_list
 ;
 
 exp
-	::=	NEW ID:name
+	::=	literal:l
+		{:
+			RESULT = l;
+		:}
+	|	NEW ID:name
 		{:
 			RESULT = new NewExpression(new ClassType(name));
 		:}
@@ -240,6 +247,13 @@ var
 	|	ID:name
 		{:
 			RESULT = new Variable(name);
+		:}
+;
+
+literal
+	::=	INT_LITERAL:l
+		{:
+			RESULT = new IntLiteral(l);
 		:}
 ;
 

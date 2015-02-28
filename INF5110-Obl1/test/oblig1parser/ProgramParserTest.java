@@ -147,20 +147,6 @@ public class ProgramParserTest extends ParserTest {
 			parseSymbol(String.format(PROGRAM, procString));
 		}
 
-		// callStatementExpressionReturnStatementInProcedure_success() throws
-		// Exception
-
-		@Test
-		public void literalExpressionReturnStatementInProcedure_success()
-				throws Exception {
-			for (String literal : LITERALS) {
-				String returnString = String.format(RETURN_STATEMENT, literal)
-						+ ";";
-				String procString = String.format(PROCEDURE, "", returnString);
-				parseSymbol(String.format(PROGRAM, procString));
-			}
-		}
-
 		@Test
 		public void assignStatementInProcedure_success() throws Exception {
 			String procString = String.format(PROCEDURE, "", ASSIGN_STATEMENT

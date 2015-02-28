@@ -29,6 +29,7 @@ InputCharacter	= [^\r\n]
 WhiteSpace		= {LineTerminator} | [ \t\f]
 LineComment		= "//" {InputCharacter}* {LineTerminator}?
 Identifier		= [:jletter:] [:jletterdigit:]*
+IntLiteral		= 0 | [1-9][0-9]*
 
 %%
 <YYINITIAL> {
@@ -36,8 +37,8 @@ Identifier		= [:jletter:] [:jletterdigit:]*
 	{LineComment}					{}
 	"program"                       { return symbol(sym.PROGRAM); }
 	"class"                         { return symbol(sym.CLASS); }
-	"proc"							{ return symbol(sym.PROCEDURE); }
-	"ref"							{ return symbol(sym.REFERENCE); }
+	"proc"							{ return symbol(sym.PROC); }
+	"ref"							{ return symbol(sym.REF); }
 	"{"                             { return symbol(sym.LBRACK); }
 	"}"                             { return symbol(sym.RBRACK); }
 	"("                             { return symbol(sym.LPAR); }
@@ -49,12 +50,13 @@ Identifier		= [:jletter:] [:jletterdigit:]*
 	":="							{ return symbol(sym.ASSIGN); }
 	"return"						{ return symbol(sym.RETURN); }
 	"new"							{ return symbol(sym.NEW); }
-	"var"							{ return symbol(sym.VARIABLE); }
+	"var"							{ return symbol(sym.VAR); }
 	"bool"							{ return symbol(sym.BOOL); }
 	"float"							{ return symbol(sym.FLOAT); }
 	"int"							{ return symbol(sym.INT); }
 	"string"						{ return symbol(sym.STRING); }
-	{Identifier}                    { return symbol(sym.ID,yytext()); }
+	{Identifier}                    { return symbol(sym.ID, yytext()); }
+	{IntLiteral}					{ return symbol(sym.INT_LITERAL, new Integer(Integer.parseInt(yytext()))); }
 }
 
 .                           		{ throw new ScannerError("Illegal character '" + yytext() + "' at line " + yyline + ", column " + yycolumn + "."); }
