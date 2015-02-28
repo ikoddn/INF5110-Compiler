@@ -14,6 +14,7 @@ import syntaxtree.expressions.NewExpression;
 import syntaxtree.expressions.Variable;
 import syntaxtree.expressions.literals.FloatLiteral;
 import syntaxtree.expressions.literals.IntLiteral;
+import syntaxtree.expressions.literals.StringLiteral;
 
 @RunWith(Enclosed.class)
 public class ExpressionParserTest extends ParserTest {
@@ -62,10 +63,25 @@ public class ExpressionParserTest extends ParserTest {
 
 		@Test
 		public void intLiteral_success() throws Exception {
-			int number = 42;
-			IntLiteral intLiteral = (IntLiteral) parse("" + number);
+			String literal = "42";
+			IntLiteral intLiteral = (IntLiteral) parse(literal);
 			
-			assertEquals(number, intLiteral.getNumber().intValue());
+			assertEquals(literal, "" + intLiteral.getNumber().intValue());
+		}
+		
+		@Test
+		public void intLiteralZero_success() throws Exception {
+			String literal = "0";
+			IntLiteral intLiteral = (IntLiteral) parse(literal);
+			
+			assertEquals(literal, "" + intLiteral.getNumber().intValue());
+		}
+		
+		@Test
+		public void intLiteralStartsWithZero_success() throws Exception {
+			String literal = "042";
+			IntLiteral intLiteral = (IntLiteral) parse(literal);
+			assertEquals("42", "" + intLiteral.getNumber().intValue());
 		}
 		
 		@Test
@@ -74,6 +90,70 @@ public class ExpressionParserTest extends ParserTest {
 			FloatLiteral floatLiteral = (FloatLiteral) parse(literal);
 			
 			assertEquals(literal, "" + floatLiteral.getNumber());
+		}
+		
+		@Test(expected = ParserSyntaxException.class)
+		public void floatLiteralStartsWithDot_exceptionThrown() throws Exception {
+			String literal = ".14";
+			parse(literal);
+		}
+		
+		@Test(expected = ParserSyntaxException.class)
+		public void floatLiteralEndsWithDot_exceptionThrown() throws Exception {
+			String literal = "3.";
+			parse(literal);
+		}
+		
+		@Test
+		public void stringLiteral_success() throws Exception {
+			String literal = "\"ThisIsAString\"";
+			StringLiteral stringLiteral = (StringLiteral) parse(literal);
+			
+			assertEquals("ThisIsAString", stringLiteral.getText());
+		}
+		
+		@Test
+		public void stringLiteralWithWhitespace_success() throws Exception {
+			String literal = " \" This is a string \" ";
+			StringLiteral stringLiteral = (StringLiteral) parse(literal);
+			
+			assertEquals(" This is a string ", stringLiteral.getText());
+		}
+		
+		@Test
+		public void stringLiteralWithTabular_success() throws Exception {
+			String literal = "\"ThisIs\tAString\"";
+			StringLiteral stringLiteral = (StringLiteral) parse(literal);
+			
+			assertEquals("ThisIs\tAString", stringLiteral.getText());
+		}
+		
+		@Test
+		public void stringLiteralWithBackslash_success() throws Exception {
+			String literal = "\"ThisIs\\AString\"";
+			StringLiteral stringLiteral = (StringLiteral) parse(literal);
+			
+			assertEquals("ThisIs\\AString", stringLiteral.getText());
+		}
+		
+		@Test
+		public void stringLiteralWithQuotationMark_success() throws Exception {
+			String literal = "\"ThisIs\\\"AString\"";
+			StringLiteral stringLiteral = (StringLiteral) parse(literal);
+			
+			assertEquals("ThisIs\"AString", stringLiteral.getText());
+		}
+		
+		@Test(expected = Error.class)
+		public void stringLiteralWithUnixNewline_errorThrown() throws Exception {
+			String literal = "\"ThisIs\nAString\"";
+			parse(literal);
+		}
+		
+		@Test(expected = Error.class)
+		public void stringLiteralWithWindowsNewline_errorThrown() throws Exception {
+			String literal = "\"ThisIs\r\nAString\"";
+			parse(literal);
 		}
 
 		@Test

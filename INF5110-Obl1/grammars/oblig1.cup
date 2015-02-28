@@ -36,10 +36,10 @@ terminal                        PROGRAM, CLASS;
 terminal                        LBRACK, RBRACK;
 terminal                        LPAR, RPAR;
 terminal						COLON;
-terminal                        SEMI;
+terminal                        SEMICOLON;
 terminal						DOT;
 terminal						COMMA;
-terminal						ASSIGN;
+terminal						COLONEQUALS;
 terminal                        PROC;
 terminal						REF;
 terminal						VAR;
@@ -187,7 +187,7 @@ param_decl_ref
 ;
 
 var_decl
-	::= VAR ID:name COLON type:t SEMI
+	::= VAR ID:name COLON type:t SEMICOLON
 		{:
 			RESULT = new VariableDecl(name, t);
 		:}
@@ -260,6 +260,10 @@ literal
 		{:
 			RESULT = new FloatLiteral(f);
 		:}
+	|	STRING_LITERAL:s
+		{:
+			RESULT = new StringLiteral(s);
+		:}
 ;
 
 stmt_list_opt
@@ -288,18 +292,18 @@ stmt_list
 ;
 
 stmt
-	::= assign_stmt:s SEMI
+	::= assign_stmt:s SEMICOLON
 		{:
 			RESULT = s;
 		:}
-	|	return_stmt:s SEMI
+	|	return_stmt:s SEMICOLON
 		{:
 			RESULT = s;
 		:}
 ;
 
 assign_stmt
-	::=	var:v ASSIGN exp:e
+	::=	var:v COLONEQUALS exp:e
 		{:
 			RESULT = new AssignStatement(v, e);
 		:}

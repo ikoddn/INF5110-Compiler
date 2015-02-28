@@ -29,8 +29,10 @@ InputCharacter	= [^\r\n]
 WhiteSpace		= {LineTerminator} | [ \t\f]
 LineComment		= "//" {InputCharacter}* {LineTerminator}?
 Identifier		= [:jletter:] [:jletterdigit:]*
-IntLiteral		= 0 | [1-9][0-9]*
+IntLiteral		= [0-9]+
 FloatLiteral	= {IntLiteral}.{IntLiteral}
+
+%state STRING
 
 %%
 <YYINITIAL> {
@@ -45,10 +47,10 @@ FloatLiteral	= {IntLiteral}.{IntLiteral}
 	"("                             { return symbol(sym.LPAR); }
 	")"                             { return symbol(sym.RPAR); }
 	":"								{ return symbol(sym.COLON); }
-	";"                             { return symbol(sym.SEMI); }
+	";"                             { return symbol(sym.SEMICOLON); }
 	"."								{ return symbol(sym.DOT); }
 	","								{ return symbol(sym.COMMA); }
-	":="							{ return symbol(sym.ASSIGN); }
+	":="							{ return symbol(sym.COLONEQUALS); }
 	"return"						{ return symbol(sym.RETURN); }
 	"new"							{ return symbol(sym.NEW); }
 	"var"							{ return symbol(sym.VAR); }
@@ -59,6 +61,15 @@ FloatLiteral	= {IntLiteral}.{IntLiteral}
 	{Identifier}                    { return symbol(sym.ID, yytext()); }
 	{IntLiteral}					{ return symbol(sym.INT_LITERAL, new Integer(Integer.parseInt(yytext()))); }
 	{FloatLiteral}					{ return symbol(sym.FLOAT_LITERAL, new Float(Float.parseFloat(yytext()))); }
+	\"								{ string.setLength(0); yybegin(STRING); }
+}
+
+<STRING> {
+	\"								{ yybegin(YYINITIAL); return symbol(sym.STRING_LITERAL, string.toString()); }
+	[^\n\r\"\\]+					{ string.append(yytext()); }
+	\\t								{ string.append('\t'); }
+	\\\"							{ string.append('\"'); }
+	\\								{ string.append('\\'); }
 }
 
 .                           		{ throw new ScannerError("Illegal character '" + yytext() + "' at line " + yyline + ", column " + yycolumn + "."); }
