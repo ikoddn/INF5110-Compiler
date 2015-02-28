@@ -12,6 +12,7 @@ public abstract class ParserTest {
 	public static final String VARIABLE_NAME = "foo";
 	public static final String VARIABLE_NAME2 = "bar";
 
+	public static final String LINECOMMENT = "// This is a line comment";
 	public static final String PROGRAM = Keyword.PROGRAM + " { %s }";
 	public static final String CLASS = Keyword.CLASS + " " + CLASS_NAME
 			+ " { %s }";
