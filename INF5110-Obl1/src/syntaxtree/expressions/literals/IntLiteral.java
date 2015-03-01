@@ -8,11 +8,9 @@ public class IntLiteral extends Literal {
 	private Integer number;
 
 	public IntLiteral(Integer number) {
-		super(number.toString());
-
 		this.number = number;
 	}
-	
+
 	public Integer getNumber() {
 		return number;
 	}

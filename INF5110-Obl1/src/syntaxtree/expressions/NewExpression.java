@@ -10,8 +10,6 @@ public class NewExpression extends Expression {
 	private ClassType classType;
 
 	public NewExpression(ClassType classType) {
-		super(classType.getName());
-
 		this.classType = classType;
 	}
 

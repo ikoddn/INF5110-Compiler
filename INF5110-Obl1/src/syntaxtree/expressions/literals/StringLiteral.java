@@ -8,8 +8,6 @@ public class StringLiteral extends Literal {
 	private String text;
 
 	public StringLiteral(String text) {
-		super(text);
-
 		this.text = text;
 	}
 

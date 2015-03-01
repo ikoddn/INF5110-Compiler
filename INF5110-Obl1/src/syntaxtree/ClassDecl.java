@@ -1,6 +1,5 @@
 package syntaxtree;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class ClassDecl extends Decl {
@@ -19,20 +18,12 @@ public class ClassDecl extends Decl {
 
 	@Override
 	public List<String> makeAstPrint() {
-		List<String> result = new LinkedList<String>();
-
 		StringBuilder sb = new StringBuilder();
-		sb.append("(CLASS_DECL (NAME ");
+		sb.append("CLASS_DECL (NAME ");
 		sb.append(name);
 		sb.append(")");
-		result.add(sb.toString());
 
-		for (VariableDecl variableDecl : variableDecls) {
-			result.addAll(prependWithIndentation(variableDecl.makeAstPrint()));
-		}
-
-		result.add(")");
-
-		return result;
+		return makeParentAstPrint(sb.toString(),
+				variableDecls.toArray(new VariableDecl[variableDecls.size()]));
 	}
 }

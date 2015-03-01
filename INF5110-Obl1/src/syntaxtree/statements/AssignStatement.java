@@ -1,6 +1,5 @@
 package syntaxtree.statements;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import syntaxtree.expressions.Expression;
@@ -18,12 +17,6 @@ public class AssignStatement extends Statement {
 
 	@Override
 	public List<String> makeAstPrint() {
-		List<String> result = new LinkedList<String>();
-		result.add("(ASSIGN_STMT");
-		result.addAll(prependWithIndentation(leftHandSide.makeAstPrint()));
-		result.addAll(prependWithIndentation(rightHandSide.makeAstPrint()));
-		result.add(")");
-
-		return result;
+		return makeParentAstPrint("ASSIGN_STMT", leftHandSide, rightHandSide);
 	}
 }

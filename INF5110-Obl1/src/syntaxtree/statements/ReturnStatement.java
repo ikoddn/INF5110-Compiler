@@ -29,7 +29,7 @@ public class ReturnStatement extends Statement {
 
 			result = new LinkedList<String>();
 			result.add("(RETURN_STMT " + expressionAst.get(0));
-			result.addAll(prependWithIndentation(expressionAst.subList(1,
+			result.addAll(prependAllWithIndentation(expressionAst.subList(1,
 					expressionAst.size())));
 			result.add(")");
 		}

@@ -5,6 +5,10 @@ import java_cup.runtime.*;
 import syntaxtree.*;
 import syntaxtree.datatypes.*;
 import syntaxtree.expressions.*;
+import syntaxtree.expressions.binaryoperators.*;
+import syntaxtree.expressions.binaryoperators.arithmetic.*;
+import syntaxtree.expressions.binaryoperators.logic.*;
+import syntaxtree.expressions.binaryoperators.relational.*;
 import syntaxtree.expressions.literals.*;
 import syntaxtree.statements.*;
 
@@ -105,6 +109,17 @@ non terminal AssignStatement		assign_stmt;
 non terminal ReturnStatement		return_stmt;
 non terminal Expression				exp;
 non terminal Variable				var;
+
+
+/* Precedences */
+precedence left DOUBLE_VBAR;
+precedence left DOUBLE_AMP;
+precedence left NOT;
+precedence nonassoc LESS, LESS_EQUAL, GREATER, GREATER_EQUAL, EQUAL, LESS_GREATER;
+precedence left PLUS, MINUS;
+precedence left ASTERISK, SLASH;
+precedence right HASH;
+precedence left DOT;
 
 
 /* The grammar */
@@ -258,7 +273,67 @@ var_decl_list
 ;
 
 exp
-	::=	literal:l
+	::=	exp:e1 DOUBLE_AMP exp:e2
+		{:
+			RESULT = new LogicalAnd(e1, e2);
+		:}
+	|	exp:e1 DOUBLE_VBAR exp:e2
+		{:
+			RESULT = new LogicalOr(e1, e2);
+		:}
+	|	NOT exp:e
+		{:
+			RESULT = new NotExpression(e);
+		:}
+	|	exp:e1 LESS exp:e2
+		{:
+			RESULT = new LessThan(e1, e2);
+		:}
+	|	exp:e1 LESS_EQUAL exp:e2
+		{:
+			RESULT = new LessThanOrEqualTo(e1, e2);
+		:}
+	|	exp:e1 GREATER exp:e2
+		{:
+			RESULT = new GreaterThan(e1, e2);
+		:}
+	|	exp:e1 GREATER_EQUAL exp:e2
+		{:
+			RESULT = new GreaterThanOrEqualTo(e1, e2);
+		:}
+	|	exp:e1 EQUAL exp:e2
+		{:
+			RESULT = new EqualTo(e1, e2);
+		:}
+	|	exp:e1 LESS_GREATER exp:e2
+		{:
+			RESULT = new NotEqualTo(e1, e2);
+		:}
+	|	exp:e1 PLUS exp:e2
+		{:
+			RESULT = new Addition(e1, e2);
+		:}
+	|	exp:e1 MINUS exp:e2
+		{:
+			RESULT = new Subtraction(e1, e2);
+		:}
+	|	exp:e1 ASTERISK exp:e2
+		{:
+			RESULT = new Multiplication(e1, e2);
+		:}
+	|	exp:e1 SLASH exp:e2
+		{:
+			RESULT = new Division(e1, e2);
+		:}
+	|	exp:b HASH exp:e
+		{:
+			RESULT = new Exponentiation(b, e);
+		:}
+	|	LPAR exp:e RPAR
+		{:
+			RESULT = e;
+		:}
+	|	literal:l
 		{:
 			RESULT = l;
 		:}
@@ -284,17 +359,29 @@ var
 ;
 
 literal
-	::=	INT_LITERAL:i
-		{:
-			RESULT = new IntLiteral(i);
-		:}
-	|	FLOAT_LITERAL:f
+	::=	FLOAT_LITERAL:f
 		{:
 			RESULT = new FloatLiteral(f);
+		:}
+	|	INT_LITERAL:i
+		{:
+			RESULT = new IntLiteral(i);
 		:}
 	|	STRING_LITERAL:s
 		{:
 			RESULT = new StringLiteral(s);
+		:}
+	|	TRUE
+		{:
+			RESULT = new BoolLiteral(true);
+		:}
+	|	FALSE
+		{:
+			RESULT = new BoolLiteral(false);
+		:}
+	|	NULL
+		{:
+			RESULT = new NullLiteral();
 		:}
 ;
 

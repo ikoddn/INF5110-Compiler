@@ -1,10 +1,11 @@
 package syntaxtree.expressions;
 
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Variable extends Expression {
 
+	private String name;
 	private Expression expression;
 
 	public Variable(String name) {
@@ -12,9 +13,12 @@ public class Variable extends Expression {
 	}
 
 	public Variable(String name, Expression expression) {
-		super(name);
-
+		this.name = name;
 		this.expression = expression;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public Expression getExpression() {
@@ -23,6 +27,7 @@ public class Variable extends Expression {
 
 	@Override
 	public List<String> makeAstPrint() {
+		List<String> result = new LinkedList<String>();
 		StringBuilder sb = new StringBuilder();
 
 		if (expression != null) {
@@ -33,12 +38,17 @@ public class Variable extends Expression {
 		sb.append(name);
 		sb.append(")");
 
-		if (expression != null) {
-			sb.append(" (NAME ");
-			sb.append(expression.getName());
-			sb.append("))");
+		if (expression == null) {
+			sb.append(")");
+			result.add(sb.toString());
+		} else {
+			sb.append(" ");
+			result.add(sb.toString());
+
+			addInline(result, expression.makeAstPrint());
+			appendStringToLastElement(result, ")");
 		}
 
-		return Arrays.asList(sb.toString());
+		return result;
 	}
 }

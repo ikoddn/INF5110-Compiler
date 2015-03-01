@@ -37,14 +37,14 @@ public class ProcedureDecl extends Decl {
 		result.add(sb.toString());
 
 		for (ParameterDecl parameterDecl : parameterDecls) {
-			result.addAll(prependWithIndentation(parameterDecl.makeAstPrint()));
+			result.addAll(prependAllWithIndentation(parameterDecl.makeAstPrint()));
 		}
 
 		if (!subDecls.isEmpty()) {
 			result.add("");
 
 			for (Decl decl : subDecls) {
-				result.addAll(prependWithIndentation(decl.makeAstPrint()));
+				result.addAll(prependAllWithIndentation(decl.makeAstPrint()));
 			}
 		}
 
@@ -52,7 +52,7 @@ public class ProcedureDecl extends Decl {
 			result.add("");
 
 			for (Statement statement : subStatements) {
-				result.addAll(prependWithIndentation(statement.makeAstPrint()));
+				result.addAll(prependAllWithIndentation(statement.makeAstPrint()));
 			}
 		}
 

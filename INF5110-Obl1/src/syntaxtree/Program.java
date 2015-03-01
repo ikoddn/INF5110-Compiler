@@ -25,7 +25,7 @@ public class Program extends AstNode {
 		while (it.hasNext()) {
 			Decl decl = it.next();
 
-			result.addAll(prependWithIndentation(decl.makeAstPrint()));
+			result.addAll(prependAllWithIndentation(decl.makeAstPrint()));
 
 			if (it.hasNext()) {
 				result.add("");

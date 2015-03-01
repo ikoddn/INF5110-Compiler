@@ -3,23 +3,23 @@ package syntaxtree.expressions.literals;
 import java.util.Arrays;
 import java.util.List;
 
-public class FloatLiteral extends Literal {
+public class BoolLiteral extends Literal {
 
-	private Float number;
+	private Boolean bool;
 
-	public FloatLiteral(Float number) {
-		this.number = number;
+	public BoolLiteral(Boolean bool) {
+		this.bool = bool;
 	}
 
-	public Float getNumber() {
-		return number;
+	public Boolean getBool() {
+		return bool;
 	}
 
 	@Override
 	public List<String> makeAstPrint() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("(FLOAT_LITERAL ");
-		sb.append(number.toString());
+		sb.append("(BOOL_LITERAL ");
+		sb.append(bool.toString());
 		sb.append(")");
 
 		return Arrays.asList(sb.toString());
