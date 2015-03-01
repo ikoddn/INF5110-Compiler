@@ -40,6 +40,9 @@ public class ParserGenerator {
 		cupArgs.add(symName);
 
 		cupArgs.add("-interface");
+		cupArgs.add("-nowarn");
+		cupArgs.add("-nosummary");
+
 		cupArgs.add(cupFile);
 
 		java_cup.Main.main(cupArgs.toArray(new String[] {}));
@@ -52,5 +55,8 @@ public class ParserGenerator {
 		pg.generate("class_decl", "Class");
 		pg.generate("exp", "Exp");
 		pg.generate("var", "Var");
+		pg.generate("stmt", "Statement");
+		
+		System.out.println("Done.");
 	}
 }
