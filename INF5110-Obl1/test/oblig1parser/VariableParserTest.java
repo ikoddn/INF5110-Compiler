@@ -93,23 +93,6 @@ public class VariableParserTest extends ParserTest {
 			assertEquals(VARIABLE_NAME, innerVar.getName());
 			assertNull(innerVar.getExpression());
 		}
-
-		@Test
-		public void dotAssociativity_leftAssociative() throws Exception {
-			Variable exp = parse(VARIABLE_NAME + "." + VARIABLE_NAME2 + "."
-					+ VARIABLE_NAME3);
-
-			assertEquals(VARIABLE_NAME3, exp.getName());
-			assertTrue(exp.getExpression() instanceof Variable);
-
-			Variable innerExp = (Variable) exp.getExpression();
-			assertEquals(VARIABLE_NAME2, innerExp.getName());
-			assertTrue(innerExp.getExpression() instanceof Variable);
-
-			Variable innerestExp = (Variable) innerExp.getExpression();
-			assertEquals(VARIABLE_NAME, innerestExp.getName());
-			assertNull(innerestExp.getExpression());
-		}
 	}
 
 	@RunWith(Parameterized.class)

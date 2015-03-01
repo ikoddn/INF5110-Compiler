@@ -53,8 +53,8 @@ public class ExpressionParserTest extends ParserTest {
 
 	public static class ParseMethod {
 
-		private static String ternaryExpression(BinaryOperator firstOperator,
-				BinaryOperator secondOperator) {
+		private static String ternaryExpression(String firstOperator,
+				String secondOperator) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(VARIABLE_NAME);
 			sb.append(" ");
@@ -67,6 +67,12 @@ public class ExpressionParserTest extends ParserTest {
 			sb.append(VARIABLE_NAME3);
 
 			return sb.toString();
+		}
+
+		private static String ternaryExpression(BinaryOperator firstOperator,
+				BinaryOperator secondOperator) {
+			return ternaryExpression(firstOperator.toString(),
+					secondOperator.toString());
 		}
 
 		private static void assertLeftHandSideLeftAssociative(Expression exp) {
@@ -108,6 +114,195 @@ public class ExpressionParserTest extends ParserTest {
 			assertNull(var.getExpression());
 		}
 
+		/* Precedence BEGIN */
+		@Test
+		public void logicalOrVsLogicalAndPrecedence_logicalAndHighest()
+				throws Exception {
+			LogicalOr exp = parse(ternaryExpression(BinaryOperator.DOUBLE_VBAR,
+					BinaryOperator.DOUBLE_AMP));
+
+			assertTrue(exp.getLeftHandSide() instanceof Variable);
+			assertTrue(exp.getRightHandSide() instanceof LogicalAnd);
+		}
+
+		@Test
+		public void logicalAndVsLogicalOrPrecedence_logicalAndHighest()
+				throws Exception {
+			LogicalOr exp = parse(ternaryExpression(BinaryOperator.DOUBLE_AMP,
+					BinaryOperator.DOUBLE_VBAR));
+
+			assertTrue(exp.getLeftHandSide() instanceof LogicalAnd);
+			assertTrue(exp.getRightHandSide() instanceof Variable);
+		}
+
+		@Test
+		public void logicalAndVsNotPrecedence_notHighest() throws Exception {
+			LogicalAnd exp = parse(VARIABLE_NAME + BinaryOperator.DOUBLE_AMP
+					+ " not " + VARIABLE_NAME2);
+
+			assertTrue(exp.getLeftHandSide() instanceof Variable);
+			assertTrue(exp.getRightHandSide() instanceof NotExpression);
+		}
+
+		@Test
+		public void notVsLogicalAndPrecedence_notHighest() throws Exception {
+			LogicalAnd exp = parse("not " + VARIABLE_NAME
+					+ BinaryOperator.DOUBLE_AMP + VARIABLE_NAME2);
+
+			assertTrue(exp.getLeftHandSide() instanceof NotExpression);
+			assertTrue(exp.getRightHandSide() instanceof Variable);
+		}
+
+		@Test
+		public void notVsRelationalOperatorPrecedence_relationalOperatorHighest()
+				throws Exception {
+			for (BinaryOperator binop : BinaryOperator.getRelational()) {
+				NotExpression exp = parse("not " + VARIABLE_NAME + binop
+						+ VARIABLE_NAME2);
+
+				assertTrue(exp.getExpression() instanceof BinaryOperatorExpression);
+			}
+		}
+
+		@Test
+		public void relationalOperatorVsAdditionOrSubtractionPrecedence_additionOrSubtractionHighest()
+				throws Exception {
+			for (BinaryOperator binop : BinaryOperator.getRelational()) {
+				BinaryOperatorExpression exp = parse(ternaryExpression(binop,
+						BinaryOperator.PLUS));
+				assertTrue(exp.getLeftHandSide() instanceof Variable);
+				assertTrue(exp.getRightHandSide() instanceof Addition);
+
+				exp = parse(ternaryExpression(binop, BinaryOperator.MINUS));
+				assertTrue(exp.getLeftHandSide() instanceof Variable);
+				assertTrue(exp.getRightHandSide() instanceof Subtraction);
+			}
+		}
+
+		@Test
+		public void additionOrSubtractionVsRelationalOperatorPrecedence_additionOrSubtractionHighest()
+				throws Exception {
+			for (BinaryOperator relop : BinaryOperator.getRelational()) {
+				BinaryOperatorExpression exp = parse(ternaryExpression(
+						BinaryOperator.PLUS, relop));
+				assertTrue(exp.getLeftHandSide() instanceof Addition);
+				assertTrue(exp.getRightHandSide() instanceof Variable);
+
+				exp = parse(ternaryExpression(BinaryOperator.MINUS, relop));
+				assertTrue(exp.getLeftHandSide() instanceof Subtraction);
+				assertTrue(exp.getRightHandSide() instanceof Variable);
+			}
+		}
+
+		@Test
+		public void additionOrSubtractionVsMultiplicationOrDivisionPrecedence_multiplicationOrDivisionHighest()
+				throws Exception {
+			Addition add = parse(ternaryExpression(BinaryOperator.PLUS,
+					BinaryOperator.ASTERISK));
+			assertTrue(add.getLeftHandSide() instanceof Variable);
+			assertTrue(add.getRightHandSide() instanceof Multiplication);
+
+			Subtraction sub = parse(ternaryExpression(BinaryOperator.MINUS,
+					BinaryOperator.ASTERISK));
+			assertTrue(sub.getLeftHandSide() instanceof Variable);
+			assertTrue(sub.getRightHandSide() instanceof Multiplication);
+
+			add = parse(ternaryExpression(BinaryOperator.PLUS,
+					BinaryOperator.SLASH));
+			assertTrue(add.getLeftHandSide() instanceof Variable);
+			assertTrue(add.getRightHandSide() instanceof Division);
+
+			sub = parse(ternaryExpression(BinaryOperator.MINUS,
+					BinaryOperator.SLASH));
+			assertTrue(sub.getLeftHandSide() instanceof Variable);
+			assertTrue(sub.getRightHandSide() instanceof Division);
+		}
+
+		@Test
+		public void multiplicationOrDivisionVsAdditionOrSubtractionPrecedence_multiplicationOrDivisionHighest()
+				throws Exception {
+			Addition add = parse(ternaryExpression(BinaryOperator.ASTERISK,
+					BinaryOperator.PLUS));
+			assertTrue(add.getLeftHandSide() instanceof Multiplication);
+			assertTrue(add.getRightHandSide() instanceof Variable);
+
+			Subtraction sub = parse(ternaryExpression(BinaryOperator.ASTERISK,
+					BinaryOperator.MINUS));
+			assertTrue(sub.getLeftHandSide() instanceof Multiplication);
+			assertTrue(sub.getRightHandSide() instanceof Variable);
+
+			add = parse(ternaryExpression(BinaryOperator.SLASH,
+					BinaryOperator.PLUS));
+			assertTrue(add.getLeftHandSide() instanceof Division);
+			assertTrue(add.getRightHandSide() instanceof Variable);
+
+			sub = parse(ternaryExpression(BinaryOperator.SLASH,
+					BinaryOperator.MINUS));
+			assertTrue(sub.getLeftHandSide() instanceof Division);
+			assertTrue(sub.getRightHandSide() instanceof Variable);
+		}
+
+		@Test
+		public void multiplicationOrDivisionVsExponentiationPrecedence_exponentiationHighest()
+				throws Exception {
+			Multiplication mul = parse(ternaryExpression(
+					BinaryOperator.ASTERISK, BinaryOperator.HASH));
+			assertTrue(mul.getLeftHandSide() instanceof Variable);
+			assertTrue(mul.getRightHandSide() instanceof Exponentiation);
+
+			Division div = parse(ternaryExpression(BinaryOperator.SLASH,
+					BinaryOperator.HASH));
+			assertTrue(div.getLeftHandSide() instanceof Variable);
+			assertTrue(div.getRightHandSide() instanceof Exponentiation);
+		}
+
+		@Test
+		public void exponentiationVsMultiplicationOrDivisionPrecedence_exponentiationHighest()
+				throws Exception {
+			Multiplication mul = parse(ternaryExpression(BinaryOperator.HASH,
+					BinaryOperator.ASTERISK));
+			assertTrue(mul.getLeftHandSide() instanceof Exponentiation);
+			assertTrue(mul.getRightHandSide() instanceof Variable);
+
+			Division div = parse(ternaryExpression(BinaryOperator.HASH,
+					BinaryOperator.SLASH));
+			assertTrue(div.getLeftHandSide() instanceof Exponentiation);
+			assertTrue(div.getRightHandSide() instanceof Variable);
+		}
+
+		@Test
+		public void exponentiationVsDotPrecedence_dotHighest() throws Exception {
+			Exponentiation exp = parse(ternaryExpression(
+					BinaryOperator.HASH.toString(), "."));
+
+			assertTrue(exp.getLeftHandSide() instanceof Variable);
+			assertTrue(exp.getRightHandSide() instanceof Variable);
+
+			Variable varLeft = (Variable) exp.getLeftHandSide();
+			Variable varRight = (Variable) exp.getRightHandSide();
+
+			assertNull(varLeft.getExpression());
+			assertTrue(varRight.getExpression() instanceof Variable);
+		}
+
+		@Test
+		public void dotVsExponentiationPrecedence_dotHighest() throws Exception {
+			Exponentiation exp = parse(ternaryExpression(".",
+					BinaryOperator.HASH.toString()));
+
+			assertTrue(exp.getLeftHandSide() instanceof Variable);
+			assertTrue(exp.getRightHandSide() instanceof Variable);
+
+			Variable varLeft = (Variable) exp.getLeftHandSide();
+			Variable varRight = (Variable) exp.getRightHandSide();
+
+			assertTrue(varLeft.getExpression() instanceof Variable);
+			assertNull(varRight.getExpression());
+		}
+
+		/* Precedence END */
+
+		/* Associativity BEGIN */
 		@Test
 		public void logicalOrAssociativity_leftAssociative() throws Exception {
 			LogicalOr exp = parse(ternaryExpression(BinaryOperator.DOUBLE_VBAR,
@@ -240,6 +435,24 @@ public class ExpressionParserTest extends ParserTest {
 			assertEquals(VARIABLE_NAME,
 					((Variable) innerExp.getExpression()).getName());
 		}
+
+		@Test
+		public void dotAssociativity_leftAssociative() throws Exception {
+			Variable exp = parse(ternaryExpression(".", "."));
+
+			assertEquals(VARIABLE_NAME3, exp.getName());
+			assertTrue(exp.getExpression() instanceof Variable);
+
+			Variable innerExp = (Variable) exp.getExpression();
+			assertEquals(VARIABLE_NAME2, innerExp.getName());
+			assertTrue(innerExp.getExpression() instanceof Variable);
+
+			Variable innerestExp = (Variable) innerExp.getExpression();
+			assertEquals(VARIABLE_NAME, innerestExp.getName());
+			assertNull(innerestExp.getExpression());
+		}
+
+		/* Associativity END */
 
 		@Test
 		public void expressionInsideParentheses_success() throws Exception {
