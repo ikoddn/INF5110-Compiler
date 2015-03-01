@@ -1,6 +1,8 @@
 package oblig1parser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,12 +84,31 @@ public class VariableParserTest extends ParserTest {
 
 		@Test
 		public void expressionDotName_success() throws Exception {
-			String varString = VARIABLE_NAME + "." + VARIABLE_NAME2;
-			Variable variable = parse(varString);
+			Variable var = parse(VARIABLE_NAME + "." + VARIABLE_NAME2);
 
-			assertEquals(VARIABLE_NAME2, variable.getName());
-			assertEquals(VARIABLE_NAME,
-					((Variable) variable.getExpression()).getName());
+			assertEquals(VARIABLE_NAME2, var.getName());
+			assertTrue(var.getExpression() instanceof Variable);
+			
+			Variable innerVar = (Variable) var.getExpression();
+			assertEquals(VARIABLE_NAME, innerVar.getName());
+			assertNull(innerVar.getExpression());
+		}
+
+		@Test
+		public void dotAssociativity_leftAssociative() throws Exception {
+			Variable exp = parse(VARIABLE_NAME + "." + VARIABLE_NAME2 + "."
+					+ VARIABLE_NAME3);
+
+			assertEquals(VARIABLE_NAME3, exp.getName());
+			assertTrue(exp.getExpression() instanceof Variable);
+
+			Variable innerExp = (Variable) exp.getExpression();
+			assertEquals(VARIABLE_NAME2, innerExp.getName());
+			assertTrue(innerExp.getExpression() instanceof Variable);
+
+			Variable innerestExp = (Variable) innerExp.getExpression();
+			assertEquals(VARIABLE_NAME, innerestExp.getName());
+			assertNull(innerestExp.getExpression());
 		}
 	}
 

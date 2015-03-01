@@ -23,6 +23,13 @@ import syntaxtree.expressions.NewExpression;
 import syntaxtree.expressions.NotExpression;
 import syntaxtree.expressions.Variable;
 import syntaxtree.expressions.binaryoperators.BinaryOperatorExpression;
+import syntaxtree.expressions.binaryoperators.arithmetic.Addition;
+import syntaxtree.expressions.binaryoperators.arithmetic.Division;
+import syntaxtree.expressions.binaryoperators.arithmetic.Exponentiation;
+import syntaxtree.expressions.binaryoperators.arithmetic.Multiplication;
+import syntaxtree.expressions.binaryoperators.arithmetic.Subtraction;
+import syntaxtree.expressions.binaryoperators.logic.LogicalAnd;
+import syntaxtree.expressions.binaryoperators.logic.LogicalOr;
 import syntaxtree.expressions.literals.BoolLiteral;
 import syntaxtree.expressions.literals.FloatLiteral;
 import syntaxtree.expressions.literals.IntLiteral;
@@ -46,6 +53,52 @@ public class ExpressionParserTest extends ParserTest {
 
 	public static class ParseMethod {
 
+		private static String ternaryExpression(BinaryOperator firstOperator,
+				BinaryOperator secondOperator) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(VARIABLE_NAME);
+			sb.append(" ");
+			sb.append(firstOperator);
+			sb.append(" ");
+			sb.append(VARIABLE_NAME2);
+			sb.append(" ");
+			sb.append(secondOperator);
+			sb.append(" ");
+			sb.append(VARIABLE_NAME3);
+
+			return sb.toString();
+		}
+
+		private static void assertLeftHandSideLeftAssociative(Expression exp) {
+			assertTrue(exp instanceof BinaryOperatorExpression);
+
+			BinaryOperatorExpression binopExp = (BinaryOperatorExpression) exp;
+
+			assertTrue(binopExp.getLeftHandSide() instanceof Variable);
+			assertTrue(binopExp.getRightHandSide() instanceof Variable);
+
+			Variable leftVar = (Variable) binopExp.getLeftHandSide();
+			Variable rightVar = (Variable) binopExp.getRightHandSide();
+
+			assertEquals(VARIABLE_NAME, leftVar.getName());
+			assertEquals(VARIABLE_NAME2, rightVar.getName());
+		}
+
+		private static void assertRightHandSideRightAssociative(Expression exp) {
+			assertTrue(exp instanceof BinaryOperatorExpression);
+
+			BinaryOperatorExpression binopExp = (BinaryOperatorExpression) exp;
+
+			assertTrue(binopExp.getLeftHandSide() instanceof Variable);
+			assertTrue(binopExp.getRightHandSide() instanceof Variable);
+
+			Variable leftVar = (Variable) binopExp.getLeftHandSide();
+			Variable rightVar = (Variable) binopExp.getRightHandSide();
+
+			assertEquals(VARIABLE_NAME2, leftVar.getName());
+			assertEquals(VARIABLE_NAME3, rightVar.getName());
+		}
+
 		@Test
 		public void notExpression_success() throws Exception {
 			NotExpression notExp = parse("not " + VARIABLE_NAME);
@@ -53,6 +106,139 @@ public class ExpressionParserTest extends ParserTest {
 
 			assertEquals(VARIABLE_NAME, var.getName());
 			assertNull(var.getExpression());
+		}
+
+		@Test
+		public void logicalOrAssociativity_leftAssociative() throws Exception {
+			LogicalOr exp = parse(ternaryExpression(BinaryOperator.DOUBLE_VBAR,
+					BinaryOperator.DOUBLE_VBAR));
+
+			assertTrue(exp.getLeftHandSide() instanceof LogicalOr);
+			assertTrue(exp.getRightHandSide() instanceof Variable);
+			assertEquals(VARIABLE_NAME3,
+					((Variable) exp.getRightHandSide()).getName());
+			assertLeftHandSideLeftAssociative(exp.getLeftHandSide());
+		}
+
+		@Test
+		public void logicalAndAssociativity_leftAssociative() throws Exception {
+			LogicalAnd exp = parse(ternaryExpression(BinaryOperator.DOUBLE_AMP,
+					BinaryOperator.DOUBLE_AMP));
+
+			assertTrue(exp.getLeftHandSide() instanceof LogicalAnd);
+			assertTrue(exp.getRightHandSide() instanceof Variable);
+			assertEquals(VARIABLE_NAME3,
+					((Variable) exp.getRightHandSide()).getName());
+			assertLeftHandSideLeftAssociative(exp.getLeftHandSide());
+		}
+
+		@Test
+		public void additionAssociativity_leftAssociative() throws Exception {
+			Addition exp = parse(ternaryExpression(BinaryOperator.PLUS,
+					BinaryOperator.PLUS));
+
+			assertTrue(exp.getLeftHandSide() instanceof Addition);
+			assertTrue(exp.getRightHandSide() instanceof Variable);
+			assertEquals(VARIABLE_NAME3,
+					((Variable) exp.getRightHandSide()).getName());
+			assertLeftHandSideLeftAssociative(exp.getLeftHandSide());
+		}
+
+		@Test
+		public void subtractionAssociativity_leftAssociative() throws Exception {
+			Subtraction exp = parse(ternaryExpression(BinaryOperator.MINUS,
+					BinaryOperator.MINUS));
+
+			assertTrue(exp.getLeftHandSide() instanceof Subtraction);
+			assertTrue(exp.getRightHandSide() instanceof Variable);
+			assertEquals(VARIABLE_NAME3,
+					((Variable) exp.getRightHandSide()).getName());
+			assertLeftHandSideLeftAssociative(exp.getLeftHandSide());
+		}
+
+		@Test
+		public void multiplicationAssociativity_leftAssociative()
+				throws Exception {
+			Multiplication exp = parse(ternaryExpression(
+					BinaryOperator.ASTERISK, BinaryOperator.ASTERISK));
+
+			assertTrue(exp.getLeftHandSide() instanceof Multiplication);
+			assertTrue(exp.getRightHandSide() instanceof Variable);
+			assertEquals(VARIABLE_NAME3,
+					((Variable) exp.getRightHandSide()).getName());
+			assertLeftHandSideLeftAssociative(exp.getLeftHandSide());
+		}
+
+		@Test
+		public void divisionAssociativity_leftAssociative() throws Exception {
+			Division exp = parse(ternaryExpression(BinaryOperator.SLASH,
+					BinaryOperator.SLASH));
+
+			assertTrue(exp.getLeftHandSide() instanceof Division);
+			assertTrue(exp.getRightHandSide() instanceof Variable);
+			assertEquals(VARIABLE_NAME3,
+					((Variable) exp.getRightHandSide()).getName());
+			assertLeftHandSideLeftAssociative(exp.getLeftHandSide());
+		}
+
+		@Test
+		public void exponentiationAssociativity_rightAssociative()
+				throws Exception {
+			Exponentiation exp = parse(ternaryExpression(BinaryOperator.HASH,
+					BinaryOperator.HASH));
+
+			assertTrue(exp.getLeftHandSide() instanceof Variable);
+			assertEquals(VARIABLE_NAME,
+					((Variable) exp.getLeftHandSide()).getName());
+			assertTrue(exp.getRightHandSide() instanceof Exponentiation);
+			assertRightHandSideRightAssociative(exp.getRightHandSide());
+		}
+
+		@Test(expected = ParserSyntaxException.class)
+		public void lessThanAssociativity_exceptionThrown() throws Exception {
+			parse(ternaryExpression(BinaryOperator.LESS, BinaryOperator.LESS));
+		}
+
+		@Test(expected = ParserSyntaxException.class)
+		public void lessThanOrEqualToAssociativity_exceptionThrown()
+				throws Exception {
+			parse(ternaryExpression(BinaryOperator.LESS_EQUAL,
+					BinaryOperator.LESS_EQUAL));
+		}
+
+		@Test(expected = ParserSyntaxException.class)
+		public void greaterThanAssociativity_exceptionThrown() throws Exception {
+			parse(ternaryExpression(BinaryOperator.GREATER,
+					BinaryOperator.GREATER));
+		}
+
+		@Test(expected = ParserSyntaxException.class)
+		public void greaterThanOrEqualToAssociativity_exceptionThrown()
+				throws Exception {
+			parse(ternaryExpression(BinaryOperator.GREATER_EQUAL,
+					BinaryOperator.GREATER_EQUAL));
+		}
+
+		@Test(expected = ParserSyntaxException.class)
+		public void equalToAssociativity_exceptionThrown() throws Exception {
+			parse(ternaryExpression(BinaryOperator.EQUAL, BinaryOperator.EQUAL));
+		}
+
+		@Test(expected = ParserSyntaxException.class)
+		public void notEqualToAssociativity_exceptionThrown() throws Exception {
+			parse(ternaryExpression(BinaryOperator.LESS_GREATER,
+					BinaryOperator.LESS_GREATER));
+		}
+
+		@Test
+		public void notAssociativity_success() throws Exception {
+			NotExpression exp = parse("not not " + VARIABLE_NAME);
+
+			assertTrue(exp.getExpression() instanceof NotExpression);
+			NotExpression innerExp = (NotExpression) exp.getExpression();
+			assertTrue(innerExp.getExpression() instanceof Variable);
+			assertEquals(VARIABLE_NAME,
+					((Variable) innerExp.getExpression()).getName());
 		}
 
 		@Test
