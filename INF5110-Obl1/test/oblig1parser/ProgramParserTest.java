@@ -1,6 +1,7 @@
 package oblig1parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
 
@@ -22,7 +23,7 @@ public class ProgramParserTest extends ParserTest {
 			parser parser = new parser(scanner);
 			return parser.parse();
 		}
-		
+
 		private Program parse(String string) throws Exception {
 			return (Program) parseSymbol(string).value;
 		}
@@ -31,12 +32,12 @@ public class ProgramParserTest extends ParserTest {
 		public void emptyProgram_success() throws Exception {
 			assertTrue(parseSymbol(String.format(PROGRAM, "")).value instanceof Program);
 		}
-		
+
 		@Test
 		public void lineCommentBeforeEmptyProgram_success() throws Exception {
 			parse(String.format(LINECOMMENT + "\n" + PROGRAM, ""));
 		}
-		
+
 		@Test
 		public void lineCommentInsideEmptyProgram_success() throws Exception {
 			parse(String.format(PROGRAM, LINECOMMENT + "\n"));
@@ -44,8 +45,9 @@ public class ProgramParserTest extends ParserTest {
 
 		@Test
 		public void variableDeclInProgram_success() throws Exception {
-			Program program = (Program) parseSymbol(String.format(PROGRAM, VARIABLE)).value;
-			
+			Program program = (Program) parseSymbol(String.format(PROGRAM,
+					VARIABLE)).value;
+
 			assertTrue(program.getDecls().get(0) instanceof VariableDecl);
 			assertEquals(VARIABLE_NAME, program.getDecls().get(0).getName());
 		}
@@ -53,8 +55,9 @@ public class ProgramParserTest extends ParserTest {
 		@Test
 		public void classDeclInProgram_success() throws Exception {
 			String classString = String.format(CLASS, "");
-			Program program = (Program) parseSymbol(String.format(PROGRAM, classString)).value;
-			
+			Program program = (Program) parseSymbol(String.format(PROGRAM,
+					classString)).value;
+
 			assertTrue(program.getDecls().get(0) instanceof ClassDecl);
 			assertEquals(CLASS_NAME, program.getDecls().get(0).getName());
 		}
@@ -120,35 +123,6 @@ public class ProgramParserTest extends ParserTest {
 		public void twoDeclInProcedure_success() throws Exception {
 			String procString = String.format(PROCEDURE, "", VARIABLE
 					+ VARIABLE);
-			parseSymbol(String.format(PROGRAM, procString));
-		}
-
-		@Test
-		public void simpleReturnStatementInProcedure_success() throws Exception {
-			String returnString = String.format(RETURN_STATEMENT, "");
-			String procString = String.format(PROCEDURE, "", returnString);
-			parseSymbol(String.format(PROGRAM, procString));
-		}
-
-		@Test
-		public void varExpressionReturnStatementInProcedure_success()
-				throws Exception {
-			String returnString = String.format(RETURN_STATEMENT, "foo");
-			String procString = String.format(PROCEDURE, "", returnString);
-			parseSymbol(String.format(PROGRAM, procString));
-		}
-
-		@Test
-		public void newExpressionReturnStatementInProcedure_success()
-				throws Exception {
-			String returnString = String.format(RETURN_STATEMENT, "new Foo");
-			String procString = String.format(PROCEDURE, "", returnString);
-			parseSymbol(String.format(PROGRAM, procString));
-		}
-
-		@Test
-		public void assignStatementInProcedure_success() throws Exception {
-			String procString = String.format(PROCEDURE, "", ASSIGN_STATEMENT);
 			parseSymbol(String.format(PROGRAM, procString));
 		}
 

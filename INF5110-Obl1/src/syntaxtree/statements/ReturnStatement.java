@@ -18,6 +18,10 @@ public class ReturnStatement extends Statement {
 		this.expression = expression;
 	}
 
+	public Expression getExpression() {
+		return expression;
+	}
+
 	@Override
 	public List<String> makeAstPrint() {
 		List<String> result;

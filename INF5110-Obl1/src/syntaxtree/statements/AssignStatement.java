@@ -15,6 +15,14 @@ public class AssignStatement extends Statement {
 		this.rightHandSide = rightHandSide;
 	}
 
+	public Variable getLeftHandSide() {
+		return leftHandSide;
+	}
+
+	public Expression getRightHandSide() {
+		return rightHandSide;
+	}
+
 	@Override
 	public List<String> makeAstPrint() {
 		return makeParentAstPrint("ASSIGN_STMT", leftHandSide, rightHandSide);

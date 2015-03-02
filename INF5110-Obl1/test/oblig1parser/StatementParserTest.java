@@ -1,6 +1,7 @@
 package oblig1parser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
@@ -31,6 +32,16 @@ public class StatementParserTest extends ParserTest {
 	}
 
 	public static class ParseMethod {
+
+		@Test
+		public void assign_success() throws Exception {
+			AssignStatement stmt = parse(ASSIGN_STATEMENT);
+
+			assertEquals(VARIABLE_NAME, stmt.getLeftHandSide().getName());
+			assertTrue(stmt.getRightHandSide() instanceof Variable);
+			assertEquals(VARIABLE_NAME2,
+					((Variable) stmt.getRightHandSide()).getName());
+		}
 
 		@Test(expected = ParserSyntaxException.class)
 		public void ifNoExpression_exceptionThrown() throws Exception {
@@ -107,6 +118,23 @@ public class StatementParserTest extends ParserTest {
 			assertEquals(2, stmt.getElseBodyStatements().size());
 			assertTrue(stmt.getElseBodyStatements().get(0) instanceof AssignStatement);
 			assertTrue(stmt.getElseBodyStatements().get(1) instanceof ReturnStatement);
+		}
+
+		@Test
+		public void returnVoid_success() throws Exception {
+			ReturnStatement stmt = parse(String.format(RETURN_STATEMENT, ""));
+
+			assertNull(stmt.getExpression());
+		}
+
+		@Test
+		public void returnVarExpression_success() throws Exception {
+			ReturnStatement stmt = parse(String.format(RETURN_STATEMENT,
+					VARIABLE_NAME));
+
+			assertTrue(stmt.getExpression() instanceof Variable);
+			assertEquals(VARIABLE_NAME,
+					((Variable) stmt.getExpression()).getName());
 		}
 	}
 }
