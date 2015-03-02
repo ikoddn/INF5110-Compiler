@@ -16,56 +16,63 @@ import syntaxtree.VariableDecl;
 @RunWith(Enclosed.class)
 public class ProgramParserTest extends ParserTest {
 
+	private static Symbol parseSymbol(String string) throws Exception {
+		Scanner scanner = new Lexer(toInputStream(string));
+		parser parser = new parser(scanner);
+		return parser.parse();
+	}
+
+	private static Program parse(String string) throws Exception {
+		return (Program) parseSymbol(string).value;
+	}
+
 	public static class ParseMethod {
-
-		private Symbol parseSymbol(String string) throws Exception {
-			Scanner scanner = new Lexer(toInputStream(string));
-			parser parser = new parser(scanner);
-			return parser.parse();
-		}
-
-		private Program parse(String string) throws Exception {
-			return (Program) parseSymbol(string).value;
-		}
 
 		@Test
 		public void emptyProgram_success() throws Exception {
-			assertTrue(parseSymbol(String.format(PROGRAM, "")).value instanceof Program);
+			Program program = parse(String.format(PROGRAM, ""));
+
+			assertTrue(program.getDecls().isEmpty());
 		}
 
 		@Test
 		public void lineCommentBeforeEmptyProgram_success() throws Exception {
-			parse(String.format(LINECOMMENT + "\n" + PROGRAM, ""));
+			Program program = parse(String.format(LINECOMMENT + "\n" + PROGRAM,
+					""));
+
+			assertTrue(program.getDecls().isEmpty());
 		}
 
 		@Test
 		public void lineCommentInsideEmptyProgram_success() throws Exception {
-			parse(String.format(PROGRAM, LINECOMMENT + "\n"));
+			Program program = parse(String.format(PROGRAM, LINECOMMENT + "\n"));
+
+			assertTrue(program.getDecls().isEmpty());
 		}
 
 		@Test
 		public void variableDeclInProgram_success() throws Exception {
-			Program program = (Program) parseSymbol(String.format(PROGRAM,
-					VARIABLE)).value;
+			Program program = parse(String.format(PROGRAM, VARIABLE));
 
+			assertEquals(1, program.getDecls().size());
 			assertTrue(program.getDecls().get(0) instanceof VariableDecl);
-			assertEquals(VARIABLE_NAME, program.getDecls().get(0).getName());
 		}
 
 		@Test
 		public void classDeclInProgram_success() throws Exception {
-			String classString = String.format(CLASS, "");
-			Program program = (Program) parseSymbol(String.format(PROGRAM,
-					classString)).value;
+			Program program = parse(String.format(PROGRAM,
+					String.format(CLASS, "")));
 
+			assertEquals(1, program.getDecls().size());
 			assertTrue(program.getDecls().get(0) instanceof ClassDecl);
-			assertEquals(CLASS_NAME, program.getDecls().get(0).getName());
 		}
 
 		@Test
 		public void twoDeclInProgram_success() throws Exception {
-			String classString = String.format(CLASS, "");
-			parseSymbol(String.format(PROGRAM, VARIABLE + classString));
+			Program program = parse(String.format(PROGRAM,
+					VARIABLE + String.format(CLASS, "")));
+
+			assertEquals(2, program.getDecls().size());
 		}
 	}
 }
