@@ -20,7 +20,7 @@ public class NotExpression extends Expression {
 		List<String> result = new LinkedList<String>();
 
 		result.add("(NOT ");
-		addInline(result, expression.makeAstPrint());
+		addInline(result, expression);
 		appendStringToLastElement(result, ")");
 
 		return result;

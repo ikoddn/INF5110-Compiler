@@ -106,6 +106,8 @@ non terminal Literal				literal;
 non terminal Statement				stmt;
 non terminal List<Statement>		stmt_list, stmt_list_opt;
 non terminal AssignStatement		assign_stmt;
+non terminal IfStatement			if_stmt;
+non terminal List<Statement>		else_part_opt;
 non terminal ReturnStatement		return_stmt;
 non terminal Expression				exp;
 non terminal Variable				var;
@@ -415,6 +417,10 @@ stmt
 		{:
 			RESULT = s;
 		:}
+	|	if_stmt:s
+		{:
+			RESULT = s;
+		:}
 	|	return_stmt:s SEMICOLON
 		{:
 			RESULT = s;
@@ -425,6 +431,24 @@ assign_stmt
 	::=	var:v COLON_EQUAL exp:e
 		{:
 			RESULT = new AssignStatement(v, e);
+		:}
+;
+
+if_stmt
+	::=	IF exp:e THEN LBRACK stmt_list_opt:ifs RBRACK else_part_opt:elses
+		{:
+			RESULT = new IfStatement(e, ifs, elses);
+		:}
+;
+
+else_part_opt
+	::= ELSE LBRACK stmt_list_opt:elses RBRACK
+		{:
+			RESULT = elses;
+		:}
+	|	// empty
+		{:
+			RESULT = new LinkedList<Statement>();
 		:}
 ;
 

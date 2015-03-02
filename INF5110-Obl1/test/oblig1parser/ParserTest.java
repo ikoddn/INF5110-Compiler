@@ -26,15 +26,14 @@ public abstract class ParserTest {
 			+ PROCEDURE_NAME + " (%s) { %s }";
 	public static final String PARAMETER = PARAMETER_NAME + " : " + Keyword.INT;
 	public static final String PARAMETER_REF = Keyword.REF + " " + PARAMETER;
-	public static final String RETURN_STATEMENT = Keyword.RETURN + " %s";
-	public static final String ASSIGN_STATEMENT = VARIABLE_NAME + " := "
-			+ VARIABLE_NAME2;
 
-	public static final String[] ARITHMETIC_OPERATORS = { "+", "-", "*", "/",
-			"#" };
-	public static final String[] LOGIC_OPERATORS = { "&&", "||" };
-	public static final String[] RELATIONAL_OPERATORS = { "<", "<=", ">", ">=",
-			"=", "<>" };
+	public static final String IF_STATEMENT = Keyword.IF + " %s "
+			+ Keyword.THEN + " { %s } ";
+	public static final String IFELSE_STATEMENT = IF_STATEMENT + Keyword.ELSE
+			+ " { %s }";
+	public static final String RETURN_STATEMENT = Keyword.RETURN + " %s;";
+	public static final String ASSIGN_STATEMENT = VARIABLE_NAME + " := "
+			+ VARIABLE_NAME2 + ";";
 
 	protected static InputStream toInputStream(String string) {
 		return new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8));

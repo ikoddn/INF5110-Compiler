@@ -45,7 +45,7 @@ public class Variable extends Expression {
 			sb.append(" ");
 			result.add(sb.toString());
 
-			addInline(result, expression.makeAstPrint());
+			addInline(result, expression);
 			appendStringToLastElement(result, ")");
 		}
 

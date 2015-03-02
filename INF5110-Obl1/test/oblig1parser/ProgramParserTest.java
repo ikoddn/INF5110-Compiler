@@ -125,7 +125,7 @@ public class ProgramParserTest extends ParserTest {
 
 		@Test
 		public void simpleReturnStatementInProcedure_success() throws Exception {
-			String returnString = String.format(RETURN_STATEMENT, "") + ";";
+			String returnString = String.format(RETURN_STATEMENT, "");
 			String procString = String.format(PROCEDURE, "", returnString);
 			parseSymbol(String.format(PROGRAM, procString));
 		}
@@ -133,7 +133,7 @@ public class ProgramParserTest extends ParserTest {
 		@Test
 		public void varExpressionReturnStatementInProcedure_success()
 				throws Exception {
-			String returnString = String.format(RETURN_STATEMENT, "foo") + ";";
+			String returnString = String.format(RETURN_STATEMENT, "foo");
 			String procString = String.format(PROCEDURE, "", returnString);
 			parseSymbol(String.format(PROGRAM, procString));
 		}
@@ -141,22 +141,20 @@ public class ProgramParserTest extends ParserTest {
 		@Test
 		public void newExpressionReturnStatementInProcedure_success()
 				throws Exception {
-			String returnString = String.format(RETURN_STATEMENT, "new Foo")
-					+ ";";
+			String returnString = String.format(RETURN_STATEMENT, "new Foo");
 			String procString = String.format(PROCEDURE, "", returnString);
 			parseSymbol(String.format(PROGRAM, procString));
 		}
 
 		@Test
 		public void assignStatementInProcedure_success() throws Exception {
-			String procString = String.format(PROCEDURE, "", ASSIGN_STATEMENT
-					+ ";");
+			String procString = String.format(PROCEDURE, "", ASSIGN_STATEMENT);
 			parseSymbol(String.format(PROGRAM, procString));
 		}
 
 		@Test
 		public void twoStatementsInProcedure_success() throws Exception {
-			String returnString = String.format(RETURN_STATEMENT, "") + ";";
+			String returnString = String.format(RETURN_STATEMENT, "");
 			String procString = String.format(PROCEDURE, "", returnString
 					+ returnString);
 			parseSymbol(String.format(PROGRAM, procString));
@@ -164,7 +162,7 @@ public class ProgramParserTest extends ParserTest {
 
 		@Test
 		public void declBeforeStatementInProcedure_success() throws Exception {
-			String statement = String.format(RETURN_STATEMENT, "") + ";";
+			String statement = String.format(RETURN_STATEMENT, "");
 			String procString = String.format(PROCEDURE, "", VARIABLE
 					+ statement);
 			parseSymbol(String.format(PROGRAM, procString));
@@ -173,7 +171,7 @@ public class ProgramParserTest extends ParserTest {
 		@Test(expected = ParserSyntaxException.class)
 		public void declAfterStatementInProcedure_exceptionThrown()
 				throws Exception {
-			String statement = String.format(RETURN_STATEMENT, "") + ";";
+			String statement = String.format(RETURN_STATEMENT, "");
 			String procString = String.format(PROCEDURE, "", statement
 					+ VARIABLE);
 			parseSymbol(String.format(PROGRAM, procString));

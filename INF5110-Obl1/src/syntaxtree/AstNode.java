@@ -25,11 +25,12 @@ public abstract class AstNode {
 		list.set(lastIndex, list.get(lastIndex) + string);
 	}
 
-	protected static void addInline(List<String> dest, List<String> src) {
-		appendStringToLastElement(dest, src.get(0));
+	protected static void addInline(List<String> dest, AstNode srcNode) {
+		List<String> srcList = srcNode.makeAstPrint();
+		appendStringToLastElement(dest, srcList.get(0));
 
-		if (src.size() > 1) {
-			dest.addAll(src.subList(1, src.size()));
+		if (srcList.size() > 1) {
+			dest.addAll(srcList.subList(1, srcList.size()));
 		}
 	}
 	
