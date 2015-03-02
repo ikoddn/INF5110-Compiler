@@ -14,6 +14,10 @@ public class VariableDecl extends Decl {
 		this.dataType = dataType;
 	}
 
+	public DataType getDataType() {
+		return dataType;
+	}
+
 	@Override
 	public List<String> makeAstPrint() {
 		StringBuilder sb = new StringBuilder();

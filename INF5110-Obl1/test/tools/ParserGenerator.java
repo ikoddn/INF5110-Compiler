@@ -56,7 +56,8 @@ public class ParserGenerator {
 		pg.generate("exp", "Exp");
 		pg.generate("var", "Var");
 		pg.generate("stmt", "Statement");
-		
+		pg.generate("proc_decl", "Procedure");
+
 		System.out.println("Done.");
 	}
 }

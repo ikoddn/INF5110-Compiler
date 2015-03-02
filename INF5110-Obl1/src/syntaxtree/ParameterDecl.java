@@ -17,6 +17,14 @@ public class ParameterDecl extends Decl {
 		this.dataType = dataType;
 	}
 
+	public boolean isReference() {
+		return reference;
+	}
+
+	public DataType getDataType() {
+		return dataType;
+	}
+
 	@Override
 	public List<String> makeAstPrint() {
 		StringBuilder sb = new StringBuilder();

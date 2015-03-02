@@ -24,6 +24,22 @@ public class ProcedureDecl extends Decl {
 		this.subStatements = subStatements;
 	}
 
+	public DataType getReturnType() {
+		return returnType;
+	}
+
+	public List<ParameterDecl> getParameterDecls() {
+		return parameterDecls;
+	}
+
+	public List<Decl> getSubDecls() {
+		return subDecls;
+	}
+
+	public List<Statement> getSubStatements() {
+		return subStatements;
+	}
+
 	@Override
 	public List<String> makeAstPrint() {
 		List<String> result = new LinkedList<String>();
@@ -37,7 +53,8 @@ public class ProcedureDecl extends Decl {
 		result.add(sb.toString());
 
 		for (ParameterDecl parameterDecl : parameterDecls) {
-			result.addAll(prependAllWithIndentation(parameterDecl.makeAstPrint()));
+			result.addAll(prependAllWithIndentation(parameterDecl
+					.makeAstPrint()));
 		}
 
 		if (!subDecls.isEmpty()) {
@@ -52,7 +69,8 @@ public class ProcedureDecl extends Decl {
 			result.add("");
 
 			for (Statement statement : subStatements) {
-				result.addAll(prependAllWithIndentation(statement.makeAstPrint()));
+				result.addAll(prependAllWithIndentation(statement
+						.makeAstPrint()));
 			}
 		}
 
