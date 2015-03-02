@@ -76,8 +76,8 @@
 
 	<!-- Compile Java Files and store in /build/classes directory  -->
 	<target name="compile" depends="generate">
-		<javac srcdir="${dir.src}" destdir="${dir.classes}" debug="true" includes="**/*.java" classpathref="path-cup" sourcepath="${dir.src-gen}"/>
-		<javac srcdir="${dir.src-gen}" destdir="${dir.classes}" debug="true" includes="**/*.java" classpathref="path-cup" sourcepath="${dir.src}" />
+		<javac includeantruntime="false" srcdir="${dir.src}" destdir="${dir.classes}" debug="true" includes="**/*.java" classpathref="path-cup" sourcepath="${dir.src-gen}"/>
+		<javac includeantruntime="false" srcdir="${dir.src-gen}" destdir="${dir.classes}" debug="true" includes="**/*.java" classpathref="path-cup" sourcepath="${dir.src}" />
 	</target>
 
 	<!-- Main target  -->
