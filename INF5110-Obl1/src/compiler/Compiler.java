@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import oblig1parser.Lexer;
 import oblig1parser.parser;
@@ -21,7 +22,7 @@ public class Compiler {
 
 	public void compile() throws Exception {
 		InputStream inputStream = new FileInputStream(inFilename);
-		Lexer lexer = new Lexer(inputStream);
+		Lexer lexer = new Lexer(new InputStreamReader(inputStream));
 		parser parser = new parser(lexer);
 
 		Program program = (Program) parser.parse().value;

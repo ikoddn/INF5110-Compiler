@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ import syntaxtree.operators.RelationalOperator;
 public class ExpressionParserTest extends ParserTest {
 
 	private static Symbol parseSymbol(String string) throws Exception {
-		Scanner scanner = new Lexer(toInputStream(string));
+		Scanner scanner = new Lexer(new StringReader(string));
 		ExpParser parser = new ExpParser(scanner);
 		return parser.parse();
 	}
@@ -433,18 +434,6 @@ public class ExpressionParserTest extends ParserTest {
 					ArithmeticOperator.SUBTRACTION,
 					ArithmeticOperator.SUBTRACTION));
 
-			System.out.println(ternaryExpression(
-					ArithmeticOperator.SUBTRACTION,
-					ArithmeticOperator.SUBTRACTION));
-			
-			for (String s : exp.getLeftExpression().makeAstPrint()) {
-				System.out.println(s);
-			}
-			
-			for (String s : exp.getRightExpression().makeAstPrint()) {
-				System.out.println(s);
-			}
-			
 			assertTrue(exp.getLeftExpression() instanceof ArithmeticOperatorExpression);
 			assertTrue(exp.getRightExpression() instanceof Variable);
 			assertEquals(VARIABLE_NAME3,

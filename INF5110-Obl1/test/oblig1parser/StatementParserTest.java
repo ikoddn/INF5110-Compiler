@@ -3,6 +3,9 @@ package oblig1parser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.io.StringReader;
+
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
 
@@ -24,7 +27,7 @@ import syntaxtree.statements.WhileStatement;
 public class StatementParserTest extends ParserTest {
 
 	private static Symbol parseSymbol(String string) throws Exception {
-		Scanner scanner = new Lexer(toInputStream(string));
+		Scanner scanner = new Lexer(new StringReader(string));
 		StatementParser parser = new StatementParser(scanner);
 		return parser.parse();
 	}

@@ -3,6 +3,9 @@ package oblig1parser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.io.StringReader;
+
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
 
@@ -19,7 +22,7 @@ import syntaxtree.declarations.ProcedureDecl;
 public class ProcedureParserTest extends ParserTest {
 
 	private static Symbol parseSymbol(String string) throws Exception {
-		Scanner scanner = new Lexer(toInputStream(string));
+		Scanner scanner = new Lexer(new StringReader(string));
 		ProcedureParser parser = new ProcedureParser(scanner);
 		return parser.parse();
 	}
