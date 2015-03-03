@@ -44,7 +44,6 @@ FloatLiteral	= {IntLiteral}.{IntLiteral}
 	"}"                             { return symbol(sym.RBRACK); }
 	"("                             { return symbol(sym.LPAR); }
 	")"                             { return symbol(sym.RPAR); }
-	"."								{ return symbol(sym.DOT); }
 	","								{ return symbol(sym.COMMA); }
 	":"								{ return symbol(sym.COLON); }
 	";"                             { return symbol(sym.SEMICOLON); }
@@ -52,6 +51,7 @@ FloatLiteral	= {IntLiteral}.{IntLiteral}
 	/* operators */
 	"*"								{ return symbol(sym.ASTERISK); }
 	":="							{ return symbol(sym.COLON_EQUAL); }
+	"."								{ return symbol(sym.DOT); }
 	"&&"							{ return symbol(sym.DOUBLE_AMP); }
 	"||"							{ return symbol(sym.DOUBLE_VBAR); }
 	"="								{ return symbol(sym.EQUAL); }
