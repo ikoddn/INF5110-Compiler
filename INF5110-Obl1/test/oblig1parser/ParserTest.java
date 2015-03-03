@@ -31,6 +31,8 @@ public abstract class ParserTest {
 			+ Keyword.THEN + " { %s } ";
 	public static final String IFELSE_STATEMENT = IF_STATEMENT + Keyword.ELSE
 			+ " { %s }";
+	public static final String WHILE_STATEMENT = Keyword.WHILE + " %s "
+			+ Keyword.DO + " { %s } ";
 	public static final String RETURN_STATEMENT = Keyword.RETURN + " %s;";
 	public static final String ASSIGN_STATEMENT = VARIABLE_NAME + " := "
 			+ VARIABLE_NAME2 + ";";

@@ -39,7 +39,6 @@ parser code {:
 /* symbols */
 terminal                        LBRACK, RBRACK;
 terminal                        LPAR, RPAR;
-terminal						DOT;
 terminal						COMMA;
 terminal						COLON;
 terminal                        SEMICOLON;
@@ -47,6 +46,7 @@ terminal                        SEMICOLON;
 /* operators */
 terminal						ASTERISK;
 terminal						COLON_EQUAL;
+terminal						DOT;
 terminal						DOUBLE_AMP;
 terminal						DOUBLE_VBAR;
 terminal						EQUAL;
@@ -91,37 +91,37 @@ terminal Integer				INT_LITERAL;
 terminal String                 STRING_LITERAL;
 
 /* Non terminals */
-non terminal Program				program;
-non terminal List<Decl>				decl_list_opt, decl_list;
-non terminal Decl					decl;
-non terminal ProcedureDecl			proc_decl;
-non terminal ClassDecl				class_decl;
-non terminal VariableDecl			var_decl;
-non terminal List<VariableDecl>		var_decl_list_opt, var_decl_list;
-non terminal DataType				type, return_type;
-non terminal ParameterDecl			param_decl;
-non terminal List<ParameterDecl>	param_decl_list, param_decl_list_opt;
-non terminal Boolean				param_decl_ref;
-non terminal Literal				literal;
-non terminal Statement				stmt;
-non terminal List<Statement>		stmt_list, stmt_list_opt;
 non terminal AssignStatement		assign_stmt;
-non terminal IfStatement			if_stmt;
-non terminal List<Statement>		else_part_opt;
-non terminal ReturnStatement		return_stmt;
+non terminal Boolean				param_decl_ref;
+non terminal ClassDecl				class_decl;
+non terminal DataType				type, return_type;
+non terminal Decl					decl;
 non terminal Expression				exp;
+non terminal IfStatement			if_stmt;
+non terminal List<Decl>				decl_list, decl_list_opt;
+non terminal List<ParameterDecl>	param_decl_list, param_decl_list_opt;
+non terminal List<Statement>		stmt_list, stmt_list_opt, else_part_opt;
+non terminal List<VariableDecl>		var_decl_list, var_decl_list_opt;
+non terminal Literal				literal;
+non terminal ParameterDecl			param_decl;
+non terminal ProcedureDecl			proc_decl;
+non terminal Program				program;
+non terminal ReturnStatement		return_stmt;
+non terminal Statement				stmt;
 non terminal Variable				var;
+non terminal VariableDecl			var_decl;
+non terminal WhileStatement			while_stmt;
 
 
 /* Precedences */
-precedence left DOUBLE_VBAR;
-precedence left DOUBLE_AMP;
-precedence left NOT;
+precedence left		DOUBLE_VBAR;
+precedence left 	DOUBLE_AMP;
+precedence left 	NOT;
 precedence nonassoc LESS, LESS_EQUAL, GREATER, GREATER_EQUAL, EQUAL, LESS_GREATER;
-precedence left PLUS, MINUS;
-precedence left ASTERISK, SLASH;
-precedence right HASH;
-precedence left DOT;
+precedence left 	PLUS, MINUS;
+precedence left 	ASTERISK, SLASH;
+precedence right 	HASH;
+precedence left 	DOT;
 
 
 /* The grammar */
@@ -421,6 +421,10 @@ stmt
 		{:
 			RESULT = s;
 		:}
+	|	while_stmt:s
+		{:
+			RESULT = s;
+		:}
 	|	return_stmt:s SEMICOLON
 		{:
 			RESULT = s;
@@ -449,6 +453,13 @@ else_part_opt
 	|	// empty
 		{:
 			RESULT = new LinkedList<Statement>();
+		:}
+;
+
+while_stmt
+	::=	WHILE exp:e DO LBRACK stmt_list_opt:s RBRACK
+		{:
+			RESULT = new WhileStatement(e, s);
 		:}
 ;
 

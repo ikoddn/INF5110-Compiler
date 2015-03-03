@@ -15,6 +15,7 @@ import syntaxtree.statements.AssignStatement;
 import syntaxtree.statements.IfStatement;
 import syntaxtree.statements.ReturnStatement;
 import syntaxtree.statements.Statement;
+import syntaxtree.statements.WhileStatement;
 
 @RunWith(Enclosed.class)
 public class StatementParserTest extends ParserTest {
@@ -118,6 +119,39 @@ public class StatementParserTest extends ParserTest {
 			assertEquals(2, stmt.getElseBodyStatements().size());
 			assertTrue(stmt.getElseBodyStatements().get(0) instanceof AssignStatement);
 			assertTrue(stmt.getElseBodyStatements().get(1) instanceof ReturnStatement);
+		}
+		
+		@Test(expected = ParserSyntaxException.class)
+		public void whileNoExpression_exceptionThrown() throws Exception {
+			parse(String.format(WHILE_STATEMENT, "", ""));
+		}
+		
+		@Test
+		public void whileVarExpressionEmptyBody_success() throws Exception {
+			WhileStatement stmt = parse(String.format(WHILE_STATEMENT, VARIABLE_NAME,
+					""));
+
+			assertTrue(stmt.getExpression() instanceof Variable);
+			assertTrue(stmt.getStatements().isEmpty());
+		}
+		
+		@Test
+		public void whileExpressionOneBodyStatement_success() throws Exception {
+			WhileStatement stmt = parse(String.format(WHILE_STATEMENT, VARIABLE_NAME,
+					ASSIGN_STATEMENT));
+
+			assertEquals(1, stmt.getStatements().size());
+			assertTrue(stmt.getStatements().get(0) instanceof AssignStatement);
+		}
+		
+		@Test
+		public void whileExpressionTwoBodyStatement_success() throws Exception {
+			String body = ASSIGN_STATEMENT
+					+ String.format(RETURN_STATEMENT, VARIABLE_NAME3);
+			WhileStatement stmt = parse(String.format(WHILE_STATEMENT, VARIABLE_NAME,
+					body));
+
+			assertEquals(2, stmt.getStatements().size());
 		}
 
 		@Test
