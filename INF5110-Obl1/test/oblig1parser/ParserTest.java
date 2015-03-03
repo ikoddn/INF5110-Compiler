@@ -36,6 +36,7 @@ public abstract class ParserTest {
 	public static final String RETURN_STATEMENT = Keyword.RETURN + " %s;";
 	public static final String ASSIGN_STATEMENT = VARIABLE_NAME + " := "
 			+ VARIABLE_NAME2 + ";";
+	public static final String CALL_STATEMENT = VARIABLE_NAME + " ( %s )";
 
 	protected static InputStream toInputStream(String string) {
 		return new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8));

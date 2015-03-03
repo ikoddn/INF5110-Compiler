@@ -10,8 +10,11 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import syntaxtree.actualparameters.PassByReferenceParameter;
+import syntaxtree.actualparameters.PassByValueParameter;
 import syntaxtree.expressions.Variable;
 import syntaxtree.statements.AssignStatement;
+import syntaxtree.statements.CallStatement;
 import syntaxtree.statements.IfStatement;
 import syntaxtree.statements.ReturnStatement;
 import syntaxtree.statements.Statement;
@@ -120,36 +123,36 @@ public class StatementParserTest extends ParserTest {
 			assertTrue(stmt.getElseBodyStatements().get(0) instanceof AssignStatement);
 			assertTrue(stmt.getElseBodyStatements().get(1) instanceof ReturnStatement);
 		}
-		
+
 		@Test(expected = ParserSyntaxException.class)
 		public void whileNoExpression_exceptionThrown() throws Exception {
 			parse(String.format(WHILE_STATEMENT, "", ""));
 		}
-		
+
 		@Test
 		public void whileVarExpressionEmptyBody_success() throws Exception {
-			WhileStatement stmt = parse(String.format(WHILE_STATEMENT, VARIABLE_NAME,
-					""));
+			WhileStatement stmt = parse(String.format(WHILE_STATEMENT,
+					VARIABLE_NAME, ""));
 
 			assertTrue(stmt.getExpression() instanceof Variable);
 			assertTrue(stmt.getStatements().isEmpty());
 		}
-		
+
 		@Test
 		public void whileExpressionOneBodyStatement_success() throws Exception {
-			WhileStatement stmt = parse(String.format(WHILE_STATEMENT, VARIABLE_NAME,
-					ASSIGN_STATEMENT));
+			WhileStatement stmt = parse(String.format(WHILE_STATEMENT,
+					VARIABLE_NAME, ASSIGN_STATEMENT));
 
 			assertEquals(1, stmt.getStatements().size());
 			assertTrue(stmt.getStatements().get(0) instanceof AssignStatement);
 		}
-		
+
 		@Test
 		public void whileExpressionTwoBodyStatement_success() throws Exception {
 			String body = ASSIGN_STATEMENT
 					+ String.format(RETURN_STATEMENT, VARIABLE_NAME3);
-			WhileStatement stmt = parse(String.format(WHILE_STATEMENT, VARIABLE_NAME,
-					body));
+			WhileStatement stmt = parse(String.format(WHILE_STATEMENT,
+					VARIABLE_NAME, body));
 
 			assertEquals(2, stmt.getStatements().size());
 		}
@@ -169,6 +172,73 @@ public class StatementParserTest extends ParserTest {
 			assertTrue(stmt.getExpression() instanceof Variable);
 			assertEquals(VARIABLE_NAME,
 					((Variable) stmt.getExpression()).getName());
+		}
+
+		@Test
+		public void callNoParameter_success() throws Exception {
+			CallStatement stmt = parse(String.format(CALL_STATEMENT + ";", ""));
+
+			assertEquals(VARIABLE_NAME, stmt.getName());
+			assertTrue(stmt.getActualParameters().isEmpty());
+		}
+
+		@Test
+		public void callOneByValueParameter_success() throws Exception {
+			CallStatement stmt = parse(String.format(CALL_STATEMENT + ";",
+					VARIABLE_NAME));
+
+			assertEquals(1, stmt.getActualParameters().size());
+
+			PassByValueParameter param = (PassByValueParameter) stmt
+					.getActualParameters().get(0);
+
+			assertTrue(param.getExpression() instanceof Variable);
+			assertEquals(VARIABLE_NAME,
+					((Variable) param.getExpression()).getName());
+		}
+
+		@Test
+		public void callTwoByValueParameter_success() throws Exception {
+			CallStatement stmt = parse(String.format(CALL_STATEMENT + ";",
+					VARIABLE_NAME + ", " + VARIABLE_NAME2));
+
+			assertEquals(2, stmt.getActualParameters().size());
+			assertTrue(stmt.getActualParameters().get(0) instanceof PassByValueParameter);
+			assertTrue(stmt.getActualParameters().get(1) instanceof PassByValueParameter);
+		}
+
+		@Test
+		public void callOneByReferenceParameter_success() throws Exception {
+			CallStatement stmt = parse(String.format(CALL_STATEMENT + ";",
+					Keyword.REF + " " + VARIABLE_NAME));
+
+			assertEquals(1, stmt.getActualParameters().size());
+
+			PassByReferenceParameter param = (PassByReferenceParameter) stmt
+					.getActualParameters().get(0);
+
+			assertEquals(VARIABLE_NAME, param.getVariable().getName());
+		}
+
+		@Test
+		public void callTwoByReferenceParameter_success() throws Exception {
+			CallStatement stmt = parse(String.format(CALL_STATEMENT + ";",
+					Keyword.REF + " " + VARIABLE_NAME + ", " + Keyword.REF
+							+ " " + VARIABLE_NAME2));
+
+			assertEquals(2, stmt.getActualParameters().size());
+			assertTrue(stmt.getActualParameters().get(0) instanceof PassByReferenceParameter);
+			assertTrue(stmt.getActualParameters().get(1) instanceof PassByReferenceParameter);
+		}
+		
+		@Test(expected = ParserSyntaxException.class)
+		public void callOneByValueParameterCommaFirst_exceptionThrown() throws Exception {
+			parse(String.format(CALL_STATEMENT, ", " + VARIABLE_NAME));
+		}
+		
+		@Test(expected = ParserSyntaxException.class)
+		public void callOneByValueParameterCommaAfter_exceptionThrown() throws Exception {
+			parse(String.format(CALL_STATEMENT, VARIABLE_NAME + ","));
 		}
 	}
 }

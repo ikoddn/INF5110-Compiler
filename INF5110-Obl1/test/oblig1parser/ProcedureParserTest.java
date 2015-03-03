@@ -10,10 +10,10 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import syntaxtree.ParameterDecl;
-import syntaxtree.ProcedureDecl;
 import syntaxtree.datatypes.IntType;
 import syntaxtree.datatypes.VoidType;
+import syntaxtree.declarations.ParameterDecl;
+import syntaxtree.declarations.ProcedureDecl;
 
 @RunWith(Enclosed.class)
 public class ProcedureParserTest extends ParserTest {

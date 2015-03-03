@@ -3,7 +3,6 @@ package oblig1parser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +17,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+import syntaxtree.expressions.CallStatementExpression;
 import syntaxtree.expressions.Expression;
 import syntaxtree.expressions.NewExpression;
 import syntaxtree.expressions.NotExpression;
@@ -456,7 +456,7 @@ public class ExpressionParserTest extends ParserTest {
 
 		@Test
 		public void expressionInsideParentheses_success() throws Exception {
-			Variable var = (Variable) parseSymbol("(" + VARIABLE_NAME + ")").value;
+			Variable var = parse("(" + VARIABLE_NAME + ")");
 
 			assertEquals(VARIABLE_NAME, var.getName());
 		}
@@ -581,19 +581,22 @@ public class ExpressionParserTest extends ParserTest {
 
 		@Test
 		public void callStatement_success() throws Exception {
-			fail();
+			CallStatementExpression exp = parse(String.format(CALL_STATEMENT,
+					VARIABLE_NAME2));
+
+			assertEquals(VARIABLE_NAME, exp.getCallStatement().getName());
 		}
 
 		@Test
 		public void newExpression_success() throws Exception {
-			NewExpression exp = (NewExpression) parseSymbol("new " + CLASS_NAME).value;
+			NewExpression exp = parse("new " + CLASS_NAME);
 
 			assertEquals(CLASS_NAME, exp.getClassType().getName());
 		}
 
 		@Test
 		public void variable_success() throws Exception {
-			Variable var = (Variable) parseSymbol(VARIABLE_NAME).value;
+			Variable var = parse(VARIABLE_NAME);
 
 			assertEquals(VARIABLE_NAME, var.getName());
 		}

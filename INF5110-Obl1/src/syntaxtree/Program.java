@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import syntaxtree.declarations.Decl;
+
 public class Program extends AstNode {
 
 	private List<Decl> decls;

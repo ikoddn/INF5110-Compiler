@@ -33,18 +33,25 @@ public abstract class AstNode {
 			dest.addAll(srcList.subList(1, srcList.size()));
 		}
 	}
-	
-	protected static List<String> makeParentAstPrint(String label, AstNode... children) {
+
+	protected static List<String> makeParentAstPrint(String label,
+			AstNode... children) {
 		List<String> result = new LinkedList<String>();
-		
+
 		result.add("(" + label);
-		
+
 		for (AstNode child : children) {
 			result.addAll(prependAllWithIndentation(child.makeAstPrint()));
 		}
-		
+
 		result.add(")");
-		
+
 		return result;
+	}
+
+	protected static <T extends AstNode> List<String> makeParentAstPrint(
+			String label, List<T> children) {
+		AstNode[] array = new AstNode[children.size()];
+		return makeParentAstPrint(label, children.toArray(array));
 	}
 }

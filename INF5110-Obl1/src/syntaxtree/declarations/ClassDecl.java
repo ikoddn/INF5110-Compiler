@@ -1,4 +1,4 @@
-package syntaxtree;
+package syntaxtree.declarations;
 
 import java.util.List;
 
@@ -23,7 +23,6 @@ public class ClassDecl extends Decl {
 		sb.append(name);
 		sb.append(")");
 
-		return makeParentAstPrint(sb.toString(),
-				variableDecls.toArray(new VariableDecl[variableDecls.size()]));
+		return makeParentAstPrint(sb.toString(), variableDecls);
 	}
 }

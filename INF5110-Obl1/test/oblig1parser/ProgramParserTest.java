@@ -9,9 +9,9 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import syntaxtree.ClassDecl;
 import syntaxtree.Program;
-import syntaxtree.VariableDecl;
+import syntaxtree.declarations.ClassDecl;
+import syntaxtree.declarations.VariableDecl;
 
 @RunWith(Enclosed.class)
 public class ProgramParserTest extends ParserTest {

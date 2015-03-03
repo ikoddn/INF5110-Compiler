@@ -3,7 +3,9 @@ package oblig1parser;
 import java.util.*;
 import java_cup.runtime.*;
 import syntaxtree.*;
+import syntaxtree.actualparameters.*;
 import syntaxtree.datatypes.*;
+import syntaxtree.declarations.*;
 import syntaxtree.expressions.*;
 import syntaxtree.expressions.binaryoperators.*;
 import syntaxtree.expressions.binaryoperators.arithmetic.*;
@@ -91,13 +93,16 @@ terminal Integer				INT_LITERAL;
 terminal String                 STRING_LITERAL;
 
 /* Non terminals */
+non terminal ActualParameter		actual_param;
 non terminal AssignStatement		assign_stmt;
 non terminal Boolean				param_decl_ref;
+non terminal CallStatement			call_stmt;
 non terminal ClassDecl				class_decl;
 non terminal DataType				type, return_type;
 non terminal Decl					decl;
 non terminal Expression				exp;
 non terminal IfStatement			if_stmt;
+non terminal List<ActualParameter>	actual_param_list, actual_param_list_opt;
 non terminal List<Decl>				decl_list, decl_list_opt;
 non terminal List<ParameterDecl>	param_decl_list, param_decl_list_opt;
 non terminal List<Statement>		stmt_list, stmt_list_opt, else_part_opt;
@@ -339,6 +344,10 @@ exp
 		{:
 			RESULT = l;
 		:}
+	|	call_stmt:s
+		{:
+			RESULT = new CallStatementExpression(s);
+		:}
 	|	NEW ID:name
 		{:
 			RESULT = new NewExpression(new ClassType(name));
@@ -429,6 +438,10 @@ stmt
 		{:
 			RESULT = s;
 		:}
+	|	call_stmt:s SEMICOLON
+		{:
+			RESULT = s;
+		:}
 ;
 
 assign_stmt
@@ -471,6 +484,49 @@ return_stmt
 	|	RETURN exp:e
 		{:
 			RESULT = new ReturnStatement(e);
+		:}
+;
+
+call_stmt
+	::= ID:name LPAR actual_param_list_opt:pl RPAR
+		{:
+			RESULT = new CallStatement(name, pl);
+		:}
+;
+
+actual_param_list_opt
+	::=	actual_param_list:pl
+		{:
+			RESULT = pl;
+		:}
+	|	// empty
+		{:
+			RESULT = new LinkedList<ActualParameter>();
+		:}
+;
+
+actual_param_list
+	::=	actual_param:ap
+		{:
+			List<ActualParameter> l = new LinkedList<ActualParameter>();
+			l.add(ap);
+			RESULT = l;
+		:}
+	|	actual_param_list:pl COMMA actual_param:ap
+		{:
+			pl.add(ap);
+			RESULT = pl;
+		:}
+;
+
+actual_param
+	::=	REF var:v
+		{:
+			RESULT = new PassByReferenceParameter(v);
+		:}
+	|	exp:e
+		{:
+			RESULT = new PassByValueParameter(e);
 		:}
 ;
 

@@ -1,4 +1,6 @@
-package syntaxtree;
+package syntaxtree.declarations;
+
+import syntaxtree.AstNode;
 
 public abstract class Decl extends AstNode {
 
