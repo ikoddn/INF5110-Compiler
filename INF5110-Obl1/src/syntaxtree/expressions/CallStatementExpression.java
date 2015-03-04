@@ -17,7 +17,7 @@ public class CallStatementExpression extends Expression {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
-		return callStatement.makeAstPrint();
+	public List<String> makeAstStringList() {
+		return callStatement.makeAstStringList();
 	}
 }

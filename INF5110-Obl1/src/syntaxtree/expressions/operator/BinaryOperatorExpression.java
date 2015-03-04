@@ -31,8 +31,8 @@ public abstract class BinaryOperatorExpression extends Expression {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
-		return makeParentAstPrint(operator.makeAstLabel(), leftExpression,
+	public List<String> makeAstStringList() {
+		return makeAstStringListWithIndentedChildren(operator.makeAstLabel(), leftExpression,
 				rightExpression);
 	}
 }

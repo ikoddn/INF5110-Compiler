@@ -31,21 +31,20 @@ public class IfStatement extends Statement {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
+	public List<String> makeAstStringList() {
 		List<String> result = new LinkedList<String>();
 		result.add("(IF_STMT ");
-		addInline(result, expression);
+		addAstStringsInline(result, expression);
 
-		Statement[] array = new Statement[ifBodyStatements.size()];
-		List<String> ifBody = makeParentAstPrint("",
-				ifBodyStatements.toArray(array));
+		List<String> ifBody = makeAstStringListWithIndentedChildren("",
+				ifBodyStatements);
 		result.addAll(prependAllWithIndentation(ifBody));
 
 		if (!elseBodyStatements.isEmpty()) {
 			result.add("ELSE");
 
-			array = new Statement[elseBodyStatements.size()];
-			List<String> elseBody = makeParentAstPrint("", array);
+			List<String> elseBody = makeAstStringListWithIndentedChildren("",
+					elseBodyStatements);
 			result.addAll(prependAllWithIndentation(elseBody));
 		}
 

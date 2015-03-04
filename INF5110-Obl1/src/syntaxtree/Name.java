@@ -14,11 +14,6 @@ public class Name extends SimpleAstNode {
 
 	@Override
 	public String makeAstString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("(NAME ");
-		sb.append(string);
-		sb.append(")");
-
-		return sb.toString();
+		return makeAstStringWithInlineChild("NAME", string);
 	}
 }

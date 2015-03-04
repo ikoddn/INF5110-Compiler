@@ -16,11 +16,6 @@ public abstract class DataType extends SimpleAstNode {
 
 	@Override
 	public String makeAstString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("(TYPE ");
-		sb.append(name);
-		sb.append(")");
-
-		return sb.toString();
+		return makeAstStringWithInlineChild("TYPE", name);
 	}
 }

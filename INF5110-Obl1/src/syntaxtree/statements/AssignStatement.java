@@ -24,7 +24,7 @@ public class AssignStatement extends Statement {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
-		return makeParentAstPrint("ASSIGN_STMT", leftHandSide, rightHandSide);
+	public List<String> makeAstStringList() {
+		return makeAstStringListWithIndentedChildren("ASSIGN_STMT", leftHandSide, rightHandSide);
 	}
 }

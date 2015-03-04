@@ -1,6 +1,5 @@
 package syntaxtree.expressions;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class NotExpression extends Expression {
@@ -16,13 +15,7 @@ public class NotExpression extends Expression {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
-		List<String> result = new LinkedList<String>();
-
-		result.add("(NOT ");
-		addInline(result, expression);
-		appendStringToLastElement(result, ")");
-
-		return result;
+	public List<String> makeAstStringList() {
+		return makeAstStringListWithInlineChild("NOT", expression);
 	}
 }

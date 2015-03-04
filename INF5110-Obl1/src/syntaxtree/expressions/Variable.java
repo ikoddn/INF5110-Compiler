@@ -1,6 +1,5 @@
 package syntaxtree.expressions;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import syntaxtree.Name;
@@ -28,23 +27,11 @@ public class Variable extends Expression {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
+	public List<String> makeAstStringList() {
 		if (expression == null) {
-			return name.makeAstPrint();
+			return name.makeAstStringList();
 		}
 
-		List<String> result = new LinkedList<String>();
-
-		result.add("( . ");
-		addInline(result, expression);
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(" ");
-		sb.append(name.makeAstString());
-		sb.append(")");
-
-		appendStringToLastElement(result, sb.toString());
-
-		return result;
+		return makeAstStringListWithInlineChildren(" .", expression, name);
 	}
 }

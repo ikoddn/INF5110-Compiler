@@ -1,6 +1,5 @@
 package syntaxtree.expressions;
 
-import java.util.Arrays;
 import java.util.List;
 
 import syntaxtree.datatypes.ClassType;
@@ -18,12 +17,7 @@ public class NewExpression extends Expression {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("(NEW ");
-		sb.append(classType.makeAstPrint().get(0));
-		sb.append(")");
-
-		return Arrays.asList(sb.toString());
+	public List<String> makeAstStringList() {
+		return makeAstStringListWithInlineChild("NEW", classType);
 	}
 }

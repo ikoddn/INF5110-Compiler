@@ -24,11 +24,11 @@ public class CallStatement extends Statement {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
+	public List<String> makeAstStringList() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("CALL_STMT ");
 		sb.append(name.makeAstString());
 
-		return makeParentAstPrint(sb.toString(), actualParameters);
+		return makeAstStringListWithIndentedChildren(sb.toString(), actualParameters);
 	}
 }

@@ -8,7 +8,7 @@ public abstract class SimpleAstNode extends AstNode {
 	public abstract String makeAstString();
 
 	@Override
-	public final List<String> makeAstPrint() {
+	public final List<String> makeAstStringList() {
 		return Arrays.asList(makeAstString());
 	}
 }

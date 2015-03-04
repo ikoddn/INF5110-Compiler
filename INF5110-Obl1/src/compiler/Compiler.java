@@ -29,7 +29,7 @@ public class Compiler {
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
 				outFilename));
 
-		for (String line : program.makeAstPrint()) {
+		for (String line : program.makeAstStringList()) {
 			bufferedWriter.write(line);
 			bufferedWriter.newLine();
 		}

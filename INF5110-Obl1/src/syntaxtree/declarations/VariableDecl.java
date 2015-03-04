@@ -1,6 +1,5 @@
 package syntaxtree.declarations;
 
-import java.util.Arrays;
 import java.util.List;
 
 import syntaxtree.Name;
@@ -20,14 +19,7 @@ public class VariableDecl extends Decl {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("(VAR_DECL ");
-		sb.append(dataType.makeAstString());
-		sb.append(" ");
-		sb.append(name.makeAstString());
-		sb.append(")");
-
-		return Arrays.asList(sb.toString());
+	public List<String> makeAstStringList() {
+		return makeAstStringListWithInlineChildren("VAR_DECL", dataType, name);
 	}
 }

@@ -19,11 +19,11 @@ public class ClassDecl extends Decl {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
+	public List<String> makeAstStringList() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("CLASS_DECL ");
 		sb.append(name.makeAstString());
 
-		return makeParentAstPrint(sb.toString(), variableDecls);
+		return makeAstStringListWithIndentedChildren(sb.toString(), variableDecls);
 	}
 }

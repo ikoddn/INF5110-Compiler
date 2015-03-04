@@ -24,13 +24,13 @@ public class WhileStatement extends Statement {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
+	public List<String> makeAstStringList() {
 		List<String> result = new LinkedList<String>();
 		result.add("(WHILE_STMT ");
-		addInline(result, expression);
+		addAstStringsInline(result, expression);
 
-		Statement[] array = new Statement[statements.size()];
-		List<String> body = makeParentAstPrint("", statements.toArray(array));
+		List<String> body = makeAstStringListWithIndentedChildren("",
+				statements);
 		result.addAll(prependAllWithIndentation(body));
 		result.add(")");
 

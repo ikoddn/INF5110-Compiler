@@ -1,6 +1,5 @@
 package syntaxtree.declarations;
 
-import java.util.Arrays;
 import java.util.List;
 
 import syntaxtree.Name;
@@ -27,19 +26,8 @@ public class ParameterDecl extends Decl {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("(PARAM_DECL ");
-
-		if (reference) {
-			sb.append("ref ");
-		}
-
-		sb.append(dataType.makeAstString());
-		sb.append(" ");
-		sb.append(name.makeAstString());
-		sb.append(")");
-
-		return Arrays.asList(sb.toString());
+	public List<String> makeAstStringList() {
+		String label = reference ? "PARAM_DECL ref" : "PARAM_DECL";
+		return makeAstStringListWithInlineChildren(label, dataType, name);
 	}
 }

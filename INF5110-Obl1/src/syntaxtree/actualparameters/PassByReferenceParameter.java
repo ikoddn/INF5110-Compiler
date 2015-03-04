@@ -1,6 +1,5 @@
 package syntaxtree.actualparameters;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import syntaxtree.expressions.Variable;
@@ -18,12 +17,7 @@ public class PassByReferenceParameter extends ActualParameter {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
-		List<String> result = new LinkedList<String>();
-		result.add("(ACTUAL_PARAM REF ");
-		addInline(result, variable);
-		appendStringToLastElement(result, ")");
-
-		return result;
+	public List<String> makeAstStringList() {
+		return makeAstStringListWithInlineChild("ACTUAL_PARAM ref", variable);
 	}
 }

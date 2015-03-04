@@ -1,6 +1,5 @@
 package syntaxtree.expressions.literals;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class BoolLiteral extends Literal {
@@ -16,12 +15,7 @@ public class BoolLiteral extends Literal {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("(BOOL_LITERAL ");
-		sb.append(bool.toString());
-		sb.append(")");
-
-		return Arrays.asList(sb.toString());
+	public List<String> makeAstStringList() {
+		return makeAstStringListWithInlineChild("BOOL_LITERAL", bool.toString());
 	}
 }

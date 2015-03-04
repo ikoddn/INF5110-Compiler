@@ -42,7 +42,7 @@ public class ProcedureDecl extends Decl {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
+	public List<String> makeAstStringList() {
 		List<String> result = new LinkedList<String>();
 
 		StringBuilder sb = new StringBuilder();
@@ -54,14 +54,14 @@ public class ProcedureDecl extends Decl {
 
 		for (ParameterDecl parameterDecl : parameterDecls) {
 			result.addAll(prependAllWithIndentation(parameterDecl
-					.makeAstPrint()));
+					.makeAstStringList()));
 		}
 
 		if (!subDecls.isEmpty()) {
 			result.add("");
 
 			for (Decl decl : subDecls) {
-				result.addAll(prependAllWithIndentation(decl.makeAstPrint()));
+				result.addAll(prependAllWithIndentation(decl.makeAstStringList()));
 			}
 		}
 
@@ -70,7 +70,7 @@ public class ProcedureDecl extends Decl {
 
 			for (Statement statement : subStatements) {
 				result.addAll(prependAllWithIndentation(statement
-						.makeAstPrint()));
+						.makeAstStringList()));
 			}
 		}
 

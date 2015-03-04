@@ -1,6 +1,5 @@
 package syntaxtree.expressions.literals;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class StringLiteral extends Literal {
@@ -16,12 +15,12 @@ public class StringLiteral extends Literal {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
+	public List<String> makeAstStringList() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("(STRING_LITERAL \"");
+		sb.append("\"");
 		sb.append(text);
-		sb.append("\")");
+		sb.append("\"");
 
-		return Arrays.asList(sb.toString());
+		return makeAstStringListWithInlineChild("STRING_LITERAL", sb.toString());
 	}
 }
