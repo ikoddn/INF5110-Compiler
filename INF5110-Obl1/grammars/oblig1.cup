@@ -322,11 +322,11 @@ exp
 var
 	::=	exp:e DOT ID:name
 		{:
-			RESULT = new Variable(name, e);
+			RESULT = new Variable(new Name(name), e);
 		:}
 	|	ID:name
 		{:
-			RESULT = new Variable(name);
+			RESULT = new Variable(new Name(name));
 		:}
 ;
 

@@ -86,8 +86,8 @@
 	<!-- Run the system  -->
 	<target name="run" depends="init">
 		<java classname="compiler.Compiler" classpathref="path-run">
-			<arg value="compila-code/wip.cmp"/>
-			<arg value="compila-ast/wip.ast"/>
+			<arg value="compila-code/Compila.cmp"/>
+			<arg value="compila-ast/Compila.ast"/>
 		</java>
 	</target>
 

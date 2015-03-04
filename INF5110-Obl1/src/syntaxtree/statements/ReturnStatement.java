@@ -29,13 +29,10 @@ public class ReturnStatement extends Statement {
 		if (expression == null) {
 			result = Arrays.asList("(RETURN_STMT)");
 		} else {
-			List<String> expressionAst = expression.makeAstPrint();
-
 			result = new LinkedList<String>();
-			result.add("(RETURN_STMT " + expressionAst.get(0));
-			result.addAll(prependAllWithIndentation(expressionAst.subList(1,
-					expressionAst.size())));
-			result.add(")");
+			result.add("(RETURN_STMT ");
+			addInline(result, expression);
+			appendStringToLastElement(result, ")");
 		}
 
 		return result;
