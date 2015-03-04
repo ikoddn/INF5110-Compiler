@@ -1,0 +1,621 @@
+package oblig1parser;
+
+import java.util.*;
+import java_cup.runtime.*;
+import syntaxtree.*;
+import syntaxtree.actualparameters.*;
+import syntaxtree.datatypes.*;
+import syntaxtree.declarations.*;
+import syntaxtree.expressions.*;
+import syntaxtree.expressions.literals.*;
+import syntaxtree.expressions.operator.*;
+import syntaxtree.operators.*;
+import syntaxtree.statements.*;
+
+parser code {:
+
+	@Override
+	public void unrecovered_syntax_error(Symbol s) throws ParserSyntaxException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Syntax error ");
+		
+		if (s.value != null) {
+			sb.append("when reading '");
+			sb.append(s.value);
+			sb.append("' ");
+		}
+		
+		sb.append("on line ");
+		sb.append(s.left + 1);
+		sb.append(", column ");
+		sb.append(s.right + 1);
+		sb.append(".");
+		
+		throw new ParserSyntaxException(sb.toString());
+	}
+:};
+
+/* Terminals */
+/* symbols */
+terminal                        LBRACK, RBRACK;
+terminal                        LPAR, RPAR;
+terminal						COMMA;
+terminal						COLON;
+terminal                        SEMICOLON;
+
+/* operators */
+terminal						ASTERISK;
+terminal						COLON_EQUAL;
+terminal						DOT;
+terminal						DOUBLE_AMP;
+terminal						DOUBLE_VBAR;
+terminal						EQUAL;
+terminal						GREATER;
+terminal						GREATER_EQUAL;
+terminal						HASH;
+terminal						LESS;
+terminal						LESS_EQUAL;
+terminal						LESS_GREATER;
+terminal						MINUS;
+terminal						PLUS;
+terminal						SLASH;
+
+/* keywords */
+terminal						BOOL;
+terminal						CLASS;
+terminal						DO;
+terminal						ELSE;
+terminal						FALSE;
+terminal						FLOAT;
+terminal						IF;
+terminal						INT;
+terminal						NEW;
+terminal						NOT;
+terminal						NULL;
+terminal                        PROC;
+terminal                        PROGRAM;
+terminal						REF;
+terminal						RETURN;
+terminal						STRING;
+terminal						THEN;
+terminal						TRUE;
+terminal						VAR;
+terminal						WHILE;
+
+/* identifiers */
+terminal String                 ID;
+
+/* literals */
+terminal Float					FLOAT_LITERAL;
+terminal Integer				INT_LITERAL;
+terminal String                 STRING_LITERAL;
+
+/* Non terminals */
+non terminal ActualParameter				actual_param;
+non terminal ArithmeticOperator				op_addsub, op_muldiv;
+non terminal AssignStatement				assign_stmt;
+non terminal Boolean						param_decl_ref;
+non terminal CallStatement					call_stmt;
+non terminal ClassDecl						class_decl;
+non terminal DataType						type, proc_return_type;
+non terminal Decl							decl;
+non terminal Expression						exp, exp_simple, exp_and, exp_not, exp_rel, exp_addsub, exp_muldiv, exp_exp;
+non terminal IfStatement					if_stmt;
+non terminal List<ActualParameter>			actual_param_list, actual_param_list_opt;
+non terminal List<Decl>						decl_list, decl_list_opt;
+non terminal List<ParameterDecl>			param_decl_list, param_decl_list_opt;
+non terminal List<Statement>				stmt_list, stmt_list_opt, else_part_opt;
+non terminal List<VariableDecl>				var_decl_list, var_decl_list_opt;
+non terminal Literal						literal;
+non terminal Name							name;
+non terminal ParameterDecl					param_decl;
+non terminal ProcedureDecl					proc_decl;
+non terminal Program						program;
+non terminal RelationalOperator				op_rel;
+non terminal ReturnStatement				return_stmt;
+non terminal Statement						stmt;
+non terminal Variable						var;
+non terminal VariableDecl					var_decl;
+non terminal WhileStatement					while_stmt;
+
+
+/* The grammar */
+start with program;
+
+program
+	::= PROGRAM LBRACK decl_list_opt:dl RBRACK
+		{:
+			RESULT = new Program(dl);
+		:}
+;
+
+name
+	::= ID:id
+		{:
+			RESULT = new Name(id);
+		:}
+;
+
+decl
+	::= var_decl:d
+		{:
+			RESULT = d;
+		:}
+	|	proc_decl:d
+		{:
+			RESULT = d;
+		:}
+	|	class_decl:d
+		{:
+			RESULT = d;
+		:}
+;
+
+decl_list
+	::= decl:d
+		{:
+			List<Decl> l = new LinkedList<Decl>();
+			l.add(d);
+			RESULT = l;
+		:}
+	|	decl_list:dl decl:d
+		{:
+			dl.add(d);
+			RESULT = dl;
+		:}
+;
+
+decl_list_opt
+	::= decl_list:dl
+		{:
+			RESULT = dl;
+		:}
+	|	// empty (no declarations)
+		{:
+			RESULT = new LinkedList<Decl>();
+		:}
+;
+
+var_decl
+	::= VAR name:name COLON type:t SEMICOLON
+		{:
+			RESULT = new VariableDecl(name, t);
+		:}
+;
+				
+var_decl_list
+	::= var_decl:vd
+		{:
+			List<VariableDecl> l = new LinkedList<VariableDecl>();
+			l.add(vd);
+			RESULT = l;
+		:}
+	|	var_decl_list:vl var_decl:vd
+		{:
+			vl.add(vd);
+			RESULT = vl;
+		:}
+;
+
+var_decl_list_opt
+	::= var_decl_list:vl
+		{:
+			RESULT = vl;
+		:}
+	|	// empty (no variable declarations)
+		{:
+			RESULT = new LinkedList<VariableDecl>();
+		:}
+;
+
+proc_decl
+	::= PROC name:name proc_return_type:t LPAR param_decl_list_opt:pl RPAR LBRACK decl_list_opt:dl stmt_list_opt:sl RBRACK
+		{:
+			RESULT = new ProcedureDecl(name, t, pl, dl, sl);
+		:}
+;
+
+proc_return_type
+	::=	COLON type:t
+		{:
+			RESULT = t;
+		:}
+	|	// empty
+		{:
+			RESULT = new VoidType();
+		:}
+;
+
+class_decl
+	::= CLASS name:name LBRACK var_decl_list_opt:vl RBRACK
+		{:
+			RESULT = new ClassDecl(name, vl);
+		:}
+;
+
+param_decl
+	::=	param_decl_ref:r name:name COLON type:t
+		{:
+			RESULT = new ParameterDecl(r.booleanValue(), name, t);
+		:}
+;
+
+param_decl_ref
+	::=	REF
+		{:
+			RESULT = true;
+		:}
+	|	// empty
+		{:
+			RESULT = false;
+		:}
+;
+
+param_decl_list
+	::=	param_decl:pd
+		{:
+			List<ParameterDecl> l = new LinkedList<ParameterDecl>();
+			l.add(pd);
+			RESULT = l;
+		:}
+	|	param_decl_list:pl COMMA param_decl:pd
+		{:
+			pl.add(pd);
+			RESULT = pl;
+		:}
+;
+
+param_decl_list_opt
+	::=	param_decl_list:pl
+		{:
+			RESULT = pl;
+		:}
+	|	// empty
+		{:
+			RESULT = new LinkedList<ParameterDecl>();
+		:}
+;
+
+exp_simple
+	::=	LPAR exp:e RPAR
+		{:
+			RESULT = e;
+		:}
+	|	literal:l
+		{:
+			RESULT = l;
+		:}
+	|	call_stmt:s
+		{:
+			RESULT = new CallStatementExpression(s);
+		:}
+	|	NEW ID:name
+		{:
+			RESULT = new NewExpression(new ClassType(name));
+		:}
+	|	var:v
+		{:
+			RESULT = v;
+		:}
+;
+
+exp
+	::=	exp:e1 DOUBLE_VBAR exp_and:e2
+		{:
+			RESULT = new LogicOperatorExpression(e1, LogicOperator.OR, e2);
+		:}
+	|	exp_and:e
+		{:
+			RESULT = e;
+		:}
+;
+
+exp_and
+	::= exp_and:e1 DOUBLE_AMP exp_not:e2
+		{:
+			RESULT = new LogicOperatorExpression(e1, LogicOperator.AND, e2);
+		:}
+	|	exp_not:e
+		{:
+			RESULT = e;
+		:}
+;
+
+exp_not
+	::=	NOT exp_not:e
+		{:
+			RESULT = new NotExpression(e);
+		:}
+	|	exp_rel:e
+		{:
+			RESULT = e;
+		:}
+;
+
+exp_rel
+	::= exp_addsub:e1 op_rel:op exp_addsub:e2
+		{:
+			RESULT = new RelationalOperatorExpression(e1, op, e2);
+		:}
+	|	exp_addsub:e
+		{:
+			RESULT = e;
+		:}
+;
+
+exp_addsub
+	::=	exp_addsub:e1 op_addsub:op exp_muldiv:e2
+		{:
+			RESULT = new ArithmeticOperatorExpression(e1, op, e2);
+		:}
+	|	exp_muldiv:e
+		{:
+			RESULT = e;
+		:}
+;
+
+exp_muldiv
+	::=	exp_muldiv:e1 op_muldiv:op exp_exp:e2
+		{:
+			RESULT = new ArithmeticOperatorExpression(e1, op, e2);
+		:}
+	|	exp_exp:e
+		{:
+			RESULT = e;
+		:}
+;
+
+exp_exp
+	::=	exp_simple:e1 HASH exp_exp:e2
+		{:
+			RESULT = new ArithmeticOperatorExpression(e1, ArithmeticOperator.EXPONENTIATION, e2);
+		:}
+	|	exp_simple:e
+		{:
+			RESULT = e;
+		:}
+;
+
+var
+	::=	exp_simple:e DOT name:name
+		{:
+			RESULT = new Variable(name, e);
+		:}
+	|	name:name
+		{:
+			RESULT = new Variable(name);
+		:}
+;
+
+op_rel
+	::= EQUAL
+		{:
+			RESULT = RelationalOperator.EQUAL;
+		:}
+	|	GREATER
+		{:
+			RESULT = RelationalOperator.GREATER;
+		:}
+	|	GREATER_EQUAL
+		{:
+			RESULT = RelationalOperator.GREATER_EQUAL;
+		:}
+	|	LESS
+		{:
+			RESULT = RelationalOperator.LESS;
+		:}
+	|	LESS_EQUAL
+		{:
+			RESULT = RelationalOperator.LESS_EQUAL;
+		:}
+	|	LESS_GREATER
+		{:
+			RESULT = RelationalOperator.NOT_EQUAL;
+		:}
+;
+
+op_addsub
+	::=	PLUS
+		{:
+			RESULT = ArithmeticOperator.ADDITION;
+		:}
+	|	MINUS
+		{:
+			RESULT = ArithmeticOperator.SUBTRACTION;
+		:}
+;
+
+op_muldiv
+	::=	ASTERISK
+		{:
+			RESULT = ArithmeticOperator.MULTIPLICATION;
+		:}
+	|	SLASH
+		{:
+			RESULT = ArithmeticOperator.DIVISION;
+		:}
+;
+
+literal
+	::=	FLOAT_LITERAL:f
+		{:
+			RESULT = new FloatLiteral(f);
+		:}
+	|	INT_LITERAL:i
+		{:
+			RESULT = new IntLiteral(i);
+		:}
+	|	STRING_LITERAL:s
+		{:
+			RESULT = new StringLiteral(s);
+		:}
+	|	TRUE
+		{:
+			RESULT = new BoolLiteral(true);
+		:}
+	|	FALSE
+		{:
+			RESULT = new BoolLiteral(false);
+		:}
+	|	NULL
+		{:
+			RESULT = new NullLiteral();
+		:}
+;
+
+stmt
+	::= assign_stmt:s SEMICOLON
+		{:
+			RESULT = s;
+		:}
+	|	if_stmt:s
+		{:
+			RESULT = s;
+		:}
+	|	while_stmt:s
+		{:
+			RESULT = s;
+		:}
+	|	return_stmt:s SEMICOLON
+		{:
+			RESULT = s;
+		:}
+	|	call_stmt:s SEMICOLON
+		{:
+			RESULT = s;
+		:}
+;
+
+stmt_list
+	::=	stmt:s
+		{:
+			List<Statement> l = new LinkedList<Statement>();
+			l.add(s);
+			RESULT = l;
+		:}
+	|	stmt_list:sl stmt:s
+		{:
+			sl.add(s);
+			RESULT = sl;
+		:}
+;
+
+stmt_list_opt
+	::=	stmt_list:sl
+		{:
+			RESULT = sl;
+		:}
+	|	// empty
+		{:
+			RESULT = new LinkedList<Statement>();
+		:}
+;
+
+assign_stmt
+	::=	var:v COLON_EQUAL exp:e
+		{:
+			RESULT = new AssignStatement(v, e);
+		:}
+;
+
+if_stmt
+	::=	IF exp:e THEN LBRACK stmt_list_opt:ifs RBRACK else_part_opt:elses
+		{:
+			RESULT = new IfStatement(e, ifs, elses);
+		:}
+;
+
+else_part_opt
+	::= ELSE LBRACK stmt_list_opt:elses RBRACK
+		{:
+			RESULT = elses;
+		:}
+	|	// empty
+		{:
+			RESULT = new LinkedList<Statement>();
+		:}
+;
+
+while_stmt
+	::=	WHILE exp:e DO LBRACK stmt_list_opt:s RBRACK
+		{:
+			RESULT = new WhileStatement(e, s);
+		:}
+;
+
+return_stmt
+	::=	RETURN
+		{:
+			RESULT = new ReturnStatement();
+		:}
+	|	RETURN exp:e
+		{:
+			RESULT = new ReturnStatement(e);
+		:}
+;
+
+call_stmt
+	::= name:name LPAR actual_param_list_opt:pl RPAR
+		{:
+			RESULT = new CallStatement(name, pl);
+		:}
+;
+
+actual_param
+	::=	REF var:v
+		{:
+			RESULT = new PassByReferenceParameter(v);
+		:}
+	|	exp:e
+		{:
+			RESULT = new PassByValueParameter(e);
+		:}
+;
+
+actual_param_list
+	::=	actual_param:ap
+		{:
+			List<ActualParameter> l = new LinkedList<ActualParameter>();
+			l.add(ap);
+			RESULT = l;
+		:}
+	|	actual_param_list:pl COMMA actual_param:ap
+		{:
+			pl.add(ap);
+			RESULT = pl;
+		:}
+;
+
+actual_param_list_opt
+	::=	actual_param_list:pl
+		{:
+			RESULT = pl;
+		:}
+	|	// empty
+		{:
+			RESULT = new LinkedList<ActualParameter>();
+		:}
+;
+
+type
+	::= BOOL
+		{:
+			RESULT = new BoolType();
+		:}
+	|	FLOAT
+		{:
+			RESULT = new FloatType();
+		:}
+	|	INT
+		{:
+			RESULT = new IntType();
+		:}
+	|	STRING
+		{:
+			RESULT = new StringType();
+		:}
+	|	ID:name
+		{:
+			RESULT = new ClassType(name);
+		:}
+;
