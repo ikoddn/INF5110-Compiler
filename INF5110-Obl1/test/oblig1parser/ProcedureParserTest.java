@@ -37,7 +37,7 @@ public class ProcedureParserTest extends ParserTest {
 		public void emptyVoidProcedure_success() throws Exception {
 			ProcedureDecl proc = parse(String.format(PROCEDURE_VOID, "", ""));
 
-			assertEquals(PROCEDURE_NAME, proc.getName());
+			assertEquals(PROCEDURE_NAME, proc.getName().getString());
 			assertTrue(proc.getParameterDecls().isEmpty());
 			assertTrue(proc.getReturnType() instanceof VoidType);
 			assertTrue(proc.getSubDecls().isEmpty());
@@ -48,7 +48,7 @@ public class ProcedureParserTest extends ParserTest {
 		public void emptyProcedure_success() throws Exception {
 			ProcedureDecl proc = parse(String.format(PROCEDURE, "", ""));
 
-			assertEquals(PROCEDURE_NAME, proc.getName());
+			assertEquals(PROCEDURE_NAME, proc.getName().getString());
 			assertTrue(proc.getParameterDecls().isEmpty());
 			assertTrue(proc.getReturnType() instanceof IntType);
 			assertTrue(proc.getSubDecls().isEmpty());
@@ -63,7 +63,7 @@ public class ProcedureParserTest extends ParserTest {
 
 			ParameterDecl param = proc.getParameterDecls().get(0);
 
-			assertEquals(PARAMETER_NAME, param.getName());
+			assertEquals(PARAMETER_NAME, param.getName().getString());
 			assertFalse(param.isReference());
 			assertTrue(param.getDataType() instanceof IntType);
 
@@ -78,7 +78,7 @@ public class ProcedureParserTest extends ParserTest {
 
 			ParameterDecl param = proc.getParameterDecls().get(0);
 
-			assertEquals(PARAMETER_NAME, param.getName());
+			assertEquals(PARAMETER_NAME, param.getName().getString());
 			assertTrue(param.isReference());
 			assertTrue(param.getDataType() instanceof IntType);
 		}

@@ -108,6 +108,7 @@ non terminal List<Statement>				stmt_list, stmt_list_opt, else_part_opt;
 non terminal List<VariableDecl>				var_decl_list, var_decl_list_opt;
 non terminal Literal						literal;
 non terminal LogicOperatorExpression		log_op_exp;
+non terminal Name							name;
 non terminal ParameterDecl					param_decl;
 non terminal ProcedureDecl					proc_decl;
 non terminal Program						program;
@@ -137,6 +138,13 @@ program
 	::= PROGRAM LBRACK decl_list_opt:dl RBRACK
 		{:
 			RESULT = new Program(dl);
+		:}
+;
+
+name
+	::= ID:id
+		{:
+			RESULT = new Name(id);
 		:}
 ;
 
@@ -181,7 +189,7 @@ decl_list_opt
 ;
 
 var_decl
-	::= VAR ID:name COLON type:t SEMICOLON
+	::= VAR name:name COLON type:t SEMICOLON
 		{:
 			RESULT = new VariableDecl(name, t);
 		:}
@@ -213,7 +221,7 @@ var_decl_list_opt
 ;
 
 proc_decl
-	::= PROC ID:name proc_return_type:t LPAR param_decl_list_opt:pl RPAR LBRACK decl_list_opt:dl stmt_list_opt:sl RBRACK
+	::= PROC name:name proc_return_type:t LPAR param_decl_list_opt:pl RPAR LBRACK decl_list_opt:dl stmt_list_opt:sl RBRACK
 		{:
 			RESULT = new ProcedureDecl(name, t, pl, dl, sl);
 		:}
@@ -231,14 +239,14 @@ proc_return_type
 ;
 
 class_decl
-	::= CLASS ID:name LBRACK var_decl_list_opt:vl RBRACK
+	::= CLASS name:name LBRACK var_decl_list_opt:vl RBRACK
 		{:
 			RESULT = new ClassDecl(name, vl);
 		:}
 ;
 
 param_decl
-	::=	param_decl_ref:r ID:name COLON type:t
+	::=	param_decl_ref:r name:name COLON type:t
 		{:
 			RESULT = new ParameterDecl(r.booleanValue(), name, t);
 		:}
@@ -320,13 +328,13 @@ exp
 ;
 
 var
-	::=	exp:e DOT ID:name
+	::=	exp:e DOT name:name
 		{:
-			RESULT = new Variable(new Name(name), e);
+			RESULT = new Variable(name, e);
 		:}
-	|	ID:name
+	|	name:name
 		{:
-			RESULT = new Variable(new Name(name));
+			RESULT = new Variable(name);
 		:}
 ;
 
@@ -510,7 +518,7 @@ return_stmt
 ;
 
 call_stmt
-	::= ID:name LPAR actual_param_list_opt:pl RPAR
+	::= name:name LPAR actual_param_list_opt:pl RPAR
 		{:
 			RESULT = new CallStatement(name, pl);
 		:}

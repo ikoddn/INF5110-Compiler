@@ -44,10 +44,11 @@ public class StatementParserTest extends ParserTest {
 		public void assign_success() throws Exception {
 			AssignStatement stmt = parse(ASSIGN_STATEMENT);
 
-			assertEquals(VARIABLE_NAME, stmt.getLeftHandSide().getName());
+			assertEquals(VARIABLE_NAME, stmt.getLeftHandSide().getName()
+					.getString());
 			assertTrue(stmt.getRightHandSide() instanceof Variable);
 			assertEquals(VARIABLE_NAME2,
-					((Variable) stmt.getRightHandSide()).getName());
+					((Variable) stmt.getRightHandSide()).getName().getString());
 		}
 
 		@Test(expected = ParserSyntaxException.class)
@@ -173,15 +174,15 @@ public class StatementParserTest extends ParserTest {
 					VARIABLE_NAME));
 
 			assertTrue(stmt.getExpression() instanceof Variable);
-			assertEquals(VARIABLE_NAME,
-					((Variable) stmt.getExpression()).getName());
+			assertEquals(VARIABLE_NAME, ((Variable) stmt.getExpression())
+					.getName().getString());
 		}
 
 		@Test
 		public void callNoParameter_success() throws Exception {
 			CallStatement stmt = parse(String.format(CALL_STATEMENT + ";", ""));
 
-			assertEquals(VARIABLE_NAME, stmt.getName());
+			assertEquals(VARIABLE_NAME, stmt.getName().getString());
 			assertTrue(stmt.getActualParameters().isEmpty());
 		}
 
@@ -196,8 +197,8 @@ public class StatementParserTest extends ParserTest {
 					.getActualParameters().get(0);
 
 			assertTrue(param.getExpression() instanceof Variable);
-			assertEquals(VARIABLE_NAME,
-					((Variable) param.getExpression()).getName());
+			assertEquals(VARIABLE_NAME, ((Variable) param.getExpression())
+					.getName().getString());
 		}
 
 		@Test
@@ -220,7 +221,8 @@ public class StatementParserTest extends ParserTest {
 			PassByReferenceParameter param = (PassByReferenceParameter) stmt
 					.getActualParameters().get(0);
 
-			assertEquals(VARIABLE_NAME, param.getVariable().getName());
+			assertEquals(VARIABLE_NAME, param.getVariable().getName()
+					.getString());
 		}
 
 		@Test
@@ -233,14 +235,16 @@ public class StatementParserTest extends ParserTest {
 			assertTrue(stmt.getActualParameters().get(0) instanceof PassByReferenceParameter);
 			assertTrue(stmt.getActualParameters().get(1) instanceof PassByReferenceParameter);
 		}
-		
+
 		@Test(expected = ParserSyntaxException.class)
-		public void callOneByValueParameterCommaFirst_exceptionThrown() throws Exception {
+		public void callOneByValueParameterCommaFirst_exceptionThrown()
+				throws Exception {
 			parse(String.format(CALL_STATEMENT, ", " + VARIABLE_NAME));
 		}
-		
+
 		@Test(expected = ParserSyntaxException.class)
-		public void callOneByValueParameterCommaAfter_exceptionThrown() throws Exception {
+		public void callOneByValueParameterCommaAfter_exceptionThrown()
+				throws Exception {
 			parse(String.format(CALL_STATEMENT, VARIABLE_NAME + ","));
 		}
 	}

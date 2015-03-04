@@ -19,7 +19,7 @@ public enum ArithmeticOperator implements Operator {
 	}
 
 	@Override
-	public String makeAstString() {
+	public String makeAstLabel() {
 		return "ARIT_OP " + symbol;
 	}
 	

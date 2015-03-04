@@ -4,5 +4,5 @@ public interface Operator {
 
 	String getSymbol();
 
-	String makeAstString();
+	String makeAstLabel();
 }

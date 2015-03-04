@@ -3,6 +3,7 @@ package syntaxtree.declarations;
 import java.util.LinkedList;
 import java.util.List;
 
+import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.statements.Statement;
 
@@ -13,7 +14,7 @@ public class ProcedureDecl extends Decl {
 	private List<Decl> subDecls;
 	private List<Statement> subStatements;
 
-	public ProcedureDecl(String name, DataType returnType,
+	public ProcedureDecl(Name name, DataType returnType,
 			List<ParameterDecl> parameterDecls, List<Decl> subDecls,
 			List<Statement> subStatements) {
 		super(name);
@@ -46,10 +47,9 @@ public class ProcedureDecl extends Decl {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("(PROC_DECL ");
-		sb.append(returnType.makeAstPrint().get(0));
-		sb.append(" (NAME ");
-		sb.append(name);
-		sb.append(")");
+		sb.append(returnType.makeAstString());
+		sb.append(" ");
+		sb.append(name.makeAstString());
 		result.add(sb.toString());
 
 		for (ParameterDecl parameterDecl : parameterDecls) {

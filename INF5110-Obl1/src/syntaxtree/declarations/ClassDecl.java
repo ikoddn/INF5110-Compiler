@@ -2,11 +2,13 @@ package syntaxtree.declarations;
 
 import java.util.List;
 
+import syntaxtree.Name;
+
 public class ClassDecl extends Decl {
 
 	private List<VariableDecl> variableDecls;
 
-	public ClassDecl(String name, List<VariableDecl> variableDecls) {
+	public ClassDecl(Name name, List<VariableDecl> variableDecls) {
 		super(name);
 
 		this.variableDecls = variableDecls;
@@ -19,9 +21,8 @@ public class ClassDecl extends Decl {
 	@Override
 	public List<String> makeAstPrint() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("CLASS_DECL (NAME ");
-		sb.append(name);
-		sb.append(")");
+		sb.append("CLASS_DECL ");
+		sb.append(name.makeAstString());
 
 		return makeParentAstPrint(sb.toString(), variableDecls);
 	}

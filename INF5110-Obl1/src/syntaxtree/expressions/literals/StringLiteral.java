@@ -18,9 +18,9 @@ public class StringLiteral extends Literal {
 	@Override
 	public List<String> makeAstPrint() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("(STRING_LITERAL ");
+		sb.append("(STRING_LITERAL \"");
 		sb.append(text);
-		sb.append(")");
+		sb.append("\")");
 
 		return Arrays.asList(sb.toString());
 	}

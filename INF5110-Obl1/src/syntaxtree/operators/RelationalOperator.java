@@ -20,7 +20,7 @@ public enum RelationalOperator implements Operator {
 	}
 
 	@Override
-	public String makeAstString() {
+	public String makeAstLabel() {
 		return "REL_OP " + symbol;
 	}
 

@@ -2,21 +2,21 @@ package syntaxtree;
 
 public class Name extends SimpleAstNode {
 
-	private String name;
+	private String string;
 
-	public Name(String name) {
-		this.name = name;
+	public Name(String string) {
+		this.string = string;
 	}
 
-	public String getName() {
-		return name;
+	public String getString() {
+		return string;
 	}
 
 	@Override
 	public String makeAstString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("(NAME ");
-		sb.append(name);
+		sb.append(string);
 		sb.append(")");
 
 		return sb.toString();

@@ -39,14 +39,14 @@ public class VariableParserTest extends ParserTest {
 		public void lowercaseName_success() throws Exception {
 			String name = "foo";
 
-			assertEquals(name, parse(name).getName());
+			assertEquals(name, parse(name).getName().getString());
 		}
 
 		@Test
 		public void uppercaseName_success() throws Exception {
 			String name = "FOO";
 
-			assertEquals(name, parse(name).getName());
+			assertEquals(name, parse(name).getName().getString());
 		}
 
 		@Test(expected = ParserSyntaxException.class)
@@ -58,7 +58,7 @@ public class VariableParserTest extends ParserTest {
 		public void digitsPrecededByLetterName_success() throws Exception {
 			String name = "f1234";
 
-			assertEquals(name, parse(name).getName());
+			assertEquals(name, parse(name).getName().getString());
 		}
 
 		// @Test(expected = ScannerError.class)
@@ -70,7 +70,7 @@ public class VariableParserTest extends ParserTest {
 		public void underscorePrecededByLetterName_success() throws Exception {
 			String name = "f_";
 
-			assertEquals(name, parse(name).getName());
+			assertEquals(name, parse(name).getName().getString());
 		}
 
 		// @Test(expected = ScannerError.class)
@@ -87,11 +87,11 @@ public class VariableParserTest extends ParserTest {
 		public void expressionDotName_success() throws Exception {
 			Variable var = parse(VARIABLE_NAME + "." + VARIABLE_NAME2);
 
-			assertEquals(VARIABLE_NAME2, var.getName());
+			assertEquals(VARIABLE_NAME2, var.getName().getString());
 			assertTrue(var.getExpression() instanceof Variable);
 			
 			Variable innerVar = (Variable) var.getExpression();
-			assertEquals(VARIABLE_NAME, innerVar.getName());
+			assertEquals(VARIABLE_NAME, innerVar.getName().getString());
 			assertNull(innerVar.getExpression());
 		}
 	}

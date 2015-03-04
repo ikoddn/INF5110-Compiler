@@ -87,8 +87,8 @@ public class ExpressionParserTest extends ParserTest {
 			Variable leftVar = (Variable) binopExp.getLeftExpression();
 			Variable rightVar = (Variable) binopExp.getRightExpression();
 
-			assertEquals(VARIABLE_NAME, leftVar.getName());
-			assertEquals(VARIABLE_NAME2, rightVar.getName());
+			assertEquals(VARIABLE_NAME, leftVar.getName().getString());
+			assertEquals(VARIABLE_NAME2, rightVar.getName().getString());
 		}
 
 		private static void assertRightHandSideRightAssociative(Expression exp) {
@@ -102,8 +102,8 @@ public class ExpressionParserTest extends ParserTest {
 			Variable leftVar = (Variable) binopExp.getLeftExpression();
 			Variable rightVar = (Variable) binopExp.getRightExpression();
 
-			assertEquals(VARIABLE_NAME2, leftVar.getName());
-			assertEquals(VARIABLE_NAME3, rightVar.getName());
+			assertEquals(VARIABLE_NAME2, leftVar.getName().getString());
+			assertEquals(VARIABLE_NAME3, rightVar.getName().getString());
 		}
 
 		@Test
@@ -111,7 +111,7 @@ public class ExpressionParserTest extends ParserTest {
 			NotExpression notExp = parse("not " + VARIABLE_NAME);
 			Variable var = (Variable) notExp.getExpression();
 
-			assertEquals(VARIABLE_NAME, var.getName());
+			assertEquals(VARIABLE_NAME, var.getName().getString());
 			assertNull(var.getExpression());
 		}
 
@@ -399,8 +399,8 @@ public class ExpressionParserTest extends ParserTest {
 
 			assertTrue(exp.getLeftExpression() instanceof LogicOperatorExpression);
 			assertTrue(exp.getRightExpression() instanceof Variable);
-			assertEquals(VARIABLE_NAME3,
-					((Variable) exp.getRightExpression()).getName());
+			assertEquals(VARIABLE_NAME3, ((Variable) exp.getRightExpression())
+					.getName().getString());
 			assertLeftHandSideLeftAssociative(exp.getLeftExpression());
 		}
 
@@ -411,8 +411,8 @@ public class ExpressionParserTest extends ParserTest {
 
 			assertTrue(exp.getLeftExpression() instanceof LogicOperatorExpression);
 			assertTrue(exp.getRightExpression() instanceof Variable);
-			assertEquals(VARIABLE_NAME3,
-					((Variable) exp.getRightExpression()).getName());
+			assertEquals(VARIABLE_NAME3, ((Variable) exp.getRightExpression())
+					.getName().getString());
 			assertLeftHandSideLeftAssociative(exp.getLeftExpression());
 		}
 
@@ -423,8 +423,8 @@ public class ExpressionParserTest extends ParserTest {
 
 			assertTrue(exp.getLeftExpression() instanceof ArithmeticOperatorExpression);
 			assertTrue(exp.getRightExpression() instanceof Variable);
-			assertEquals(VARIABLE_NAME3,
-					((Variable) exp.getRightExpression()).getName());
+			assertEquals(VARIABLE_NAME3, ((Variable) exp.getRightExpression())
+					.getName().getString());
 			assertLeftHandSideLeftAssociative(exp.getLeftExpression());
 		}
 
@@ -436,8 +436,8 @@ public class ExpressionParserTest extends ParserTest {
 
 			assertTrue(exp.getLeftExpression() instanceof ArithmeticOperatorExpression);
 			assertTrue(exp.getRightExpression() instanceof Variable);
-			assertEquals(VARIABLE_NAME3,
-					((Variable) exp.getRightExpression()).getName());
+			assertEquals(VARIABLE_NAME3, ((Variable) exp.getRightExpression())
+					.getName().getString());
 			assertLeftHandSideLeftAssociative(exp.getLeftExpression());
 		}
 
@@ -450,8 +450,8 @@ public class ExpressionParserTest extends ParserTest {
 
 			assertTrue(exp.getLeftExpression() instanceof ArithmeticOperatorExpression);
 			assertTrue(exp.getRightExpression() instanceof Variable);
-			assertEquals(VARIABLE_NAME3,
-					((Variable) exp.getRightExpression()).getName());
+			assertEquals(VARIABLE_NAME3, ((Variable) exp.getRightExpression())
+					.getName().getString());
 			assertLeftHandSideLeftAssociative(exp.getLeftExpression());
 		}
 
@@ -462,8 +462,8 @@ public class ExpressionParserTest extends ParserTest {
 
 			assertTrue(exp.getLeftExpression() instanceof ArithmeticOperatorExpression);
 			assertTrue(exp.getRightExpression() instanceof Variable);
-			assertEquals(VARIABLE_NAME3,
-					((Variable) exp.getRightExpression()).getName());
+			assertEquals(VARIABLE_NAME3, ((Variable) exp.getRightExpression())
+					.getName().getString());
 			assertLeftHandSideLeftAssociative(exp.getLeftExpression());
 		}
 
@@ -475,8 +475,8 @@ public class ExpressionParserTest extends ParserTest {
 					ArithmeticOperator.EXPONENTIATION));
 
 			assertTrue(exp.getLeftExpression() instanceof Variable);
-			assertEquals(VARIABLE_NAME,
-					((Variable) exp.getLeftExpression()).getName());
+			assertEquals(VARIABLE_NAME, ((Variable) exp.getLeftExpression())
+					.getName().getString());
 			assertTrue(exp.getRightExpression() instanceof ArithmeticOperatorExpression);
 			assertRightHandSideRightAssociative(exp.getRightExpression());
 		}
@@ -526,23 +526,23 @@ public class ExpressionParserTest extends ParserTest {
 			assertTrue(exp.getExpression() instanceof NotExpression);
 			NotExpression innerExp = (NotExpression) exp.getExpression();
 			assertTrue(innerExp.getExpression() instanceof Variable);
-			assertEquals(VARIABLE_NAME,
-					((Variable) innerExp.getExpression()).getName());
+			assertEquals(VARIABLE_NAME, ((Variable) innerExp.getExpression())
+					.getName().getString());
 		}
 
 		@Test
 		public void dotAssociativity_leftAssociative() throws Exception {
 			Variable exp = parse(ternaryExpression(".", "."));
 
-			assertEquals(VARIABLE_NAME3, exp.getName());
+			assertEquals(VARIABLE_NAME3, exp.getName().getString());
 			assertTrue(exp.getExpression() instanceof Variable);
 
 			Variable innerExp = (Variable) exp.getExpression();
-			assertEquals(VARIABLE_NAME2, innerExp.getName());
+			assertEquals(VARIABLE_NAME2, innerExp.getName().getString());
 			assertTrue(innerExp.getExpression() instanceof Variable);
 
 			Variable innerestExp = (Variable) innerExp.getExpression();
-			assertEquals(VARIABLE_NAME, innerestExp.getName());
+			assertEquals(VARIABLE_NAME, innerestExp.getName().getString());
 			assertNull(innerestExp.getExpression());
 		}
 
@@ -552,7 +552,7 @@ public class ExpressionParserTest extends ParserTest {
 		public void expressionInsideParentheses_success() throws Exception {
 			Variable var = parse("(" + VARIABLE_NAME + ")");
 
-			assertEquals(VARIABLE_NAME, var.getName());
+			assertEquals(VARIABLE_NAME, var.getName().getString());
 		}
 
 		@Test
@@ -678,7 +678,8 @@ public class ExpressionParserTest extends ParserTest {
 			CallStatementExpression exp = parse(String.format(CALL_STATEMENT,
 					VARIABLE_NAME2));
 
-			assertEquals(VARIABLE_NAME, exp.getCallStatement().getName());
+			assertEquals(VARIABLE_NAME, exp.getCallStatement().getName()
+					.getString());
 		}
 
 		@Test
@@ -692,7 +693,7 @@ public class ExpressionParserTest extends ParserTest {
 		public void variable_success() throws Exception {
 			Variable var = parse(VARIABLE_NAME);
 
-			assertEquals(VARIABLE_NAME, var.getName());
+			assertEquals(VARIABLE_NAME, var.getName().getString());
 		}
 	}
 
@@ -733,8 +734,8 @@ public class ExpressionParserTest extends ParserTest {
 			Variable leftVar = (Variable) binop.getLeftExpression();
 			Variable rightVar = (Variable) binop.getRightExpression();
 
-			assertEquals(VARIABLE_NAME, leftVar.getName());
-			assertEquals(VARIABLE_NAME2, rightVar.getName());
+			assertEquals(VARIABLE_NAME, leftVar.getName().getString());
+			assertEquals(VARIABLE_NAME2, rightVar.getName().getString());
 			assertNull(leftVar.getExpression());
 			assertNull(rightVar.getExpression());
 		}

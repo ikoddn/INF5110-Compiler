@@ -1,16 +1,17 @@
 package syntaxtree.declarations;
 
 import syntaxtree.AstNode;
+import syntaxtree.Name;
 
 public abstract class Decl extends AstNode {
 
-	protected String name;
+	protected Name name;
 
-	protected Decl(String name) {
+	protected Decl(Name name) {
 		this.name = name;
 	}
 
-	public String getName() {
+	public Name getName() {
 		return name;
 	}
 }

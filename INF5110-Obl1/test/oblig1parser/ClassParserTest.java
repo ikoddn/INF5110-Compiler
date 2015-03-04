@@ -33,7 +33,7 @@ public class ClassParserTest extends ParserTest {
 		public void emptyClass_success() throws Exception {
 			ClassDecl classDecl = parse(String.format(CLASS, ""));
 
-			assertEquals(CLASS_NAME, classDecl.getName());
+			assertEquals(CLASS_NAME, classDecl.getName().getString());
 			assertTrue(classDecl.getVariableDecls().isEmpty());
 		}
 

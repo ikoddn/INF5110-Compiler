@@ -32,7 +32,7 @@ public abstract class BinaryOperatorExpression extends Expression {
 
 	@Override
 	public List<String> makeAstPrint() {
-		return makeParentAstPrint(operator.makeAstString(), leftExpression,
+		return makeParentAstPrint(operator.makeAstLabel(), leftExpression,
 				rightExpression);
 	}
 }

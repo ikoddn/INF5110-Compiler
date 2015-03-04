@@ -3,6 +3,7 @@ package syntaxtree.declarations;
 import java.util.Arrays;
 import java.util.List;
 
+import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
 
 public class ParameterDecl extends Decl {
@@ -10,7 +11,7 @@ public class ParameterDecl extends Decl {
 	private boolean reference;
 	private DataType dataType;
 
-	public ParameterDecl(boolean reference, String name, DataType dataType) {
+	public ParameterDecl(boolean reference, Name name, DataType dataType) {
 		super(name);
 
 		this.reference = reference;
@@ -34,10 +35,10 @@ public class ParameterDecl extends Decl {
 			sb.append("ref ");
 		}
 
-		sb.append(dataType.makeAstPrint().get(0));
-		sb.append(" (NAME ");
-		sb.append(name);
-		sb.append("))");
+		sb.append(dataType.makeAstString());
+		sb.append(" ");
+		sb.append(name.makeAstString());
+		sb.append(")");
 
 		return Arrays.asList(sb.toString());
 	}

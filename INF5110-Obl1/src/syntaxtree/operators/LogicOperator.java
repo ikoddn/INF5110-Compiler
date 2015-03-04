@@ -16,7 +16,7 @@ public enum LogicOperator implements Operator {
 	}
 
 	@Override
-	public String makeAstString() {
+	public String makeAstLabel() {
 		return "LOG_OP " + symbol;
 	}
 	

@@ -1,11 +1,8 @@
 package syntaxtree.datatypes;
 
-import java.util.Arrays;
-import java.util.List;
+import syntaxtree.SimpleAstNode;
 
-import syntaxtree.AstNode;
-
-public abstract class DataType extends AstNode {
+public abstract class DataType extends SimpleAstNode {
 
 	protected String name;
 
@@ -18,12 +15,12 @@ public abstract class DataType extends AstNode {
 	}
 
 	@Override
-	public List<String> makeAstPrint() {
+	public String makeAstString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("(TYPE ");
 		sb.append(name);
 		sb.append(")");
 
-		return Arrays.asList(sb.toString());
+		return sb.toString();
 	}
 }
