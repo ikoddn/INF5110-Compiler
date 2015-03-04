@@ -2,6 +2,8 @@ package syntaxtree.expressions.literals;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
+
 public class IntLiteral extends Literal {
 
 	private Integer number;
@@ -16,7 +18,7 @@ public class IntLiteral extends Literal {
 
 	@Override
 	public List<String> makeAstStringList() {
-		return makeAstStringListWithInlineChild("INT_LITERAL",
-				number.toString());
+		return new AstStringListBuilder("INT_LITERAL").addInline(
+				number.toString()).build();
 	}
 }

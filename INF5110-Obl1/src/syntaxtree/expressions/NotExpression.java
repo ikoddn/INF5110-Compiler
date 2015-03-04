@@ -2,6 +2,8 @@ package syntaxtree.expressions;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
+
 public class NotExpression extends Expression {
 
 	private Expression expression;
@@ -16,6 +18,6 @@ public class NotExpression extends Expression {
 
 	@Override
 	public List<String> makeAstStringList() {
-		return makeAstStringListWithInlineChild("NOT", expression);
+		return new AstStringListBuilder("NOT").addInline(expression).build();
 	}
 }

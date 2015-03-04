@@ -2,6 +2,7 @@ package syntaxtree.declarations;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
 
@@ -20,6 +21,7 @@ public class VariableDecl extends Decl {
 
 	@Override
 	public List<String> makeAstStringList() {
-		return makeAstStringListWithInlineChildren("VAR_DECL", dataType, name);
+		return new AstStringListBuilder("VAR_DECL").addInline(dataType, name)
+				.build();
 	}
 }

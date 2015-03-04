@@ -2,6 +2,8 @@ package syntaxtree.expressions.literals;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
+
 public class StringLiteral extends Literal {
 
 	private String text;
@@ -21,6 +23,7 @@ public class StringLiteral extends Literal {
 		sb.append(text);
 		sb.append("\"");
 
-		return makeAstStringListWithInlineChild("STRING_LITERAL", sb.toString());
+		return new AstStringListBuilder("STRING_LITERAL").addInline(
+				sb.toString()).build();
 	}
 }

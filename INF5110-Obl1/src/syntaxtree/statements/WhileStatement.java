@@ -1,8 +1,8 @@
 package syntaxtree.statements;
 
-import java.util.LinkedList;
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
 import syntaxtree.expressions.Expression;
 
 public class WhileStatement extends Statement {
@@ -25,15 +25,7 @@ public class WhileStatement extends Statement {
 
 	@Override
 	public List<String> makeAstStringList() {
-		List<String> result = new LinkedList<String>();
-		result.add("(WHILE_STMT ");
-		addAstStringsInline(result, expression);
-
-		List<String> body = makeAstStringListWithIndentedChildren("",
-				statements);
-		result.addAll(prependAllWithIndentation(body));
-		result.add(")");
-
-		return result;
+		return new AstStringListBuilder("WHILE_STMT").addInline(expression)
+				.addIndented(statements).build();
 	}
 }

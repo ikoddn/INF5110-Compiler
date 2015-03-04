@@ -14,6 +14,6 @@ public class Name extends SimpleAstNode {
 
 	@Override
 	public String makeAstString() {
-		return makeAstStringWithInlineChild("NAME", string);
+		return new AstStringBuilder("NAME").addInline(string).build();
 	}
 }

@@ -2,6 +2,7 @@ package syntaxtree.statements;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
 import syntaxtree.expressions.Expression;
 import syntaxtree.expressions.Variable;
 
@@ -25,6 +26,7 @@ public class AssignStatement extends Statement {
 
 	@Override
 	public List<String> makeAstStringList() {
-		return makeAstStringListWithIndentedChildren("ASSIGN_STMT", leftHandSide, rightHandSide);
+		return new AstStringListBuilder("ASSIGN_STMT").addIndented(
+				leftHandSide, rightHandSide).build();
 	}
 }

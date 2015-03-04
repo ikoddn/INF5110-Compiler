@@ -2,6 +2,8 @@ package syntaxtree.expressions.literals;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
+
 public class BoolLiteral extends Literal {
 
 	private Boolean bool;
@@ -16,6 +18,7 @@ public class BoolLiteral extends Literal {
 
 	@Override
 	public List<String> makeAstStringList() {
-		return makeAstStringListWithInlineChild("BOOL_LITERAL", bool.toString());
+		return new AstStringListBuilder("BOOL_LITERAL").addInline(
+				bool.toString()).build();
 	}
 }

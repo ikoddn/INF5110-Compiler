@@ -2,6 +2,7 @@ package syntaxtree.declarations;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 
 public class ClassDecl extends Decl {
@@ -20,10 +21,7 @@ public class ClassDecl extends Decl {
 
 	@Override
 	public List<String> makeAstStringList() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("CLASS_DECL ");
-		sb.append(name.makeAstString());
-
-		return makeAstStringListWithIndentedChildren(sb.toString(), variableDecls);
+		return new AstStringListBuilder("CLASS_DECL").addInline(name)
+				.addIndented(variableDecls).build();
 	}
 }

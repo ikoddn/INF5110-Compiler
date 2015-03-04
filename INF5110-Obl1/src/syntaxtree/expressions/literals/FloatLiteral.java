@@ -2,6 +2,8 @@ package syntaxtree.expressions.literals;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
+
 public class FloatLiteral extends Literal {
 
 	private Float number;
@@ -16,7 +18,7 @@ public class FloatLiteral extends Literal {
 
 	@Override
 	public List<String> makeAstStringList() {
-		return makeAstStringListWithInlineChild("FLOAT_LITERAL",
-				number.toString());
+		return new AstStringListBuilder("FLOAT_LITERAL").addInline(
+				number.toString()).build();
 	}
 }

@@ -1,8 +1,8 @@
 package syntaxtree.declarations;
 
-import java.util.LinkedList;
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.statements.Statement;
@@ -43,39 +43,20 @@ public class ProcedureDecl extends Decl {
 
 	@Override
 	public List<String> makeAstStringList() {
-		List<String> result = new LinkedList<String>();
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("(PROC_DECL ");
-		sb.append(returnType.makeAstString());
-		sb.append(" ");
-		sb.append(name.makeAstString());
-		result.add(sb.toString());
-
-		for (ParameterDecl parameterDecl : parameterDecls) {
-			result.addAll(prependAllWithIndentation(parameterDecl
-					.makeAstStringList()));
-		}
+		AstStringListBuilder ast = new AstStringListBuilder("PROC_DECL");
+		ast.addInline(returnType, name);
+		ast.addIndented(parameterDecls);
 
 		if (!subDecls.isEmpty()) {
-			result.add("");
-
-			for (Decl decl : subDecls) {
-				result.addAll(prependAllWithIndentation(decl.makeAstStringList()));
-			}
+			ast.add("");
+			ast.addIndented(subDecls);
 		}
 
 		if (!subStatements.isEmpty()) {
-			result.add("");
-
-			for (Statement statement : subStatements) {
-				result.addAll(prependAllWithIndentation(statement
-						.makeAstStringList()));
-			}
+			ast.add("");
+			ast.addIndented(subStatements);
 		}
 
-		result.add(")");
-
-		return result;
+		return ast.build();
 	}
 }

@@ -2,6 +2,7 @@ package syntaxtree.actualparameters;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
 import syntaxtree.expressions.Variable;
 
 public class PassByReferenceParameter extends ActualParameter {
@@ -18,6 +19,7 @@ public class PassByReferenceParameter extends ActualParameter {
 
 	@Override
 	public List<String> makeAstStringList() {
-		return makeAstStringListWithInlineChild("ACTUAL_PARAM ref", variable);
+		return new AstStringListBuilder("ACTUAL_PARAM ref").addInline(variable)
+				.build();
 	}
 }

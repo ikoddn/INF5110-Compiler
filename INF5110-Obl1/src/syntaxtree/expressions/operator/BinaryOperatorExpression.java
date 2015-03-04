@@ -2,6 +2,7 @@ package syntaxtree.expressions.operator;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
 import syntaxtree.expressions.Expression;
 import syntaxtree.operators.Operator;
 
@@ -32,7 +33,7 @@ public abstract class BinaryOperatorExpression extends Expression {
 
 	@Override
 	public List<String> makeAstStringList() {
-		return makeAstStringListWithIndentedChildren(operator.makeAstLabel(), leftExpression,
-				rightExpression);
+		return new AstStringListBuilder(operator.makeAstLabel()).addIndented(
+				leftExpression, rightExpression).build();
 	}
 }

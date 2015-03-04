@@ -2,6 +2,7 @@ package syntaxtree.expressions;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 
 public class Variable extends Expression {
@@ -32,6 +33,7 @@ public class Variable extends Expression {
 			return name.makeAstStringList();
 		}
 
-		return makeAstStringListWithInlineChildren(" .", expression, name);
+		return new AstStringListBuilder(" .").addInline(expression, name)
+				.build();
 	}
 }

@@ -2,6 +2,7 @@ package syntaxtree.expressions;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
 import syntaxtree.datatypes.ClassType;
 
 public class NewExpression extends Expression {
@@ -18,6 +19,6 @@ public class NewExpression extends Expression {
 
 	@Override
 	public List<String> makeAstStringList() {
-		return makeAstStringListWithInlineChild("NEW", classType);
+		return new AstStringListBuilder("NEW").addInline(classType).build();
 	}
 }

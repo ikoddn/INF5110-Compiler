@@ -1,8 +1,8 @@
 package syntaxtree.statements;
 
-import java.util.LinkedList;
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
 import syntaxtree.expressions.Expression;
 
 public class IfStatement extends Statement {
@@ -32,24 +32,20 @@ public class IfStatement extends Statement {
 
 	@Override
 	public List<String> makeAstStringList() {
-		List<String> result = new LinkedList<String>();
-		result.add("(IF_STMT ");
-		addAstStringsInline(result, expression);
+		AstStringListBuilder ast = new AstStringListBuilder("IF_STMT");
 
-		List<String> ifBody = makeAstStringListWithIndentedChildren("",
-				ifBodyStatements);
-		result.addAll(prependAllWithIndentation(ifBody));
+		AstStringListBuilder ifBody = new AstStringListBuilder("");
+		ifBody.addIndented(ifBodyStatements);
+
+		ast.addInline(expression).addIndented(ifBody);
 
 		if (!elseBodyStatements.isEmpty()) {
-			result.add("ELSE");
+			AstStringListBuilder elseBody = new AstStringListBuilder("");
+			elseBody.addIndented(elseBodyStatements);
 
-			List<String> elseBody = makeAstStringListWithIndentedChildren("",
-					elseBodyStatements);
-			result.addAll(prependAllWithIndentation(elseBody));
+			ast.add("ELSE").addIndented(elseBody);
 		}
 
-		result.add(")");
-
-		return result;
+		return ast.build();
 	}
 }

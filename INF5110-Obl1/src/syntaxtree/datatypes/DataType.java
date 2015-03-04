@@ -1,5 +1,6 @@
 package syntaxtree.datatypes;
 
+import syntaxtree.AstStringBuilder;
 import syntaxtree.SimpleAstNode;
 
 public abstract class DataType extends SimpleAstNode {
@@ -16,6 +17,6 @@ public abstract class DataType extends SimpleAstNode {
 
 	@Override
 	public String makeAstString() {
-		return makeAstStringWithInlineChild("TYPE", name);
+		return new AstStringBuilder("TYPE").addInline(name).build();
 	}
 }

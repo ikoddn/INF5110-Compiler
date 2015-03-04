@@ -2,6 +2,7 @@ package syntaxtree.statements;
 
 import java.util.List;
 
+import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.actualparameters.ActualParameter;
 
@@ -25,10 +26,7 @@ public class CallStatement extends Statement {
 
 	@Override
 	public List<String> makeAstStringList() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("CALL_STMT ");
-		sb.append(name.makeAstString());
-
-		return makeAstStringListWithIndentedChildren(sb.toString(), actualParameters);
+		return new AstStringListBuilder("CALL_STMT").addInline(name)
+				.addIndented(actualParameters).build();
 	}
 }

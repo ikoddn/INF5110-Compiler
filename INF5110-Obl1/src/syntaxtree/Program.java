@@ -18,6 +18,6 @@ public class Program extends AstNode {
 
 	@Override
 	public List<String> makeAstStringList() {
-		return makeAstStringListWithIndentedChildren("PROGRAM", true, decls);
+		return new AstStringListBuilder("PROGRAM").addIndented(decls).build();
 	}
 }
