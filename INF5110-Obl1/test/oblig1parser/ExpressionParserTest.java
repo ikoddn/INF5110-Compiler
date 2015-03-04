@@ -558,7 +558,7 @@ public class ExpressionParserTest extends ParserTest {
 		@Test
 		public void intLiteral_success() throws Exception {
 			String literal = "42";
-			IntLiteral intLiteral = (IntLiteral) parse(literal);
+			IntLiteral intLiteral = parse(literal);
 
 			assertEquals(literal, "" + intLiteral.getNumber().intValue());
 		}
@@ -566,7 +566,7 @@ public class ExpressionParserTest extends ParserTest {
 		@Test
 		public void intLiteralZero_success() throws Exception {
 			String literal = "0";
-			IntLiteral intLiteral = (IntLiteral) parse(literal);
+			IntLiteral intLiteral = parse(literal);
 
 			assertEquals(literal, "" + intLiteral.getNumber().intValue());
 		}
@@ -574,14 +574,14 @@ public class ExpressionParserTest extends ParserTest {
 		@Test
 		public void intLiteralStartsWithZero_success() throws Exception {
 			String literal = "042";
-			IntLiteral intLiteral = (IntLiteral) parse(literal);
+			IntLiteral intLiteral = parse(literal);
 			assertEquals("42", "" + intLiteral.getNumber().intValue());
 		}
 
 		@Test
 		public void floatLiteral_success() throws Exception {
 			String literal = "3.14";
-			FloatLiteral floatLiteral = (FloatLiteral) parse(literal);
+			FloatLiteral floatLiteral = parse(literal);
 
 			assertEquals(literal, "" + floatLiteral.getNumber());
 		}
@@ -602,7 +602,7 @@ public class ExpressionParserTest extends ParserTest {
 		@Test
 		public void stringLiteral_success() throws Exception {
 			String literal = "\"ThisIsAString\"";
-			StringLiteral stringLiteral = (StringLiteral) parse(literal);
+			StringLiteral stringLiteral = parse(literal);
 
 			assertEquals("ThisIsAString", stringLiteral.getText());
 		}
@@ -610,7 +610,7 @@ public class ExpressionParserTest extends ParserTest {
 		@Test
 		public void stringLiteralWithWhitespace_success() throws Exception {
 			String literal = " \" This is a string \" ";
-			StringLiteral stringLiteral = (StringLiteral) parse(literal);
+			StringLiteral stringLiteral = parse(literal);
 
 			assertEquals(" This is a string ", stringLiteral.getText());
 		}
@@ -618,7 +618,7 @@ public class ExpressionParserTest extends ParserTest {
 		@Test
 		public void stringLiteralWithTabular_success() throws Exception {
 			String literal = "\"ThisIs\tAString\"";
-			StringLiteral stringLiteral = (StringLiteral) parse(literal);
+			StringLiteral stringLiteral = parse(literal);
 
 			assertEquals("ThisIs\tAString", stringLiteral.getText());
 		}
@@ -626,7 +626,7 @@ public class ExpressionParserTest extends ParserTest {
 		@Test
 		public void stringLiteralWithBackslash_success() throws Exception {
 			String literal = "\"ThisIs\\AString\"";
-			StringLiteral stringLiteral = (StringLiteral) parse(literal);
+			StringLiteral stringLiteral = parse(literal);
 
 			assertEquals("ThisIs\\AString", stringLiteral.getText());
 		}
@@ -634,7 +634,7 @@ public class ExpressionParserTest extends ParserTest {
 		@Test
 		public void stringLiteralWithQuotationMark_success() throws Exception {
 			String literal = "\"ThisIs\\\"AString\"";
-			StringLiteral stringLiteral = (StringLiteral) parse(literal);
+			StringLiteral stringLiteral = parse(literal);
 
 			assertEquals("ThisIs\"AString", stringLiteral.getText());
 		}
@@ -655,7 +655,7 @@ public class ExpressionParserTest extends ParserTest {
 		@Test
 		public void trueLiteral_success() throws Exception {
 			String literal = "true";
-			BoolLiteral boolLiteral = (BoolLiteral) parse(literal);
+			BoolLiteral boolLiteral = parse(literal);
 
 			assertEquals(literal, boolLiteral.getBool().toString());
 		}
@@ -663,7 +663,7 @@ public class ExpressionParserTest extends ParserTest {
 		@Test
 		public void falseLiteral_success() throws Exception {
 			String literal = "false";
-			BoolLiteral boolLiteral = (BoolLiteral) parse(literal);
+			BoolLiteral boolLiteral = parse(literal);
 
 			assertEquals(literal, boolLiteral.getBool().toString());
 		}

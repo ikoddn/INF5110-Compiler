@@ -51,5 +51,15 @@ public class ClassParserTest extends ParserTest {
 
 			assertEquals(2, classDecl.getVariableDecls().size());
 		}
+		
+		@Test(expected = ParserSyntaxException.class)
+		public void classDeclInClass_exceptionThrown() throws Exception {
+			parse(String.format(CLASS, String.format(CLASS, "")));
+		}
+		
+		@Test(expected = ParserSyntaxException.class)
+		public void procedureDeclInClass_exceptionThrown() throws Exception {
+			parse(String.format(CLASS, String.format(PROCEDURE, "", "")));
+		}
 	}
 }
