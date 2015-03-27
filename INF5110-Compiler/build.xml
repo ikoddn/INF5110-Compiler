@@ -20,12 +20,6 @@
 		<pathelement location="build/classes" />
 	</path>
 
-	<path id="path-junit">
-		<path refid="path-run" />
-		<pathelement location="./lib/junit-4.12.jar" />
-		<pathelement location="./lib/hamcrest-core-1.3.jar" />
-	</path>
-
 	<!-- Task definitions -->
 	<taskdef classname="jflex.anttask.JFlexTask" name="jflex" classpathref="path-cup" />
 	<taskdef classname="java_cup.anttask.CUPTask" name="cup" classpathref="path-cup" />
@@ -42,6 +36,7 @@
 
 		<!-- Directories and files to be created. -->
 		<property name="dir.classes" value="${dir.build}/classes" />
+		<property name="dir.testclasses" value="${dir.build}/testclasses" />
 	</target>
 
 	<target name="clean" depends="init">
@@ -100,28 +95,44 @@
 
 
 	<!-- Parser tests -->
-	<target name="compile-parsertests" depends="mkdir">
-		<!-- Compile test parser generator -->
-		<javac includeantruntime="false" srcdir="${dir.test}/tools" destdir="${dir.classes}" debug="true" includes="**/*.java" classpathref="path-cup" />
-		
-		<!-- Run test parser generator -->
-		<java classname="tools.ParserGenerator" classpathref="path-run" />
-		
-		<!-- Compile parser tests -->
-		<javac includeantruntime="false" srcdir="${dir.test}" destdir="${dir.classes}" debug="true" includes="**/*.java" classpathref="path-junit" sourcepath="${dir.test-gen}" />
+	<target name="mkdir-parsertests" depends="init">
+		<mkdir dir="${dir.testclasses}" />
 	</target>
-	
-	<target name="test-parser" depends="compile-parsertests">
-	  <junit outputtoformatters="true">
-	    <classpath>
-	    	<path refid="path-junit" />
-	    </classpath>
-	    <batchtest>
-	       <fileset dir="${dir.test}">
-	            <include name="**/*Test*" />
-	       </fileset>
-	    </batchtest>
-	    <formatter type="brief" usefile="false"/>
-	  </junit>
-	</target>  
+
+	<path id="path-run-parsertests">
+		<path refid="path-cup" />
+		<pathelement location="build/testclasses" />
+	</path>
+
+	<path id="path-junit">
+		<path refid="path-run" />
+		<path refid="path-run-parsertests" />
+		<pathelement location="./lib/junit-4.12.jar" />
+		<pathelement location="./lib/hamcrest-core-1.3.jar" />
+	</path>
+
+	<target name="build-parsertests" depends="mkdir-parsertests">
+		<!-- Compile test parser generator -->
+		<javac includeantruntime="false" srcdir="${dir.test}/tools" destdir="${dir.testclasses}" debug="true" includes="**/*.java" classpathref="path-cup" />
+
+		<!-- Run test parser generator -->
+		<java classname="tools.ParserGenerator" classpathref="path-run-parsertests" />
+
+		<!-- Compile parser tests -->
+		<javac includeantruntime="false" srcdir="${dir.test}" destdir="${dir.testclasses}" debug="true" includes="**/*.java" classpathref="path-junit" sourcepath="${dir.test-gen}" />
+	</target>
+
+	<target name="test-parser" depends="build-parsertests">
+		<junit outputtoformatters="true">
+			<classpath>
+				<path refid="path-junit" />
+			</classpath>
+			<batchtest>
+				<fileset dir="${dir.test}">
+					<include name="**/*Test*" />
+				</fileset>
+			</batchtest>
+			<formatter type="brief" usefile="false" />
+		</junit>
+	</target>
 </project>
