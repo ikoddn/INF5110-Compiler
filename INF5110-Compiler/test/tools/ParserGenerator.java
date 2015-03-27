@@ -1,5 +1,6 @@
 package tools;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.List;
 import java_cup.internal_error;
 
 public class ParserGenerator {
+
+	private static final String DEST_DIR = "test-gen/oblig1parser";
 
 	private CupFileGenerator cupGen;
 	private String outputBase;
@@ -31,7 +34,7 @@ public class ParserGenerator {
 
 		List<String> cupArgs = new ArrayList<String>();
 		cupArgs.add("-destdir");
-		cupArgs.add("test-gen/oblig1parser");
+		cupArgs.add(DEST_DIR);
 
 		cupArgs.add("-parser");
 		cupArgs.add(parserName);
@@ -49,6 +52,8 @@ public class ParserGenerator {
 	}
 
 	public static void main(String[] args) throws internal_error, Exception {
+		new File(DEST_DIR).mkdirs();
+
 		ParserGenerator pg = new ParserGenerator("grammars/oblig1.cup",
 				"test-grammars/");
 

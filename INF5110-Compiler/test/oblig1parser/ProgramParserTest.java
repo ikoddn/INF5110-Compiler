@@ -17,7 +17,7 @@ import syntaxtree.declarations.ClassDecl;
 import syntaxtree.declarations.VariableDecl;
 
 @RunWith(Enclosed.class)
-public class ProgramParserTest extends ParserTest {
+public class ProgramParserTest extends ParserBase {
 
 	private static Symbol parseSymbol(String string) throws Exception {
 		Scanner scanner = new Lexer(new StringReader(string));

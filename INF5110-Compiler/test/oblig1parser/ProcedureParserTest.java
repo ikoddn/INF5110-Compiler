@@ -19,7 +19,7 @@ import syntaxtree.declarations.ParameterDecl;
 import syntaxtree.declarations.ProcedureDecl;
 
 @RunWith(Enclosed.class)
-public class ProcedureParserTest extends ParserTest {
+public class ProcedureParserTest extends ParserBase {
 
 	private static Symbol parseSymbol(String string) throws Exception {
 		Scanner scanner = new Lexer(new StringReader(string));

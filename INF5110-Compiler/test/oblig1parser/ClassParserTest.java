@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 import syntaxtree.declarations.ClassDecl;
 
 @RunWith(Enclosed.class)
-public class ClassParserTest extends ParserTest {
+public class ClassParserTest extends ParserBase {
 
 	private static Symbol parseSymbol(String string) throws Exception {
 		Scanner scanner = new Lexer(new StringReader(string));

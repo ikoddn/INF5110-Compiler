@@ -24,7 +24,7 @@ import syntaxtree.statements.Statement;
 import syntaxtree.statements.WhileStatement;
 
 @RunWith(Enclosed.class)
-public class StatementParserTest extends ParserTest {
+public class StatementParserTest extends ParserBase {
 
 	private static Symbol parseSymbol(String string) throws Exception {
 		Scanner scanner = new Lexer(new StringReader(string));

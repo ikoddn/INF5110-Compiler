@@ -21,7 +21,7 @@ import org.junit.runners.Parameterized.Parameters;
 import syntaxtree.expressions.Variable;
 
 @RunWith(Enclosed.class)
-public class VariableParserTest extends ParserTest {
+public class VariableParserTest extends ParserBase {
 
 	private static Symbol parseSymbol(String string) throws Exception {
 		Scanner scanner = new Lexer(new StringReader(string));

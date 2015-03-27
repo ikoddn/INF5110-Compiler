@@ -38,7 +38,7 @@ import syntaxtree.operators.Operator;
 import syntaxtree.operators.RelationalOperator;
 
 @RunWith(Enclosed.class)
-public class ExpressionParserTest extends ParserTest {
+public class ExpressionParserTest extends ParserBase {
 
 	private static Symbol parseSymbol(String string) throws Exception {
 		Scanner scanner = new Lexer(new StringReader(string));

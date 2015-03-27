@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public abstract class ParserTest {
+public abstract class ParserBase {
 
 	public static final String CLASS_NAME = "Foo";
 	public static final String PARAMETER_NAME = "foo";
