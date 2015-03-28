@@ -1,0 +1,16 @@
+program
+{
+
+    proc Main()
+    {
+        var flag : bool;
+    
+        proc change_flag() {
+             flag := not flag;
+        }
+        flag := false;    
+    
+        change_flag();
+    }
+
+}

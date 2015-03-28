@@ -1,0 +1,12 @@
+program
+{
+
+	proc Main()
+	{
+	}
+	proc test : notexist () // Fail: Struct does not exist.
+	{
+	    return null;
+	}
+
+}

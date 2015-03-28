@@ -1,0 +1,17 @@
+program
+{
+
+	proc Proc( a : int )
+	{
+	    a := 42;
+	}
+
+	proc Main()
+	{
+	    var tmp : int;
+	    tmp := 32;
+	    Proc( ref tmp ); // error, procedure does not take a ref parameter
+	    printint( tmp );
+	}
+
+}

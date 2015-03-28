@@ -1,0 +1,10 @@
+program
+{
+
+	proc Main()
+	{
+	    var a : int;
+	    b := a; // Fail: The left side does not exist.
+	}
+
+}

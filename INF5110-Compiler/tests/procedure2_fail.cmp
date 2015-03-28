@@ -1,0 +1,14 @@
+program
+{
+
+	proc Proc : string ()
+	{
+	   return 42; // error, Proc declared as returning string
+	}
+
+	proc Main()
+	{
+	   Proc();
+	}
+
+}

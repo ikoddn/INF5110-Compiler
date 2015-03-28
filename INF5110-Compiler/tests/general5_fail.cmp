@@ -1,0 +1,17 @@
+program
+{
+
+	proc Proc( ref a : int )
+	{
+	    a := 42;
+	}
+
+	proc Main()
+	{
+	    var tmp : int;
+	    tmp := 32;
+	    Proc( tmp ); // error, ref not used
+	    printint( tmp );
+	}
+
+}

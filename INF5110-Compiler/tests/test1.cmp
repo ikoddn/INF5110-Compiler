@@ -1,0 +1,17 @@
+program
+{
+
+	proc Main()
+	{
+	    var flag : bool;
+	    var val : int ;
+	    var real : float;
+	    val := 42;
+	    flag := val > 40;
+	    real := val; // implicit conversion int=>float
+	    printfloat( real );
+	    printfloat( val ); // implicit conversion int=>float
+	    printint( val );
+	}
+
+}

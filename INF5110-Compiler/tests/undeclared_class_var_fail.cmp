@@ -1,0 +1,12 @@
+program
+{
+
+    proc Main()
+    {
+       class Zot {var x : int;}
+       var zot : Zot;
+       zot := new Zot;
+       (zot).bar := 42; // error, zot.bar not declared
+    }
+
+}

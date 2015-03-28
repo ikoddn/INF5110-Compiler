@@ -1,0 +1,12 @@
+program
+{
+
+// Arguments of a logical operator not of type bool.
+proc Main()
+{
+    var b : bool;
+    b := false || 4;
+    b := 5 && true;
+}
+
+}

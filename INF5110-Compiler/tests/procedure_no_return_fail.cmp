@@ -1,0 +1,12 @@
+program
+{
+
+proc Main()
+{
+}
+proc test : string ()
+{
+    // Fail: No return.
+}
+
+}

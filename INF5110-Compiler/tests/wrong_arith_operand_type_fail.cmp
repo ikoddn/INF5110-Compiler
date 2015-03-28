@@ -1,0 +1,15 @@
+program
+{
+
+    // Arguments of an arithmetical operator not of arithmetical type.
+    proc Main()
+    {
+        var n : int;
+        var s : string;
+        var b : bool;
+        s := "bad operand";
+    //    n := s + s / s;
+        n := true + b;
+    }
+
+}

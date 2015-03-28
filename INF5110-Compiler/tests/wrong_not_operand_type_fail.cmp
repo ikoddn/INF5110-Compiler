@@ -1,0 +1,13 @@
+program
+{
+
+    // Argument of the not operator not of type bool.
+    proc Main()
+    {
+        var b : bool;
+        var s : string;
+        s := "bad operand";
+        b := not s;
+    }
+
+}

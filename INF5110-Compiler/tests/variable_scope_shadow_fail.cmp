@@ -1,0 +1,16 @@
+program
+{
+
+    proc Main()
+    {
+        var flag : bool;
+    
+        proc change_flag() {
+             var flag : int; 
+             flag := not flag; // error, refers to local int, not outer level boolean!
+        }
+        flag := false;    
+        change_flag();
+    }
+
+}

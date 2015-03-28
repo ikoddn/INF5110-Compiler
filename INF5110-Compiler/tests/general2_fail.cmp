@@ -1,0 +1,15 @@
+program
+{
+
+	proc Proc( a : int )
+	{
+	   var a : int ; // error, param already named a
+	   printint( a );
+	}
+
+	proc Main()
+	{
+	   Proc();
+	}
+
+}

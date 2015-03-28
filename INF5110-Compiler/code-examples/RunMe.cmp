@@ -1,0 +1,97 @@
+program
+{
+  class Complex {
+      var Real : float;
+      var Imag : float;
+  }
+  var dummy : Complex;
+  proc Add : Complex ( a : Complex, b : Complex ) {
+      var retval : Complex;
+      retval := new Complex;
+      retval.Real := a.Real + b.Real;
+      retval.Imag := a.Imag + b.Imag;
+      return retval;
+  }
+  proc Max : int ( a : int , b : int ) {
+      var res : int;
+      if a > b then {
+         res := a;
+      }
+      else {
+         res := b;
+      }
+      return res;
+  }
+  proc printCmplx( pr : Complex ) {
+      printstr("Real ");
+      printfloat((pr).Real);
+      printline("");
+      printstr("Imag ");
+      printfloat((pr).Imag);
+      printline("");
+  }
+  proc test(){
+      var c1 : Complex ;
+      var c2 : Complex ;
+      var cAdd : Complex ;
+
+      var x : int ;
+      var y : int ;
+      var max: int ;
+
+      c1 := new Complex;
+      c2 := new Complex;
+      c1.Real := 1;
+      c1.Imag := 2;
+      c2.Real := 3;
+      c2.Imag := 4;
+      printCmplx(Add(c1, c2));
+
+      x:=3;
+      y:=7;
+      max := Max(y, x);
+  }
+  proc printStr(str : string) {
+  //    str := "Navn " + str;
+        printstr(str);
+  }
+  proc inOutTest(){
+      var v1 : int ;
+      var v2 : int ;
+    
+      printline("skriv v1");
+      v1 := readint();
+      printline("skriv v2");
+      v2 := readint();
+      printstr("Storst ");
+      printint(Max(v1, v2));
+      printline("");
+  }
+  proc Main() {
+      var num : float ;
+      var num2 : int ;
+      var navn : string ;
+
+      num := 6.480740;
+      printfloat( num );
+      printline("");
+
+      num2 := 7;
+      printint(num2);
+      printline("");
+    
+      navn := "TestNavn";
+      printStr(navn);
+      printline("");
+    
+      test();
+      inOutTest();
+    
+      dummy := new Complex;
+      dummy.Real := 1.0;
+      dummy.Imag := 2.0;
+      printCmplx(dummy);
+
+      printline("DONE");
+  }
+}

@@ -1,0 +1,10 @@
+program
+{
+
+	proc Main()
+	{
+	    var foo : int;
+	    bar := 42; // error, bar not declared
+	}
+
+}

@@ -1,0 +1,17 @@
+program
+{
+
+proc Main()
+{
+
+    var Tmp : int ;
+
+    proc Tmp : string () // error, already a symbol named Tmp in current scope
+    {
+        return "Top of the world, ma!";
+    }
+
+    printstr( Tmp() );
+}
+
+}

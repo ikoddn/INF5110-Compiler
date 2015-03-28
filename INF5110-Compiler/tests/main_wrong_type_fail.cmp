@@ -1,0 +1,9 @@
+program
+{
+
+	proc Main : int () // Fail: Return type for main.
+	{
+	    return 0;
+	}
+
+}

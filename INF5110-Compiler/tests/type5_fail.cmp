@@ -1,0 +1,11 @@
+program
+{
+
+    proc Main()
+    {
+        var tmp : int;
+        tmp := 42;
+        tmp.Foo := 42; // error, 
+    }
+
+}

@@ -1,0 +1,17 @@
+program
+{
+
+	proc Proc( ref a : int )
+	{
+	    a := 42;
+	}
+
+	proc Main()
+	{
+	    var a : int;
+	    a := 32;
+	    Proc( ref a );
+	    printint( a );
+	}
+
+}
