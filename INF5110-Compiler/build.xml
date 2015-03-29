@@ -89,6 +89,7 @@
 		<java classname="compiler.Compiler" classpathref="path-run">
 			<arg value="compila-code/Compila.cmp" />
 			<arg value="compila-ast/Compila.ast" />
+			<arg value="compila-ast/Compila.bin" />
 		</java>
 	</target>
 

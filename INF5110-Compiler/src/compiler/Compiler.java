@@ -5,22 +5,27 @@ import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
 import oblig1parser.Lexer;
+import oblig1parser.ParserSyntaxException;
 import oblig1parser.parser;
 import syntaxtree.Program;
 import bytecode.CodeFile;
 
 public class Compiler {
 
-	private String inFilename = null;
-	private String astFilename = null;
-	private String binFilename = null;
-	public String syntaxError;
-	public String error;
+	public static final int SUCCESS = 0;
+	public static final int SYNTAX_ERROR = 1;
+	public static final int SEMANTIC_ERROR = 2;
+	public static final int UNKNOWN_ERROR = 3;
+
+	private String inFilename;
+	private String astFilename;
+	private String binFilename;
 
 	public Compiler(String inFilename, String astFilename, String binFilename) {
 		this.inFilename = inFilename;
@@ -28,34 +33,40 @@ public class Compiler {
 		this.binFilename = binFilename;
 	}
 
-	public int compile() throws Exception {
+	public Result compile() throws IOException {
 		InputStream inputStream = new FileInputStream(inFilename);
 		Lexer lexer = new Lexer(new InputStreamReader(inputStream));
 		parser parser = new parser(lexer);
-		Program program;
+		Program program = null;
+		ErrorMessage error = null;
 
 		try {
 			program = (Program) parser.parse().value;
+		} catch (ParserSyntaxException e) {
+			System.out.println("caught ParserSyntaxException");
+			error = new ErrorMessage(e.getMessage());
 		} catch (Exception e) {
-			// Do something here?
-			throw e; // Or something.
+			System.out.println("caught general");
+			error = new ErrorMessage(e.getMessage());
 		}
+
+		if (error != null || program == null) {
+			return new Result(SYNTAX_ERROR, error);
+		}
+
+		error = program.checkSemantics();
+
+		if (error != null) {
+			return new Result(SEMANTIC_ERROR, error);
+		}
+
 		writeAst(program);
-		// Check semantics.
-		if (false) { // If it is all ok:
-			writeAst(program);
-			generateCode(program);
-			return 0;
-		} else if (false) { // If there is a SYNTAX ERROR (Should not get that
-							// for the tests):
-			return 1;
-		} else { // If there is a SEMANTIC ERROR (Should get that for the test
-					// with "_fail" in the name):
-			return 2;
-		}
+		generateCode(program);
+
+		return new Result(SUCCESS, null);
 	}
 
-	private void writeAst(Program program) throws Exception {
+	private void writeAst(Program program) throws IOException {
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
 				astFilename));
 		List<String> astStringList = program.makeAstStringList();
@@ -68,7 +79,7 @@ public class Compiler {
 		bufferedWriter.close();
 	}
 
-	private void generateCode(Program program) throws Exception {
+	private void generateCode(Program program) throws IOException {
 		CodeFile codeFile = new CodeFile();
 		program.generateCode(codeFile);
 		byte[] bytecode = codeFile.getBytecode();
@@ -80,22 +91,18 @@ public class Compiler {
 
 	public static void main(String[] args) {
 		Compiler compiler = new Compiler(args[0], args[1], args[2]);
-		int result;
+		int code;
 
 		try {
-			result = compiler.compile();
+			Result result = compiler.compile();
 
-			if (result == 1) {
-				System.out.println(compiler.syntaxError);
-			} else if (result == 2) {
-				System.out.println(compiler.error);
-			}
-
-			System.exit(result);
-		} catch (Exception e) {
+			System.out.println(result.getError().getMessage());
+			code = result.getCode();
+		} catch (IOException e) {
 			System.out.println("ERROR: " + e);
-			// If unknown error.
-			System.exit(3);
+			code = UNKNOWN_ERROR;
 		}
+
+		System.exit(code);
 	}
 }

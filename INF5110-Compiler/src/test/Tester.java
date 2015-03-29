@@ -3,9 +3,11 @@ package test;
 import java.io.File;
 
 import compiler.Compiler;
+import compiler.Result;
 
 public class Tester {
-	private String path = null;
+
+	private String path;
 
 	public Tester(String path) {
 		this.path = path;
@@ -13,11 +15,13 @@ public class Tester {
 
 	public void test() {
 		System.out.println("Testing compiler class.");
-		File file = new File(this.path);
+		File file = new File(path);
+
 		if (file.isDirectory()) {
 			int failed = 0;
 			System.out.println("Testing files in " + file.getAbsolutePath());
 			File[] files = file.listFiles(new FileEndingFilter("cmp"));
+
 			for (int i = 0; i < files.length; i++) {
 				String filename = files[i].getName();
 				boolean shouldFail = filename
@@ -29,14 +33,18 @@ public class Tester {
 						+ filename, this.path + File.separator
 						+ outFileName(filename, ".ast"), this.path
 						+ File.separator + outFileName(filename, ".bin"));
-				if (!testCompiler(compiler, shouldFail, i + 1))
+
+				if (!testCompiler(compiler, shouldFail, i + 1)) {
 					failed++;
+				}
 			}
-			if (failed == 0)
+
+			if (failed == 0) {
 				System.out.println("Test completed successfully.");
-			else
+			} else {
 				System.out.println("Some tests failed (" + failed + " / "
 						+ files.length + ")");
+			}
 		} else {
 			System.out.println("The path (" + this.path
 					+ ") is not a directory.");
@@ -46,21 +54,25 @@ public class Tester {
 	public boolean testCompiler(Compiler compiler, boolean shouldFail,
 			int number) {
 		boolean testOk = true;
+
 		try {
-			int res = compiler.compile();
-			switch (res) {
-			case 1:
+			Result result = compiler.compile();
+
+			switch (result.getCode()) {
+			case Compiler.SYNTAX_ERROR:
 				testOk = false;
 				System.out.println("BAD: Test no " + number
 						+ " resulted in syntax error!");
-				System.out.println("Syntax error: " + compiler.syntaxError);
+				System.out.println("Syntax error: "
+						+ result.getError().getMessage());
 				break;
-			case 2:
+			case Compiler.SEMANTIC_ERROR:
 				if (!shouldFail) {
 					testOk = false;
 					System.out.println("BAD: Test no " + number
 							+ " failed when it shouldn't!");
-					System.out.println("Error: " + compiler.error);
+					System.out.println("Error: "
+							+ result.getError().getMessage());
 				}
 				break;
 			default:
@@ -76,6 +88,7 @@ public class Tester {
 			e.printStackTrace();
 			System.exit(1);
 		}
+
 		return testOk;
 	}
 
