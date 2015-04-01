@@ -2,7 +2,12 @@ package syntaxtree.statements;
 
 import java.util.List;
 
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
+
 import syntaxtree.AstStringListBuilder;
+import syntaxtree.datatypes.DataType;
+import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 
 public class IfStatement extends Statement {
@@ -28,6 +33,12 @@ public class IfStatement extends Statement {
 
 	public List<Statement> getElseBodyStatements() {
 		return elseBodyStatements;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
+		return new DataType(Type.VOID);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package syntaxtree;
 
 import java.util.List;
 
+import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.declarations.Decl;
 import syntaxtree.declarations.ProcedureDecl;
@@ -63,6 +64,12 @@ public class Program extends AstNode {
 		}
 
 		return validMain;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
+		return new DataType(Type.VOID);
 	}
 
 	@Override

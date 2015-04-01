@@ -37,12 +37,12 @@ public class Variable extends Expression {
 	}
 
 	@Override
-	public DataType getType(SymbolTable symbolTable) throws SemanticException {
+	public DataType determineType(SymbolTable symbolTable) throws SemanticException {
 		if (expression == null) {
-			return symbolTable.lookup(name).getType(symbolTable);
+			return symbolTable.lookup(name).determineType(symbolTable);
 		}
 
-		DataType expressionType = expression.getType(symbolTable);
+		DataType expressionType = expression.determineType(symbolTable);
 
 		if (expressionType.getType() != Type.CLASS) {
 			throw new SemanticException(ErrorMessage.FIELD_PRIMITIVE_TYPE,
@@ -61,7 +61,7 @@ public class Variable extends Expression {
 
 		for (VariableDecl variableDecl : classDecl.getVariableDecls()) {
 			if (variableDecl.getName().equals(name)) {
-				return variableDecl.getType(symbolTable);
+				return variableDecl.determineType(symbolTable);
 			}
 		}
 

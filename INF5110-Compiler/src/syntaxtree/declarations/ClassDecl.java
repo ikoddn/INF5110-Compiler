@@ -4,6 +4,7 @@ import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
+import syntaxtree.datatypes.DataType;
 
 import compiler.SymbolTable;
 import compiler.exception.SemanticException;
@@ -32,6 +33,11 @@ public class ClassDecl extends Decl {
 
 			variableDecl.checkSemantics(symbolTable);
 		}
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable) throws SemanticException {
+		return new DataType(name);
 	}
 
 	@Override

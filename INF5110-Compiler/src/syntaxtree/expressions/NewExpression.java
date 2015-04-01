@@ -5,6 +5,9 @@ import java.util.List;
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.datatypes.DataType;
 
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
+
 public class NewExpression extends Expression {
 
 	private DataType dataType;
@@ -14,6 +17,11 @@ public class NewExpression extends Expression {
 	}
 
 	public DataType getDataType() {
+		return dataType;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable) throws SemanticException {
 		return dataType;
 	}
 

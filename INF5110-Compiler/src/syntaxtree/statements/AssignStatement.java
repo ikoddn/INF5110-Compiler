@@ -3,8 +3,13 @@ package syntaxtree.statements;
 import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
+import syntaxtree.datatypes.DataType;
+import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 import syntaxtree.expressions.Variable;
+
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
 
 public class AssignStatement extends Statement {
 
@@ -22,6 +27,12 @@ public class AssignStatement extends Statement {
 
 	public Expression getRightHandSide() {
 		return rightHandSide;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
+		return new DataType(Type.VOID);
 	}
 
 	@Override

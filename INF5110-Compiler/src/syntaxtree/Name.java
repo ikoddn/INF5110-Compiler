@@ -1,5 +1,10 @@
 package syntaxtree;
 
+import syntaxtree.datatypes.DataType;
+
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
+
 public class Name extends SimpleAstNode {
 
 	private String string;
@@ -10,6 +15,12 @@ public class Name extends SimpleAstNode {
 
 	public String getString() {
 		return string;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
+		return symbolTable.lookup(this).determineType(symbolTable);
 	}
 
 	@Override

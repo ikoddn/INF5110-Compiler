@@ -22,7 +22,7 @@ public class FloatLiteral extends Literal {
 	}
 
 	@Override
-	public DataType getType(SymbolTable symbolTable) throws SemanticException {
+	public DataType determineType(SymbolTable symbolTable) throws SemanticException {
 		return new DataType(Type.FLOAT);
 	}
 

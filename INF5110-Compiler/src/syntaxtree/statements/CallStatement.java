@@ -5,6 +5,10 @@ import java.util.List;
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.actualparameters.ActualParameter;
+import syntaxtree.datatypes.DataType;
+
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
 
 public class CallStatement extends Statement {
 
@@ -22,6 +26,12 @@ public class CallStatement extends Statement {
 
 	public List<ActualParameter> getActualParameters() {
 		return actualParameters;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
+		return symbolTable.lookup(name).determineType(symbolTable);
 	}
 
 	@Override

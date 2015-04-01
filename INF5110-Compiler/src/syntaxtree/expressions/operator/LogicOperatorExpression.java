@@ -16,7 +16,7 @@ public class LogicOperatorExpression extends BinaryOperatorExpression {
 	}
 
 	@Override
-	public DataType getType(SymbolTable symbolTable) throws SemanticException {
+	public DataType determineType(SymbolTable symbolTable) throws SemanticException {
 		return new DataType(Type.BOOL);
 	}
 }

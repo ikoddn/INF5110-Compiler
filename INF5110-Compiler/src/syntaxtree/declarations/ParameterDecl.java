@@ -6,6 +6,9 @@ import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
 
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
+
 public class ParameterDecl extends Decl {
 
 	private boolean reference;
@@ -23,6 +26,12 @@ public class ParameterDecl extends Decl {
 	}
 
 	public DataType getDataType() {
+		return dataType;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
 		return dataType;
 	}
 

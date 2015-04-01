@@ -3,7 +3,12 @@ package syntaxtree.statements;
 import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
+import syntaxtree.datatypes.DataType;
+import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
+
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
 
 public class ReturnStatement extends Statement {
 
@@ -19,6 +24,12 @@ public class ReturnStatement extends Statement {
 
 	public Expression getExpression() {
 		return expression;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
+		return new DataType(Type.VOID);
 	}
 
 	@Override

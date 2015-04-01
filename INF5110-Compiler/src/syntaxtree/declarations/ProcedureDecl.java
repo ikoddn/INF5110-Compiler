@@ -7,6 +7,9 @@ import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.statements.Statement;
 
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
+
 public class ProcedureDecl extends Decl {
 
 	private DataType returnType;
@@ -39,6 +42,12 @@ public class ProcedureDecl extends Decl {
 
 	public List<Statement> getSubStatements() {
 		return subStatements;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
+		return returnType;
 	}
 
 	@Override

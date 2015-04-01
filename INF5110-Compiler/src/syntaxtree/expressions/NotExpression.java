@@ -3,6 +3,11 @@ package syntaxtree.expressions;
 import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
+import syntaxtree.datatypes.DataType;
+import syntaxtree.datatypes.Type;
+
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
 
 public class NotExpression extends Expression {
 
@@ -14,6 +19,11 @@ public class NotExpression extends Expression {
 
 	public Expression getExpression() {
 		return expression;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable) throws SemanticException {
+		return new DataType(Type.BOOL);
 	}
 
 	@Override

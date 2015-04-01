@@ -6,6 +6,9 @@ import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
 
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
+
 public class VariableDecl extends Decl {
 
 	private DataType dataType;
@@ -16,6 +19,12 @@ public class VariableDecl extends Decl {
 	}
 
 	public DataType getDataType() {
+		return dataType;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
 		return dataType;
 	}
 

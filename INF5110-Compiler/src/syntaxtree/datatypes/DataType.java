@@ -4,6 +4,9 @@ import syntaxtree.AstStringBuilder;
 import syntaxtree.Name;
 import syntaxtree.SimpleAstNode;
 
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
+
 public class DataType extends SimpleAstNode {
 
 	protected Name name;
@@ -25,6 +28,12 @@ public class DataType extends SimpleAstNode {
 
 	public Type getType() {
 		return type;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
+		return this;
 	}
 
 	@Override

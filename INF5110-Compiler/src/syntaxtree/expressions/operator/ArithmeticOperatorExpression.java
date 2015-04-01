@@ -17,9 +17,9 @@ public class ArithmeticOperatorExpression extends BinaryOperatorExpression {
 	}
 
 	@Override
-	public DataType getType(SymbolTable symbolTable) throws SemanticException {
-		DataType leftType = leftExpression.getType(symbolTable);
-		DataType rightType = rightExpression.getType(symbolTable);
+	public DataType determineType(SymbolTable symbolTable) throws SemanticException {
+		DataType leftType = leftExpression.determineType(symbolTable);
+		DataType rightType = rightExpression.determineType(symbolTable);
 
 		switch (leftType.getType()) {
 		case FLOAT:

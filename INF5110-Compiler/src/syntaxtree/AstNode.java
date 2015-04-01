@@ -15,10 +15,8 @@ public abstract class AstNode {
 		throw new SemanticException("Not implemented");
 	}
 
-	public DataType getType(SymbolTable symbolTable) throws SemanticException {
-		// TODO make abstract
-		throw new SemanticException("Not implemented");
-	}
+	public abstract DataType determineType(SymbolTable symbolTable)
+			throws SemanticException;
 
 	public abstract List<String> makeAstStringList();
 

@@ -3,7 +3,11 @@ package syntaxtree.actualparameters;
 import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
+import syntaxtree.datatypes.DataType;
 import syntaxtree.expressions.Expression;
+
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
 
 public class PassByValueParameter extends ActualParameter {
 
@@ -15,6 +19,12 @@ public class PassByValueParameter extends ActualParameter {
 
 	public Expression getExpression() {
 		return expression;
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
+		return expression.determineType(symbolTable);
 	}
 
 	@Override
