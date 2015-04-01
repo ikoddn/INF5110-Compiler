@@ -26,6 +26,8 @@ public class VariableParserTest extends ParserBase {
 	private static Symbol parseSymbol(String string) throws Exception {
 		Scanner scanner = new Lexer(new StringReader(string));
 		VarParser parser = new VarParser(scanner);
+		parser.setSystemErrOutputSuppressed(true);
+
 		return parser.parse();
 	}
 
@@ -89,7 +91,7 @@ public class VariableParserTest extends ParserBase {
 
 			assertEquals(VARIABLE_NAME2, var.getName().getString());
 			assertTrue(var.getExpression() instanceof Variable);
-			
+
 			Variable innerVar = (Variable) var.getExpression();
 			assertEquals(VARIABLE_NAME, innerVar.getName().getString());
 			assertNull(innerVar.getExpression());

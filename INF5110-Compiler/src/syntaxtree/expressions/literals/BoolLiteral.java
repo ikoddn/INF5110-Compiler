@@ -3,6 +3,11 @@ package syntaxtree.expressions.literals;
 import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
+import syntaxtree.datatypes.DataType;
+import syntaxtree.datatypes.Type;
+
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
 
 public class BoolLiteral extends Literal {
 
@@ -14,6 +19,11 @@ public class BoolLiteral extends Literal {
 
 	public Boolean getBool() {
 		return bool;
+	}
+
+	@Override
+	public DataType getType(SymbolTable symbolTable) throws SemanticException {
+		return new DataType(Type.BOOL);
 	}
 
 	@Override

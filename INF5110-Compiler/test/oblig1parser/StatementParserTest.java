@@ -29,6 +29,8 @@ public class StatementParserTest extends ParserBase {
 	private static Symbol parseSymbol(String string) throws Exception {
 		Scanner scanner = new Lexer(new StringReader(string));
 		StatementParser parser = new StatementParser(scanner);
+		parser.setSystemErrOutputSuppressed(true);
+
 		return parser.parse();
 	}
 
@@ -47,8 +49,8 @@ public class StatementParserTest extends ParserBase {
 			assertEquals(VARIABLE_NAME, stmt.getLeftHandSide().getName()
 					.getString());
 			assertTrue(stmt.getRightHandSide() instanceof Variable);
-			assertEquals(VARIABLE_NAME2,
-					((Variable) stmt.getRightHandSide()).getName().getString());
+			assertEquals(VARIABLE_NAME2, ((Variable) stmt.getRightHandSide())
+					.getName().getString());
 		}
 
 		@Test(expected = ParserSyntaxException.class)

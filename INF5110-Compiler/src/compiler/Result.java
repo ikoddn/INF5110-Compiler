@@ -3,18 +3,18 @@ package compiler;
 public class Result {
 
 	private int code;
-	private ErrorMessage error;
+	private String message;
 
-	public Result(int code, ErrorMessage error) {
+	public Result(int code, String message) {
 		this.code = code;
-		this.error = error;
+		this.message = message;
 	}
 
 	public int getCode() {
 		return code;
 	}
 
-	public ErrorMessage getError() {
-		return error;
+	public String getMessage() {
+		return message;
 	}
 }

@@ -16,6 +16,8 @@ import oblig1parser.parser;
 import syntaxtree.Program;
 import bytecode.CodeFile;
 
+import compiler.exception.SemanticException;
+
 public class Compiler {
 
 	public static final int SUCCESS = 0;
@@ -38,26 +40,24 @@ public class Compiler {
 		Lexer lexer = new Lexer(new InputStreamReader(inputStream));
 		parser parser = new parser(lexer);
 		Program program = null;
-		ErrorMessage error = null;
+		String error = null;
 
 		try {
 			program = (Program) parser.parse().value;
 		} catch (ParserSyntaxException e) {
-			System.out.println("caught ParserSyntaxException");
-			error = new ErrorMessage(e.getMessage());
+			error = e.getMessage();
 		} catch (Exception e) {
-			System.out.println("caught general");
-			error = new ErrorMessage(e.getMessage());
+			error = e.getMessage();
 		}
 
 		if (error != null || program == null) {
 			return new Result(SYNTAX_ERROR, error);
 		}
 
-		error = program.checkSemantics();
-
-		if (error != null) {
-			return new Result(SEMANTIC_ERROR, error);
+		try {
+			program.checkSemantics();
+		} catch (SemanticException e) {
+			return new Result(SEMANTIC_ERROR, e.getMessage());
 		}
 
 		writeAst(program);
@@ -84,7 +84,7 @@ public class Compiler {
 		program.generateCode(codeFile);
 		byte[] bytecode = codeFile.getBytecode();
 		DataOutputStream stream = new DataOutputStream(new FileOutputStream(
-				this.binFilename));
+				binFilename));
 		stream.write(bytecode);
 		stream.close();
 	}
@@ -96,7 +96,7 @@ public class Compiler {
 		try {
 			Result result = compiler.compile();
 
-			System.out.println(result.getError().getMessage());
+			System.out.println(result.getMessage());
 			code = result.getCode();
 		} catch (IOException e) {
 			System.out.println("ERROR: " + e);

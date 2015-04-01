@@ -22,6 +22,8 @@ public class ProgramParserTest extends ParserBase {
 	private static Symbol parseSymbol(String string) throws Exception {
 		Scanner scanner = new Lexer(new StringReader(string));
 		parser parser = new parser(scanner);
+		parser.setSystemErrOutputSuppressed(true);
+
 		return parser.parse();
 	}
 

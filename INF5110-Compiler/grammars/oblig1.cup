@@ -14,6 +14,19 @@ import syntaxtree.statements.*;
 
 parser code {:
 
+	private boolean systemErrOutputSuppressed = false;
+	
+	public void setSystemErrOutputSuppressed(boolean value) {
+		systemErrOutputSuppressed = value;
+	}
+
+	@Override
+	public void report_error(String message, Object info) {
+		if (!systemErrOutputSuppressed) {
+			super.report_error(message, info);
+		}
+	}
+
 	@Override
 	public void unrecovered_syntax_error(Symbol s) throws ParserSyntaxException {
 		StringBuilder sb = new StringBuilder();
@@ -234,7 +247,7 @@ proc_return_type
 		:}
 	|	// empty
 		{:
-			RESULT = new VoidType();
+			RESULT = new DataType(Type.VOID);
 		:}
 ;
 
@@ -317,9 +330,9 @@ exp
 		{:
 			RESULT = new CallStatementExpression(s);
 		:}
-	|	NEW ID:name
+	|	NEW name:name
 		{:
-			RESULT = new NewExpression(new ClassType(name));
+			RESULT = new NewExpression(new DataType(name));
 		:}
 	|	var:v
 		{:
@@ -563,22 +576,22 @@ actual_param_list_opt
 type
 	::= BOOL
 		{:
-			RESULT = new BoolType();
+			RESULT = new DataType(Type.BOOL);
 		:}
 	|	FLOAT
 		{:
-			RESULT = new FloatType();
+			RESULT = new DataType(Type.FLOAT);
 		:}
 	|	INT
 		{:
-			RESULT = new IntType();
+			RESULT = new DataType(Type.INT);
 		:}
 	|	STRING
 		{:
-			RESULT = new StringType();
+			RESULT = new DataType(Type.STRING);
 		:}
-	|	ID:name
+	|	name:name
 		{:
-			RESULT = new ClassType(name);
+			RESULT = new DataType(name);
 		:}
 ;

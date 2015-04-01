@@ -20,6 +20,8 @@ public class ClassParserTest extends ParserBase {
 	private static Symbol parseSymbol(String string) throws Exception {
 		Scanner scanner = new Lexer(new StringReader(string));
 		ClassParser parser = new ClassParser(scanner);
+		parser.setSystemErrOutputSuppressed(true);
+
 		return parser.parse();
 	}
 
@@ -51,12 +53,12 @@ public class ClassParserTest extends ParserBase {
 
 			assertEquals(2, classDecl.getVariableDecls().size());
 		}
-		
+
 		@Test(expected = ParserSyntaxException.class)
 		public void classDeclInClass_exceptionThrown() throws Exception {
 			parse(String.format(CLASS, String.format(CLASS, "")));
 		}
-		
+
 		@Test(expected = ParserSyntaxException.class)
 		public void procedureDeclInClass_exceptionThrown() throws Exception {
 			parse(String.format(CLASS, String.format(PROCEDURE, "", "")));

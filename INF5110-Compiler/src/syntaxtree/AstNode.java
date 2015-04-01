@@ -2,15 +2,24 @@ package syntaxtree;
 
 import java.util.List;
 
-import compiler.ErrorMessage;
+import syntaxtree.datatypes.DataType;
+
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
 
 public abstract class AstNode {
 
-	public ErrorMessage checkSemantics() {
+	public void checkSemantics(SymbolTable parentSymbolTable)
+			throws SemanticException {
 		// TODO make abstract
-		return null;
+		throw new SemanticException("Not implemented");
 	}
-	
+
+	public DataType getType(SymbolTable symbolTable) throws SemanticException {
+		// TODO make abstract
+		throw new SemanticException("Not implemented");
+	}
+
 	public abstract List<String> makeAstStringList();
 
 }

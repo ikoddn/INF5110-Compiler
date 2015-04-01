@@ -63,16 +63,14 @@ public class Tester {
 				testOk = false;
 				System.out.println("BAD: Test no " + number
 						+ " resulted in syntax error!");
-				System.out.println("Syntax error: "
-						+ result.getError().getMessage());
+				System.out.println("Syntax error: " + result.getMessage());
 				break;
 			case Compiler.SEMANTIC_ERROR:
 				if (!shouldFail) {
 					testOk = false;
 					System.out.println("BAD: Test no " + number
 							+ " failed when it shouldn't!");
-					System.out.println("Error: "
-							+ result.getError().getMessage());
+					System.out.println("Error: " + result.getMessage());
 				}
 				break;
 			default:

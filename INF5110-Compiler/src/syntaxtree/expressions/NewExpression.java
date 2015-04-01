@@ -3,22 +3,22 @@ package syntaxtree.expressions;
 import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
-import syntaxtree.datatypes.ClassType;
+import syntaxtree.datatypes.DataType;
 
 public class NewExpression extends Expression {
 
-	private ClassType classType;
+	private DataType dataType;
 
-	public NewExpression(ClassType classType) {
-		this.classType = classType;
+	public NewExpression(DataType dataType) {
+		this.dataType = dataType;
 	}
 
-	public ClassType getClassType() {
-		return classType;
+	public DataType getDataType() {
+		return dataType;
 	}
 
 	@Override
 	public List<String> makeAstStringList() {
-		return new AstStringListBuilder("NEW").addInline(classType).build();
+		return new AstStringListBuilder("NEW").addInline(dataType).build();
 	}
 }

@@ -43,6 +43,8 @@ public class ExpressionParserTest extends ParserBase {
 	private static Symbol parseSymbol(String string) throws Exception {
 		Scanner scanner = new Lexer(new StringReader(string));
 		ExpParser parser = new ExpParser(scanner);
+		parser.setSystemErrOutputSuppressed(true);
+
 		return parser.parse();
 	}
 
@@ -686,7 +688,7 @@ public class ExpressionParserTest extends ParserBase {
 		public void newExpression_success() throws Exception {
 			NewExpression exp = parse("new " + CLASS_NAME);
 
-			assertEquals(CLASS_NAME, exp.getClassType().getName());
+			assertEquals(CLASS_NAME, exp.getDataType().getName().getString());
 		}
 
 		@Test

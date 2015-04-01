@@ -3,6 +3,11 @@ package syntaxtree.expressions.literals;
 import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
+import syntaxtree.datatypes.DataType;
+import syntaxtree.datatypes.Type;
+
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
 
 public class FloatLiteral extends Literal {
 
@@ -14,6 +19,11 @@ public class FloatLiteral extends Literal {
 
 	public Float getNumber() {
 		return number;
+	}
+
+	@Override
+	public DataType getType(SymbolTable symbolTable) throws SemanticException {
+		return new DataType(Type.FLOAT);
 	}
 
 	@Override

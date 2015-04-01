@@ -1,22 +1,34 @@
 package syntaxtree.datatypes;
 
 import syntaxtree.AstStringBuilder;
+import syntaxtree.Name;
 import syntaxtree.SimpleAstNode;
 
-public abstract class DataType extends SimpleAstNode {
+public class DataType extends SimpleAstNode {
 
-	protected String name;
+	protected Name name;
+	protected Type type;
 
-	protected DataType(String name) {
+	public DataType(Name name) {
 		this.name = name;
+		this.type = Type.CLASS;
 	}
 
-	public String getName() {
+	public DataType(Type type) {
+		this.name = type.getName();
+		this.type = type;
+	}
+
+	public Name getName() {
 		return name;
+	}
+
+	public Type getType() {
+		return type;
 	}
 
 	@Override
 	public String makeAstString() {
-		return new AstStringBuilder("TYPE").addInline(name).build();
+		return new AstStringBuilder("TYPE").addInline(name.getString()).build();
 	}
 }

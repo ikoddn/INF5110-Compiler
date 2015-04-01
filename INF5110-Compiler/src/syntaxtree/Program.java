@@ -2,12 +2,14 @@ package syntaxtree;
 
 import java.util.List;
 
-import syntaxtree.datatypes.VoidType;
+import syntaxtree.datatypes.Type;
 import syntaxtree.declarations.Decl;
 import syntaxtree.declarations.ProcedureDecl;
 import bytecode.CodeFile;
+
 import compiler.ErrorMessage;
-import compiler.ErrorMessages;
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
 
 public class Program extends AstNode {
 
@@ -23,22 +25,29 @@ public class Program extends AstNode {
 		return decls;
 	}
 
+	public void checkSemantics() throws SemanticException {
+		checkSemantics(null);
+	}
+
 	@Override
-	public ErrorMessage checkSemantics() {
-		ErrorMessage result = null;
+	public void checkSemantics(SymbolTable parentSymbolTable)
+			throws SemanticException {
+		SymbolTable symbolTable = new SymbolTable();
 		boolean hasValidMain = false;
 
 		for (Decl decl : decls) {
+			symbolTable.insert(decl.getName(), decl);
+
+			decl.checkSemantics(symbolTable);
+
 			if (!hasValidMain) {
 				hasValidMain = isValidMainProcedure(decl);
 			}
 		}
 
 		if (!hasValidMain) {
-			result = new ErrorMessage(ErrorMessages.MISSING_MAIN);
+			throw new SemanticException(ErrorMessage.MISSING_MAIN);
 		}
-		
-		return result;
 	}
 
 	private boolean isValidMainProcedure(Decl decl) {
@@ -50,7 +59,7 @@ public class Program extends AstNode {
 			ProcedureDecl main = (ProcedureDecl) decl;
 
 			validMain = main.getParameterDecls().isEmpty()
-					&& main.getReturnType() instanceof VoidType;
+					&& main.getReturnType().getType() == Type.VOID;
 		}
 
 		return validMain;

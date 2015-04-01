@@ -13,8 +13,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import syntaxtree.datatypes.IntType;
-import syntaxtree.datatypes.VoidType;
+import syntaxtree.datatypes.Type;
 import syntaxtree.declarations.ParameterDecl;
 import syntaxtree.declarations.ProcedureDecl;
 
@@ -24,6 +23,8 @@ public class ProcedureParserTest extends ParserBase {
 	private static Symbol parseSymbol(String string) throws Exception {
 		Scanner scanner = new Lexer(new StringReader(string));
 		ProcedureParser parser = new ProcedureParser(scanner);
+		parser.setSystemErrOutputSuppressed(true);
+
 		return parser.parse();
 	}
 
@@ -39,7 +40,7 @@ public class ProcedureParserTest extends ParserBase {
 
 			assertEquals(PROCEDURE_NAME, proc.getName().getString());
 			assertTrue(proc.getParameterDecls().isEmpty());
-			assertTrue(proc.getReturnType() instanceof VoidType);
+			assertTrue(proc.getReturnType().getType() == Type.VOID);
 			assertTrue(proc.getSubDecls().isEmpty());
 			assertTrue(proc.getSubStatements().isEmpty());
 		}
@@ -50,7 +51,7 @@ public class ProcedureParserTest extends ParserBase {
 
 			assertEquals(PROCEDURE_NAME, proc.getName().getString());
 			assertTrue(proc.getParameterDecls().isEmpty());
-			assertTrue(proc.getReturnType() instanceof IntType);
+			assertTrue(proc.getReturnType().getType() == Type.INT);
 			assertTrue(proc.getSubDecls().isEmpty());
 			assertTrue(proc.getSubStatements().isEmpty());
 		}
@@ -65,7 +66,7 @@ public class ProcedureParserTest extends ParserBase {
 
 			assertEquals(PARAMETER_NAME, param.getName().getString());
 			assertFalse(param.isReference());
-			assertTrue(param.getDataType() instanceof IntType);
+			assertTrue(param.getDataType().getType() == Type.INT);
 
 		}
 
@@ -80,7 +81,7 @@ public class ProcedureParserTest extends ParserBase {
 
 			assertEquals(PARAMETER_NAME, param.getName().getString());
 			assertTrue(param.isReference());
-			assertTrue(param.getDataType() instanceof IntType);
+			assertTrue(param.getDataType().getType() == Type.INT);
 		}
 
 		@Test(expected = ParserSyntaxException.class)
