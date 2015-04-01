@@ -6,14 +6,15 @@ import syntaxtree.AstStringListBuilder;
 import syntaxtree.expressions.Expression;
 import syntaxtree.operators.Operator;
 
-public abstract class BinaryOperatorExpression extends Expression {
+public abstract class BinaryOperatorExpression<O extends Operator> extends
+		Expression {
 
 	protected Expression leftExpression;
-	protected Operator operator;
+	protected O operator;
 	protected Expression rightExpression;
 
-	protected BinaryOperatorExpression(Expression leftExpression,
-			Operator operator, Expression rightExpression) {
+	protected BinaryOperatorExpression(Expression leftExpression, O operator,
+			Expression rightExpression) {
 		this.leftExpression = leftExpression;
 		this.operator = operator;
 		this.rightExpression = rightExpression;
@@ -23,7 +24,7 @@ public abstract class BinaryOperatorExpression extends Expression {
 		return leftExpression;
 	}
 
-	public Operator getOperator() {
+	public O getOperator() {
 		return operator;
 	}
 

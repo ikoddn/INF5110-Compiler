@@ -6,6 +6,7 @@ import syntaxtree.AstStringListBuilder;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 
+import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.exception.SemanticException;
 
@@ -22,7 +23,21 @@ public class NotExpression extends Expression {
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable) throws SemanticException {
+	public void checkSemantics(SymbolTable symbolTable)
+			throws SemanticException {
+		expression.checkSemantics(symbolTable);
+
+		DataType dataType = expression.determineType(symbolTable);
+
+		if (dataType.getType() != Type.BOOL) {
+			throw new SemanticException(ErrorMessage.NOT_OPERATOR_UNDEFINED,
+					dataType.getName());
+		}
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
 		return new DataType(Type.BOOL);
 	}
 

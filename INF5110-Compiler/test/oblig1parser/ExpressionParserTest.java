@@ -81,7 +81,7 @@ public class ExpressionParserTest extends ParserBase {
 		private static void assertLeftHandSideLeftAssociative(Expression exp) {
 			assertTrue(exp instanceof BinaryOperatorExpression);
 
-			BinaryOperatorExpression binopExp = (BinaryOperatorExpression) exp;
+			BinaryOperatorExpression<?> binopExp = (BinaryOperatorExpression<?>) exp;
 
 			assertTrue(binopExp.getLeftExpression() instanceof Variable);
 			assertTrue(binopExp.getRightExpression() instanceof Variable);
@@ -96,7 +96,7 @@ public class ExpressionParserTest extends ParserBase {
 		private static void assertRightHandSideRightAssociative(Expression exp) {
 			assertTrue(exp instanceof BinaryOperatorExpression);
 
-			BinaryOperatorExpression binopExp = (BinaryOperatorExpression) exp;
+			BinaryOperatorExpression<?> binopExp = (BinaryOperatorExpression<?>) exp;
 
 			assertTrue(binopExp.getLeftExpression() instanceof Variable);
 			assertTrue(binopExp.getRightExpression() instanceof Variable);
@@ -432,7 +432,7 @@ public class ExpressionParserTest extends ParserBase {
 
 		@Test
 		public void subtractionAssociativity_leftAssociative() throws Exception {
-			BinaryOperatorExpression exp = parse(ternaryExpression(
+			BinaryOperatorExpression<?> exp = parse(ternaryExpression(
 					ArithmeticOperator.SUBTRACTION,
 					ArithmeticOperator.SUBTRACTION));
 
@@ -731,7 +731,7 @@ public class ExpressionParserTest extends ParserBase {
 			sb.append(operator.getSymbol());
 			sb.append(VARIABLE_NAME2);
 
-			BinaryOperatorExpression binop = parse(sb.toString());
+			BinaryOperatorExpression<?> binop = parse(sb.toString());
 
 			Variable leftVar = (Variable) binop.getLeftExpression();
 			Variable rightVar = (Variable) binop.getRightExpression();

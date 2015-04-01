@@ -20,8 +20,7 @@ public class SymbolTable {
 		AstNode result = map.get(name);
 
 		if (result == null) {
-			throw new SemanticException(ErrorMessage.UNDECLARED_VARIABLE,
-					name.getString());
+			throw new SemanticException(ErrorMessage.UNDECLARED_VARIABLE, name);
 		}
 
 		return result;
@@ -30,7 +29,7 @@ public class SymbolTable {
 	public void insert(Name name, AstNode astNode) throws SemanticException {
 		if (map.containsKey(name)) {
 			throw new SemanticException(ErrorMessage.DUPLICATE_DECLARATION,
-					name.getString());
+					name);
 		}
 
 		map.put(name, astNode);

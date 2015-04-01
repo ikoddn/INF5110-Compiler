@@ -37,7 +37,8 @@ public class Variable extends Expression {
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable) throws SemanticException {
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
 		if (expression == null) {
 			return symbolTable.lookup(name).determineType(symbolTable);
 		}
@@ -45,16 +46,15 @@ public class Variable extends Expression {
 		DataType expressionType = expression.determineType(symbolTable);
 
 		if (expressionType.getType() != Type.CLASS) {
-			throw new SemanticException(ErrorMessage.FIELD_PRIMITIVE_TYPE,
-					name.getString());
+			throw new SemanticException(ErrorMessage.FIELD_PRIMITIVE_TYPE, name);
 		}
 
 		Name expressionTypeName = expressionType.getName();
 		AstNode astNode = symbolTable.lookup(expressionTypeName);
 
 		if (!(astNode instanceof ClassDecl)) {
-			throw new SemanticException(ErrorMessage.UNEXPECTED_NODETYPE,
-					expressionTypeName.getString(), "class declaration");
+			throw new SemanticException(ErrorMessage.NOT_A_CLASS_DECL,
+					expressionTypeName);
 		}
 
 		ClassDecl classDecl = (ClassDecl) astNode;
@@ -65,8 +65,8 @@ public class Variable extends Expression {
 			}
 		}
 
-		throw new SemanticException(ErrorMessage.UNDECLARED_FIELD,
-				name.getString(), classDecl.getName().getString());
+		throw new SemanticException(ErrorMessage.UNDECLARED_FIELD, name,
+				classDecl.getName());
 	}
 
 	@Override

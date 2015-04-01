@@ -1,5 +1,7 @@
 package compiler.exception;
 
+import syntaxtree.Name;
+
 import compiler.ErrorMessage;
 
 public class SemanticException extends Exception {
@@ -18,7 +20,17 @@ public class SemanticException extends Exception {
 		super(message.getMessage());
 	}
 
-	public SemanticException(ErrorMessage message, Object... args) {
-		super(message.getMessage(args));
+	public SemanticException(ErrorMessage message, Name... args) {
+		super(createMessage(message, args));
+	}
+
+	private static String createMessage(ErrorMessage message, Name... names) {
+		Object[] args = new String[names.length];
+
+		for (int i = 0; i < names.length; ++i) {
+			args[i] = names[i].getString();
+		}
+
+		return String.format(message.getMessage(), args);
 	}
 }

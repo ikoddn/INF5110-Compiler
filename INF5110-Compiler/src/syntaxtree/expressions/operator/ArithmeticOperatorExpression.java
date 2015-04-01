@@ -9,7 +9,8 @@ import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.exception.SemanticException;
 
-public class ArithmeticOperatorExpression extends BinaryOperatorExpression {
+public class ArithmeticOperatorExpression extends
+		BinaryOperatorExpression<ArithmeticOperator> {
 
 	public ArithmeticOperatorExpression(Expression leftExpression,
 			ArithmeticOperator operator, Expression rightExpression) {
@@ -17,34 +18,38 @@ public class ArithmeticOperatorExpression extends BinaryOperatorExpression {
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable) throws SemanticException {
-		DataType leftType = leftExpression.determineType(symbolTable);
-		DataType rightType = rightExpression.determineType(symbolTable);
+	public void checkSemantics(SymbolTable symbolTable)
+			throws SemanticException {
+		Type leftType = leftExpression.determineType(symbolTable).getType();
+		Type rightType = rightExpression.determineType(symbolTable).getType();
 
-		switch (leftType.getType()) {
-		case FLOAT:
-			switch (rightType.getType()) {
-			case FLOAT:
-			case INT:
-				return new DataType(Type.FLOAT);
-			default:
-				break;
-			}
-		case INT:
-			switch (rightType.getType()) {
-			case FLOAT:
-				return new DataType(Type.FLOAT);
-			case INT:
-				return new DataType(Type.INT);
-			default:
-				break;
-			}
-		default:
-			break;
+		if (!isAllowed(leftType) || !isAllowed(rightType)) {
+			throw new SemanticException(ErrorMessage.UNALLOWED_TYPE_ARITHMETIC);
+		}
+	}
+
+	@Override
+	public DataType determineType(SymbolTable symbolTable)
+			throws SemanticException {
+		Type leftType = leftExpression.determineType(symbolTable).getType();
+		Type rightType = rightExpression.determineType(symbolTable).getType();
+
+		if (!isAllowed(leftType) || !isAllowed(rightType)) {
+			throw new SemanticException(ErrorMessage.UNALLOWED_TYPE_ARITHMETIC);
 		}
 
-		throw new SemanticException(ErrorMessage.INCOMPATIBLE_TYPES,
-				operator.getSymbol(), leftType.getName().getString(), rightType
-						.getName().getString());
+		if (operator == ArithmeticOperator.EXPONENTIATION) {
+			return new DataType(Type.FLOAT);
+		}
+
+		if (leftType == Type.FLOAT || rightType == Type.FLOAT) {
+			return new DataType(Type.FLOAT);
+		}
+
+		return new DataType(Type.INT);
+	}
+
+	private static boolean isAllowed(Type type) {
+		return type == Type.INT || type == Type.FLOAT;
 	}
 }
