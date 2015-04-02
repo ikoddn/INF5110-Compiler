@@ -73,15 +73,11 @@ public class ProcedureDecl extends Decl {
 		boolean lastStatementIsReturn = false;
 
 		for (Statement statement : subStatements) {
-			statement.checkSemanticsIfNecessary(symbolTable);
+			DataType type = statement.checkSemanticsIfNecessary(symbolTable);
 
 			lastStatementIsReturn = statement instanceof ReturnStatement;
 
 			if (lastStatementIsReturn) {
-				ReturnStatement returnStmt = (ReturnStatement) statement;
-				DataType type = returnStmt.getExpression()
-						.checkSemanticsIfNecessary(symbolTable);
-
 				if (!type.isA(returnType)) {
 					throw new SemanticException(
 							ErrorMessage.UNALLOWED_TYPE_RETURN);
