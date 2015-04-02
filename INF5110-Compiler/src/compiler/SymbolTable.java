@@ -31,6 +31,8 @@ public class SymbolTable {
 	 *            - The {@code SymbolTable} to copy from.
 	 */
 	public SymbolTable(SymbolTable other) {
+		this();
+
 		customTypes.putAll(other.customTypes);
 		procedures.putAll(other.procedures);
 		variables.putAll(other.variables);
