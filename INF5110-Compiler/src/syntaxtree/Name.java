@@ -18,9 +18,9 @@ public class Name extends SimpleAstNode {
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable)
+	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		return symbolTable.lookup(this).determineType(symbolTable);
+		throw new RuntimeException("Not implemented");
 	}
 
 	@Override

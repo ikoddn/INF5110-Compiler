@@ -21,15 +21,9 @@ public class CallStatementExpression extends Expression {
 	}
 
 	@Override
-	public void checkSemantics(SymbolTable symbolTable)
+	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		callStatement.checkSemantics(symbolTable);
-	}
-
-	@Override
-	public DataType determineType(SymbolTable symbolTable)
-			throws SemanticException {
-		return callStatement.determineType(symbolTable);
+		return callStatement.checkSemanticsIfNecessary(symbolTable);
 	}
 
 	@Override

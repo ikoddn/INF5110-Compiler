@@ -6,33 +6,18 @@ import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
 
-import compiler.SymbolTable;
-import compiler.exception.SemanticException;
-
-public class ParameterDecl extends Decl {
+public class ParameterDecl extends VariableDecl {
 
 	private boolean reference;
-	private DataType dataType;
 
 	public ParameterDecl(boolean reference, Name name, DataType dataType) {
-		super(name);
+		super(name, dataType);
 
 		this.reference = reference;
-		this.dataType = dataType;
 	}
 
 	public boolean isReference() {
 		return reference;
-	}
-
-	public DataType getDataType() {
-		return dataType;
-	}
-
-	@Override
-	public DataType determineType(SymbolTable symbolTable)
-			throws SemanticException {
-		return dataType;
 	}
 
 	@Override

@@ -27,8 +27,10 @@ public class ReturnStatement extends Statement {
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable)
+	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
+		expression.checkSemanticsIfNecessary(symbolTable);
+
 		return new DataType(Type.VOID);
 	}
 

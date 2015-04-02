@@ -9,14 +9,23 @@ import compiler.exception.SemanticException;
 
 public abstract class AstNode {
 
-	public void checkSemantics(SymbolTable parentSymbolTable)
-			throws SemanticException {
-		// TODO make abstract
-		throw new SemanticException("Not implemented");
+	private DataType type;
+
+	protected AstNode() {
+		type = null;
 	}
 
-	public abstract DataType determineType(SymbolTable symbolTable)
+	protected abstract DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException;
+
+	public DataType checkSemanticsIfNecessary(SymbolTable symbolTable)
+			throws SemanticException {
+		if (type == null) {
+			type = checkSemantics(symbolTable);
+		}
+
+		return type;
+	}
 
 	public abstract List<String> makeAstStringList();
 

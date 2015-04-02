@@ -22,7 +22,8 @@ public class BoolLiteral extends Literal {
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable) throws SemanticException {
+	protected DataType checkSemantics(SymbolTable parentSymbolTable)
+			throws SemanticException {
 		return new DataType(Type.BOOL);
 	}
 

@@ -26,20 +26,14 @@ public class Program extends AstNode {
 		return decls;
 	}
 
-	public void checkSemantics() throws SemanticException {
-		checkSemantics(null);
-	}
-
 	@Override
-	public void checkSemantics(SymbolTable parentSymbolTable)
+	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		SymbolTable symbolTable = new SymbolTable();
 		boolean hasValidMain = false;
 
 		for (Decl decl : decls) {
-			symbolTable.insert(decl.getName(), decl);
-
-			decl.checkSemantics(symbolTable);
+			decl.insertInto(symbolTable);
+			decl.checkSemanticsIfNecessary(symbolTable);
 
 			if (!hasValidMain) {
 				hasValidMain = isValidMainProcedure(decl);
@@ -49,6 +43,8 @@ public class Program extends AstNode {
 		if (!hasValidMain) {
 			throw new SemanticException(ErrorMessage.MISSING_MAIN);
 		}
+
+		return new DataType(Type.VOID);
 	}
 
 	private boolean isValidMainProcedure(Decl decl) {
@@ -64,12 +60,6 @@ public class Program extends AstNode {
 		}
 
 		return validMain;
-	}
-
-	@Override
-	public DataType determineType(SymbolTable symbolTable)
-			throws SemanticException {
-		return new DataType(Type.VOID);
 	}
 
 	@Override

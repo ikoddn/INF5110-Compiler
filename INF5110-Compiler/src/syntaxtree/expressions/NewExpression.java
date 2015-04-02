@@ -3,7 +3,6 @@ package syntaxtree.expressions;
 import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
-import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 
@@ -24,21 +23,15 @@ public class NewExpression extends Expression {
 	}
 
 	@Override
-	public void checkSemantics(SymbolTable symbolTable)
+	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		Name name = dataType.getName();
-
 		if (dataType.getType() != Type.CLASS) {
 			throw new SemanticException(ErrorMessage.INSTANTIATE_PRIMITIVE,
-					name);
+					dataType.getName());
 		}
 
-		symbolTable.lookup(name);
-	}
+		symbolTable.lookupType(dataType);
 
-	@Override
-	public DataType determineType(SymbolTable symbolTable)
-			throws SemanticException {
 		return dataType;
 	}
 

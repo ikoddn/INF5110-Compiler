@@ -54,8 +54,10 @@ public class Compiler {
 			return new Result(SYNTAX_ERROR, error);
 		}
 
+		SymbolTable symbolTable = new SymbolTable();
+
 		try {
-			program.checkSemantics();
+			program.checkSemanticsIfNecessary(symbolTable);
 		} catch (SemanticException e) {
 			return new Result(SEMANTIC_ERROR, e.getMessage());
 		}

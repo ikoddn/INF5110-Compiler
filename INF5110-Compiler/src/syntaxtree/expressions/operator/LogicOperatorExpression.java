@@ -18,19 +18,17 @@ public class LogicOperatorExpression extends
 	}
 
 	@Override
-	public void checkSemantics(SymbolTable symbolTable)
+	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		Type leftType = leftExpression.determineType(symbolTable).getType();
-		Type rightType = rightExpression.determineType(symbolTable).getType();
+		Type leftType = leftExpression.checkSemanticsIfNecessary(symbolTable)
+				.getType();
+		Type rightType = rightExpression.checkSemanticsIfNecessary(symbolTable)
+				.getType();
 
 		if (!isAllowed(leftType) || !isAllowed(rightType)) {
 			throw new SemanticException(ErrorMessage.UNALLOWED_TYPE_LOGIC);
 		}
-	}
 
-	@Override
-	public DataType determineType(SymbolTable symbolTable)
-			throws SemanticException {
 		return new DataType(Type.BOOL);
 	}
 

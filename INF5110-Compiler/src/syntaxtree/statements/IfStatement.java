@@ -2,13 +2,14 @@ package syntaxtree.statements;
 
 import java.util.List;
 
-import compiler.SymbolTable;
-import compiler.exception.SemanticException;
-
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
+
+import compiler.ErrorMessage;
+import compiler.SymbolTable;
+import compiler.exception.SemanticException;
 
 public class IfStatement extends Statement {
 
@@ -36,8 +37,22 @@ public class IfStatement extends Statement {
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable)
+	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
+		DataType dataType = expression.checkSemanticsIfNecessary(symbolTable);
+
+		if (dataType.getType() != Type.BOOL) {
+			throw new SemanticException(ErrorMessage.NON_BOOL_EXPRESSION);
+		}
+
+		for (Statement statement : ifBodyStatements) {
+			statement.checkSemanticsIfNecessary(symbolTable);
+		}
+
+		for (Statement statement : elseBodyStatements) {
+			statement.checkSemanticsIfNecessary(symbolTable);
+		}
+
 		return new DataType(Type.VOID);
 	}
 

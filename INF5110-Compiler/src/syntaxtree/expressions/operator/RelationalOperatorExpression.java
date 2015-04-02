@@ -18,49 +18,44 @@ public class RelationalOperatorExpression extends
 	}
 
 	@Override
-	public void checkSemantics(SymbolTable symbolTable)
+	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		Type leftType = leftExpression.determineType(symbolTable).getType();
-		Type rightType = rightExpression.determineType(symbolTable).getType();
+		DataType leftType = leftExpression
+				.checkSemanticsIfNecessary(symbolTable);
+		DataType rightType = rightExpression
+				.checkSemanticsIfNecessary(symbolTable);
 
-		if (!leftType.isA(rightType) || !rightType.isA(leftType)) {
+		if (!isAllowed(leftType) || !isAllowed(rightType)) {
 			throw new SemanticException(ErrorMessage.UNALLOWED_TYPE_RELATIONAL);
 		}
 
+		if (!leftType.isA(rightType) && !rightType.isA(leftType)) {
+			throw new SemanticException(ErrorMessage.UNALLOWED_TYPE_RELATIONAL);
+		}
+
+		return new DataType(Type.BOOL);
+	}
+
+	private boolean isAllowed(DataType type) {
 		switch (operator) {
 		case EQUAL:
 		case NOT_EQUAL:
-			if (!isAllowedEquality(leftType) || !isAllowedEquality(rightType)) {
-				throw new SemanticException(
-						ErrorMessage.UNALLOWED_TYPE_EQUALITY);
-			}
-			break;
+			return isAllowedInEquality(type);
 		case GREATER:
 		case GREATER_EQUAL:
 		case LESS:
 		case LESS_EQUAL:
-			if (!isAllowedRelational(leftType)
-					|| !isAllowedRelational(rightType)) {
-				throw new SemanticException(
-						ErrorMessage.UNALLOWED_TYPE_RELATIONAL);
-			}
-			break;
+			return isAllowedInRelational(type);
 		default:
-			break;
+			return false;
 		}
 	}
 
-	@Override
-	public DataType determineType(SymbolTable symbolTable)
-			throws SemanticException {
-		return new DataType(Type.BOOL);
+	private static boolean isAllowedInEquality(DataType type) {
+		return type.getType() != Type.VOID;
 	}
 
-	private static boolean isAllowedEquality(Type type) {
-		return type != Type.VOID;
-	}
-
-	private static boolean isAllowedRelational(Type type) {
-		return type == Type.FLOAT || type == Type.INT;
+	private static boolean isAllowedInRelational(DataType type) {
+		return type.getType() == Type.FLOAT || type.getType() == Type.INT;
 	}
 }

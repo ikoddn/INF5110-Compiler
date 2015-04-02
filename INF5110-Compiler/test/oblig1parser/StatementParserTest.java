@@ -223,8 +223,8 @@ public class StatementParserTest extends ParserBase {
 			PassByReferenceParameter param = (PassByReferenceParameter) stmt
 					.getActualParameters().get(0);
 
-			assertEquals(VARIABLE_NAME, param.getVariable().getName()
-					.getString());
+			Variable variable = (Variable) param.getExpression();
+			assertEquals(VARIABLE_NAME, variable.getName().getString());
 		}
 
 		@Test

@@ -7,6 +7,7 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 
+import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.exception.SemanticException;
 
@@ -29,8 +30,18 @@ public class WhileStatement extends Statement {
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable)
+	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
+		DataType dataType = expression.checkSemanticsIfNecessary(symbolTable);
+
+		if (dataType.getType() != Type.BOOL) {
+			throw new SemanticException(ErrorMessage.NON_BOOL_EXPRESSION);
+		}
+
+		for (Statement statement : statements) {
+			statement.checkSemanticsIfNecessary(symbolTable);
+		}
+
 		return new DataType(Type.VOID);
 	}
 

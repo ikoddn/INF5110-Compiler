@@ -5,8 +5,11 @@ import java.util.List;
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
+import syntaxtree.datatypes.Type;
+import syntaxtree.statements.ReturnStatement;
 import syntaxtree.statements.Statement;
 
+import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.exception.SemanticException;
 
@@ -45,9 +48,58 @@ public class ProcedureDecl extends Decl {
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable)
+	protected DataType checkSemantics(SymbolTable parentSymbolTable)
 			throws SemanticException {
+		SymbolTable symbolTable = new SymbolTable(parentSymbolTable);
+
+		if (!isAllowed(returnType)) {
+			throw new SemanticException(ErrorMessage.UNALLOWED_TYPE_PROCEDURE);
+		}
+
+		if (returnType.getType() == Type.CLASS) {
+			symbolTable.lookupType(returnType);
+		}
+
+		for (ParameterDecl parameterDecl : parameterDecls) {
+			symbolTable.insert(parameterDecl);
+			parameterDecl.checkSemanticsIfNecessary(symbolTable);
+		}
+
+		for (Decl subDecl : subDecls) {
+			subDecl.insertInto(symbolTable);
+			subDecl.checkSemanticsIfNecessary(symbolTable);
+		}
+
+		boolean lastStatementIsReturn = false;
+
+		for (Statement statement : subStatements) {
+			statement.checkSemanticsIfNecessary(symbolTable);
+
+			lastStatementIsReturn = statement instanceof ReturnStatement;
+
+			if (lastStatementIsReturn) {
+				ReturnStatement returnStmt = (ReturnStatement) statement;
+				DataType type = returnStmt.getExpression()
+						.checkSemanticsIfNecessary(symbolTable);
+
+				if (!type.isA(returnType)) {
+					throw new SemanticException(
+							ErrorMessage.UNALLOWED_TYPE_RETURN);
+				}
+			}
+		}
+
+		if (!lastStatementIsReturn && returnType.getType() != Type.VOID) {
+			throw new SemanticException(ErrorMessage.MISSING_RETURN,
+					returnType.getName());
+		}
+
 		return returnType;
+	}
+
+	@Override
+	public void insertInto(SymbolTable symbolTable) throws SemanticException {
+		symbolTable.insert(this);
 	}
 
 	@Override
@@ -67,5 +119,9 @@ public class ProcedureDecl extends Decl {
 		}
 
 		return ast.build();
+	}
+
+	private static boolean isAllowed(DataType type) {
+		return type.getType() != Type.NULL;
 	}
 }

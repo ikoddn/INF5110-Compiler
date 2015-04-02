@@ -22,12 +22,4 @@ public enum Type {
 	public Name getName() {
 		return name;
 	}
-
-	public boolean isA(Type other) {
-		if (this == other) {
-			return true;
-		}
-
-		return this == INT && other == FLOAT;
-	}
 }

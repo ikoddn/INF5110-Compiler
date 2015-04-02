@@ -2,7 +2,6 @@ package syntaxtree.expressions;
 
 import java.util.List;
 
-import syntaxtree.AstNode;
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
@@ -37,31 +36,25 @@ public class Variable extends Expression {
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable)
+	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
 		if (expression == null) {
-			return symbolTable.lookup(name).determineType(symbolTable);
+			return symbolTable.lookupVariable(name).checkSemanticsIfNecessary(
+					symbolTable);
 		}
 
-		DataType expressionType = expression.determineType(symbolTable);
+		DataType expressionType = expression
+				.checkSemanticsIfNecessary(symbolTable);
 
 		if (expressionType.getType() != Type.CLASS) {
 			throw new SemanticException(ErrorMessage.FIELD_PRIMITIVE_TYPE, name);
 		}
 
-		Name expressionTypeName = expressionType.getName();
-		AstNode astNode = symbolTable.lookup(expressionTypeName);
-
-		if (!(astNode instanceof ClassDecl)) {
-			throw new SemanticException(ErrorMessage.NOT_A_CLASS_DECL,
-					expressionTypeName);
-		}
-
-		ClassDecl classDecl = (ClassDecl) astNode;
+		ClassDecl classDecl = symbolTable.lookupType(expressionType);
 
 		for (VariableDecl variableDecl : classDecl.getVariableDecls()) {
 			if (variableDecl.getName().equals(name)) {
-				return variableDecl.determineType(symbolTable);
+				return variableDecl.checkSemanticsIfNecessary(symbolTable);
 			}
 		}
 

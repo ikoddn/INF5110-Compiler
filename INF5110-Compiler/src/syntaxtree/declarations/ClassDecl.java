@@ -24,20 +24,21 @@ public class ClassDecl extends Decl {
 	}
 
 	@Override
-	public void checkSemantics(SymbolTable parentSymbolTable)
+	protected DataType checkSemantics(SymbolTable parentSymbolTable)
 			throws SemanticException {
-		SymbolTable symbolTable = parentSymbolTable.makeCopy();
+		SymbolTable symbolTable = new SymbolTable(parentSymbolTable);
 
 		for (VariableDecl variableDecl : variableDecls) {
-			symbolTable.insert(variableDecl.getName(), variableDecl);
-
-			variableDecl.checkSemantics(symbolTable);
+			symbolTable.insert(variableDecl);
+			variableDecl.checkSemanticsIfNecessary(symbolTable);
 		}
+
+		return new DataType(name);
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable) throws SemanticException {
-		return new DataType(name);
+	public void insertInto(SymbolTable symbolTable) throws SemanticException {
+		symbolTable.insert(this);
 	}
 
 	@Override

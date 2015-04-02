@@ -1,12 +1,16 @@
 package syntaxtree.statements;
 
+import java.util.Iterator;
 import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.actualparameters.ActualParameter;
 import syntaxtree.datatypes.DataType;
+import syntaxtree.declarations.ParameterDecl;
+import syntaxtree.declarations.ProcedureDecl;
 
+import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.exception.SemanticException;
 
@@ -29,9 +33,32 @@ public class CallStatement extends Statement {
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable)
+	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		return symbolTable.lookup(name).determineType(symbolTable);
+		ProcedureDecl decl = symbolTable.lookupProcedure(name);
+		List<ParameterDecl> formalParameters = decl.getParameterDecls();
+
+		if (actualParameters.size() != formalParameters.size()) {
+			throw new SemanticException(ErrorMessage.NOT_MATCHING_SIGNATURE,
+					name);
+		}
+
+		Iterator<ParameterDecl> it = formalParameters.iterator();
+		for (ActualParameter actualParam : actualParameters) {
+			ParameterDecl formalParam = it.next();
+
+			DataType actualType = actualParam
+					.checkSemanticsIfNecessary(symbolTable);
+			DataType formalType = formalParam
+					.checkSemanticsIfNecessary(symbolTable);
+
+			if (!actualType.isA(formalType)) {
+				throw new SemanticException(
+						ErrorMessage.NOT_MATCHING_SIGNATURE, name);
+			}
+		}
+
+		return decl.checkSemanticsIfNecessary(symbolTable);
 	}
 
 	@Override

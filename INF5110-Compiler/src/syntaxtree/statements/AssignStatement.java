@@ -8,6 +8,7 @@ import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 import syntaxtree.expressions.Variable;
 
+import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.exception.SemanticException;
 
@@ -30,8 +31,17 @@ public class AssignStatement extends Statement {
 	}
 
 	@Override
-	public DataType determineType(SymbolTable symbolTable)
+	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
+		DataType leftType = leftHandSide.checkSemanticsIfNecessary(symbolTable);
+		DataType rightType = rightHandSide
+				.checkSemanticsIfNecessary(symbolTable);
+
+		if (!rightType.isA(leftType)) {
+			throw new SemanticException(ErrorMessage.ASSIGN_INVALID_TYPE,
+					leftType.getName(), rightType.getName());
+		}
+
 		return new DataType(Type.VOID);
 	}
 
