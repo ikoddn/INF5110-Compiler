@@ -57,6 +57,7 @@ public class Compiler {
 		SymbolTable symbolTable = new SymbolTable();
 
 		try {
+			StandardLibrary.insertInto(symbolTable);
 			program.checkSemanticsIfNecessary(symbolTable);
 		} catch (SemanticException e) {
 			return new Result(SEMANTIC_ERROR, e.getMessage());
@@ -97,9 +98,14 @@ public class Compiler {
 
 		try {
 			Result result = compiler.compile();
-
-			System.out.println(result.getMessage());
 			code = result.getCode();
+			String message = result.getMessage();
+
+			if (message != null) {
+				System.out.println(message);
+			} else {
+				System.out.println("Compiled successfully!");
+			}
 		} catch (IOException e) {
 			System.out.println("ERROR: " + e);
 			code = UNKNOWN_ERROR;

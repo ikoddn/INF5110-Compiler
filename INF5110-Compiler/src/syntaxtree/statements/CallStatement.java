@@ -47,6 +47,11 @@ public class CallStatement extends Statement {
 		for (ActualParameter actualParam : actualParameters) {
 			ParameterDecl formalParam = it.next();
 
+			if (actualParam.isReference() != formalParam.isReference()) {
+				throw new SemanticException(
+						ErrorMessage.NOT_MATCHING_SIGNATURE, name);
+			}
+
 			DataType actualType = actualParam
 					.checkSemanticsIfNecessary(symbolTable);
 			DataType formalType = formalParam

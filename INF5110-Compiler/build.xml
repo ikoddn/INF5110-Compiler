@@ -95,7 +95,7 @@
 
 	<!-- Compile test classes -->
 	<target name="compile-test" depends="mkdir">
-		<javac srcdir="${dir.src}" destdir="${dir.classes}" debug="true"
+		<javac includeantruntime="false" srcdir="${dir.src}" destdir="${dir.classes}" debug="true"
 			includes="test/*.java" classpathref="path-cup" />
 	</target>
 

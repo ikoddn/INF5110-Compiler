@@ -35,9 +35,9 @@ program {
      }
      var num : float;
      num := 6.480740;
-     print_float( num );
-     print_str( " squared is " );
-     print_float( Square( num ) );
+     printfloat( num );
+     printstr( " squared is " );
+     printfloat( Square( num ) );
    
     return;
   }
