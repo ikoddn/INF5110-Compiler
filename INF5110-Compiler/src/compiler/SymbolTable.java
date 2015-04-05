@@ -88,7 +88,8 @@ public class SymbolTable {
 			throws SemanticException {
 		Name name = decl.getName();
 
-		if (map.containsKey(name)) {
+		if (customTypes.containsKey(name) || procedures.containsKey(name)
+				|| variables.containsKey(name)) {
 			throw new SemanticException(ErrorMessage.DUPLICATE_DECLARATION,
 					name);
 		}

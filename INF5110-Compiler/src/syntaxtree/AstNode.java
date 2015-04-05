@@ -15,6 +15,10 @@ public abstract class AstNode {
 		type = null;
 	}
 
+	public void setTypeManually(DataType type) {
+		this.type = type;
+	}
+
 	protected abstract DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException;
 

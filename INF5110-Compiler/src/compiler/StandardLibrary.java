@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import syntaxtree.datatypes.Type;
+import syntaxtree.declarations.ProcedureDecl;
 
 import compiler.exception.SemanticException;
 
@@ -28,7 +29,9 @@ public class StandardLibrary {
 				false, "s", Type.STRING));
 
 		for (ProcedureDeclBuilder builder : list) {
-			symbolTable.insert(builder.build());
+			ProcedureDecl decl = builder.build();
+			decl.setTypeManually(decl.getReturnType());
+			symbolTable.insert(decl);
 		}
 	}
 }
