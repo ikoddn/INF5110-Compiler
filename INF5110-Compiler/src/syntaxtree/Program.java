@@ -14,8 +14,6 @@ import compiler.exception.SemanticException;
 
 public class Program extends AstNode {
 
-	private static final String MAIN = "Main";
-
 	private List<Decl> decls;
 
 	public Program(List<Decl> decls) {
@@ -35,8 +33,9 @@ public class Program extends AstNode {
 			decl.insertInto(symbolTable);
 			decl.checkSemanticsIfNecessary(symbolTable);
 
-			if (!hasValidMain) {
-				hasValidMain = isValidMainProcedure(decl);
+			if (!hasValidMain && decl instanceof ProcedureDecl) {
+				ProcedureDecl proc = (ProcedureDecl) decl;
+				hasValidMain = proc.isValidMain();
 			}
 		}
 
@@ -45,21 +44,6 @@ public class Program extends AstNode {
 		}
 
 		return new DataType(Type.VOID);
-	}
-
-	private boolean isValidMainProcedure(Decl decl) {
-		boolean validMain = false;
-
-		if (MAIN.equals(decl.getName().getString())
-				&& decl instanceof ProcedureDecl) {
-
-			ProcedureDecl main = (ProcedureDecl) decl;
-
-			validMain = main.getParameterDecls().isEmpty()
-					&& main.getReturnType().getType() == Type.VOID;
-		}
-
-		return validMain;
 	}
 
 	@Override

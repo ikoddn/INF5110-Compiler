@@ -31,11 +31,19 @@ public class DataType extends SimpleAstNode {
 	}
 
 	public boolean isA(DataType other) {
-		if (equals(other)) {
+		if (type == other.type) {
+			if (type == Type.CLASS) {
+				return name.equals(other.name);
+			}
+
 			return true;
+		} else if (type == Type.INT) {
+			return other.type == Type.FLOAT;
+		} else if (type == Type.NULL) {
+			return other.type == Type.CLASS;
 		}
 
-		return type == Type.INT && other.type == Type.FLOAT;
+		return false;
 	}
 
 	@Override

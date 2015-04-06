@@ -15,6 +15,8 @@ import compiler.exception.SemanticException;
 
 public class ProcedureDecl extends Decl {
 
+	private static final String MAIN = "Main";
+
 	private DataType returnType;
 	private List<ParameterDecl> parameterDecls;
 	private List<Decl> subDecls;
@@ -45,6 +47,11 @@ public class ProcedureDecl extends Decl {
 
 	public List<Statement> getSubStatements() {
 		return subStatements;
+	}
+
+	public boolean isValidMain() {
+		return MAIN.equals(name.getString()) && parameterDecls.isEmpty()
+				&& returnType.getType() == Type.VOID;
 	}
 
 	@Override
