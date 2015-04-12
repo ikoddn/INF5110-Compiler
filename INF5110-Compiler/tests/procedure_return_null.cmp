@@ -6,7 +6,7 @@ program
 	}
 	proc test : string ()
 	{
-	    return null;
+	    return "abc";
 	}
 
 }
