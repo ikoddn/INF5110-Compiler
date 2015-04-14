@@ -5,10 +5,11 @@ import java.util.List;
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
-
+import bytecode.CodeProcedure;
+import bytecode.instructions.NOT;
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class NotExpression extends Expression {
 
@@ -33,6 +34,12 @@ public class NotExpression extends Expression {
 		}
 
 		return new DataType(Type.BOOL);
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		expression.generateCode(procedure);
+		procedure.addInstruction(new NOT());
 	}
 
 	@Override

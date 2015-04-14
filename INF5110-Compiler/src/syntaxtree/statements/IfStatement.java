@@ -6,10 +6,13 @@ import syntaxtree.AstStringListBuilder;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
-
+import bytecode.CodeProcedure;
+import bytecode.instructions.JMP;
+import bytecode.instructions.JMPFALSE;
+import bytecode.instructions.NOP;
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class IfStatement extends Statement {
 
@@ -54,6 +57,34 @@ public class IfStatement extends Statement {
 		}
 
 		return new DataType(Type.VOID);
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		expression.generateCode(procedure);
+
+		int ifAction = procedure.addInstruction(new NOP());
+
+		for (Statement statement : ifBodyStatements) {
+			statement.generateCode(procedure);
+		}
+
+		int ifBodyDone = procedure.addInstruction(new NOP());
+
+		if (elseBodyStatements.isEmpty()) {
+			procedure.replaceInstruction(ifAction, new JMPFALSE(ifBodyDone));
+		} else {
+			int elseBodyStart = procedure.addInstruction(new NOP());
+
+			for (Statement statement : elseBodyStatements) {
+				statement.generateCode(procedure);
+			}
+
+			int elseBodyDone = procedure.addInstruction(new NOP());
+
+			procedure.replaceInstruction(ifAction, new JMPFALSE(elseBodyStart));
+			procedure.replaceInstruction(ifBodyDone, new JMP(elseBodyDone));
+		}
 	}
 
 	@Override

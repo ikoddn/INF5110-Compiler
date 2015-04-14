@@ -4,10 +4,15 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 import syntaxtree.operators.ArithmeticOperator;
-
+import bytecode.instructions.ADD;
+import bytecode.instructions.DIV;
+import bytecode.instructions.EXP;
+import bytecode.instructions.Instruction;
+import bytecode.instructions.MUL;
+import bytecode.instructions.SUB;
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class ArithmeticOperatorExpression extends
 		BinaryOperatorExpression<ArithmeticOperator> {
@@ -38,6 +43,24 @@ public class ArithmeticOperatorExpression extends
 		}
 
 		return new DataType(Type.INT);
+	}
+
+	@Override
+	protected Instruction getByteCodeInstruction() {
+		switch (operator) {
+		case ADDITION:
+			return new ADD();
+		case DIVISION:
+			return new DIV();
+		case EXPONENTIATION:
+			return new EXP();
+		case MULTIPLICATION:
+			return new MUL();
+		case SUBTRACTION:
+			return new SUB();
+		default:
+			return null;
+		}
 	}
 
 	private static boolean isAllowed(Type type) {

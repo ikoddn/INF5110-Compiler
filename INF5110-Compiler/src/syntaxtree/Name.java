@@ -1,9 +1,8 @@
 package syntaxtree;
 
 import syntaxtree.datatypes.DataType;
-
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class Name extends SimpleAstNode {
 

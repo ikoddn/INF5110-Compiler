@@ -11,36 +11,44 @@ import syntaxtree.declarations.ParameterDecl;
 import syntaxtree.declarations.ProcedureDecl;
 import syntaxtree.statements.Statement;
 
-public class ProcedureDeclBuilder {
+public class ProcedureSignature {
 
 	private Name name;
 	private DataType returnType;
 	private List<ParameterDecl> parameters;
 
-	public ProcedureDeclBuilder(String name, DataType returnType) {
+	public ProcedureSignature(String name, DataType returnType) {
 		this.name = new Name(name);
 		this.returnType = returnType;
 		parameters = new LinkedList<ParameterDecl>();
 	}
 
-	public ProcedureDeclBuilder(String name, Type returnType) {
+	public Name getName() {
+		return name;
+	}
+
+	public DataType getReturnType() {
+		return returnType;
+	}
+
+	public ProcedureSignature(String name, Type returnType) {
 		this(name, new DataType(returnType));
 	}
 
-	public ProcedureDeclBuilder addParameter(boolean reference,
-			String paramName, DataType paramType) {
+	public ProcedureSignature addParameter(boolean reference, String paramName,
+			DataType paramType) {
 		Name name = new Name(paramName);
 		parameters.add(new ParameterDecl(reference, name, paramType));
 
 		return this;
 	}
 
-	public ProcedureDeclBuilder addParameter(boolean reference,
-			String paramName, Type paramType) {
+	public ProcedureSignature addParameter(boolean reference, String paramName,
+			Type paramType) {
 		return addParameter(reference, paramName, new DataType(paramType));
 	}
 
-	public ProcedureDecl build() {
+	public ProcedureDecl buildDecl() {
 		return new ProcedureDecl(name, returnType, parameters,
 				new LinkedList<Decl>(), new LinkedList<Statement>());
 	}

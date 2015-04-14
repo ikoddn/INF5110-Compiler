@@ -7,10 +7,9 @@ import syntaxtree.datatypes.Type;
 import syntaxtree.declarations.Decl;
 import syntaxtree.declarations.ProcedureDecl;
 import bytecode.CodeFile;
-
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class Program extends AstNode {
 
@@ -46,12 +45,16 @@ public class Program extends AstNode {
 		return new DataType(Type.VOID);
 	}
 
+	public void generateCode(CodeFile codeFile) {
+		for (Decl decl : decls) {
+			decl.generateCode(codeFile);
+		}
+
+		codeFile.setMain(ProcedureDecl.MAIN);
+	}
+
 	@Override
 	public List<String> makeAstStringList() {
 		return new AstStringListBuilder("PROGRAM").addIndented(decls).build();
-	}
-
-	public void generateCode(CodeFile codeFile) {
-		// TODO Auto-generated method stub
 	}
 }

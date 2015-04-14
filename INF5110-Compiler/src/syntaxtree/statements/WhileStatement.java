@@ -6,10 +6,13 @@ import syntaxtree.AstStringListBuilder;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
-
+import bytecode.CodeProcedure;
+import bytecode.instructions.JMP;
+import bytecode.instructions.JMPFALSE;
+import bytecode.instructions.NOP;
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class WhileStatement extends Statement {
 
@@ -43,6 +46,24 @@ public class WhileStatement extends Statement {
 		}
 
 		return new DataType(Type.VOID);
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		int start = procedure.addInstruction(new NOP());
+		
+		expression.generateCode(procedure);
+		
+		int whileAction = procedure.addInstruction(new NOP());
+		
+		for (Statement statement : statements) {
+			statement.generateCode(procedure);
+		}
+		
+		procedure.addInstruction(new JMP(start));
+		
+		int afterPosition = procedure.addInstruction(new NOP());
+		procedure.replaceInstruction(whileAction, new JMPFALSE(afterPosition));
 	}
 
 	@Override

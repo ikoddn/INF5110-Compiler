@@ -4,10 +4,16 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 import syntaxtree.operators.RelationalOperator;
-
+import bytecode.instructions.EQ;
+import bytecode.instructions.GT;
+import bytecode.instructions.GTEQ;
+import bytecode.instructions.Instruction;
+import bytecode.instructions.LT;
+import bytecode.instructions.LTEQ;
+import bytecode.instructions.NEQ;
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class RelationalOperatorExpression extends
 		BinaryOperatorExpression<RelationalOperator> {
@@ -34,6 +40,26 @@ public class RelationalOperatorExpression extends
 		}
 
 		return new DataType(Type.BOOL);
+	}
+
+	@Override
+	protected Instruction getByteCodeInstruction() {
+		switch (operator) {
+		case EQUAL:
+			return new EQ();
+		case GREATER:
+			return new GT();
+		case GREATER_EQUAL:
+			return new GTEQ();
+		case LESS:
+			return new LT();
+		case LESS_EQUAL:
+			return new LTEQ();
+		case NOT_EQUAL:
+			return new NEQ();
+		default:
+			return null;
+		}
 	}
 
 	private boolean isAllowed(DataType type) {

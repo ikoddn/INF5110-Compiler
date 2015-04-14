@@ -5,9 +5,10 @@ import java.util.List;
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
-
+import bytecode.CodeProcedure;
+import bytecode.instructions.PUSHINT;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class IntLiteral extends Literal {
 
@@ -25,6 +26,11 @@ public class IntLiteral extends Literal {
 	protected DataType checkSemantics(SymbolTable parentSymbolTable)
 			throws SemanticException {
 		return new DataType(Type.INT);
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		procedure.addInstruction(new PUSHINT(number));
 	}
 
 	@Override

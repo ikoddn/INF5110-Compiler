@@ -4,10 +4,12 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 import syntaxtree.operators.LogicOperator;
-
+import bytecode.instructions.AND;
+import bytecode.instructions.Instruction;
+import bytecode.instructions.OR;
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class LogicOperatorExpression extends
 		BinaryOperatorExpression<LogicOperator> {
@@ -30,6 +32,15 @@ public class LogicOperatorExpression extends
 		}
 
 		return new DataType(Type.BOOL);
+	}
+
+	@Override
+	protected Instruction getByteCodeInstruction() {
+		if (operator == LogicOperator.AND) {
+			return new AND();
+		}
+
+		return new OR();
 	}
 
 	private static boolean isAllowed(Type type) {

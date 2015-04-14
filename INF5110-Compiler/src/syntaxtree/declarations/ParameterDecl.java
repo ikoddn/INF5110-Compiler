@@ -5,6 +5,11 @@ import java.util.List;
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
+import bytecode.CodeFile;
+import bytecode.CodeProcedure;
+import bytecode.type.CodeType;
+
+import compiler.throwable.CodeGenerationError;
 
 public class ParameterDecl extends VariableDecl {
 
@@ -18,6 +23,18 @@ public class ParameterDecl extends VariableDecl {
 
 	public boolean isReference() {
 		return reference;
+	}
+
+	@Override
+	public void generateCode(CodeFile codeFile) {
+		throw new CodeGenerationError(
+				"Parameter outside procedure declaration not allowed");
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		CodeType codeType = dataType.getByteCodeType(procedure);
+		procedure.addParameter(name.getString(), codeType);
 	}
 
 	@Override

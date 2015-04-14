@@ -4,9 +4,9 @@ import java.util.List;
 
 import syntaxtree.datatypes.DataType;
 import syntaxtree.statements.CallStatement;
-
+import bytecode.CodeProcedure;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class CallStatementExpression extends Expression {
 
@@ -24,6 +24,11 @@ public class CallStatementExpression extends Expression {
 	protected DataType checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
 		return callStatement.checkSemanticsIfNecessary(symbolTable);
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		callStatement.generateCode(procedure);
 	}
 
 	@Override

@@ -7,10 +7,10 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 import syntaxtree.expressions.Variable;
-
+import bytecode.CodeProcedure;
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class AssignStatement extends Statement {
 
@@ -43,6 +43,12 @@ public class AssignStatement extends Statement {
 		}
 
 		return new DataType(Type.VOID);
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		rightHandSide.generateCode(procedure);
+		leftHandSide.generateCodeForStore(procedure);
 	}
 
 	@Override

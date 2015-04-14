@@ -9,8 +9,7 @@ import syntaxtree.declarations.ClassDecl;
 import syntaxtree.declarations.Decl;
 import syntaxtree.declarations.ProcedureDecl;
 import syntaxtree.declarations.VariableDecl;
-
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class SymbolTable {
 

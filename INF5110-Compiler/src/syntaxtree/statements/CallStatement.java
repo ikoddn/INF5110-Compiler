@@ -9,10 +9,11 @@ import syntaxtree.actualparameters.ActualParameter;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.declarations.ParameterDecl;
 import syntaxtree.declarations.ProcedureDecl;
-
+import bytecode.CodeProcedure;
+import bytecode.instructions.CALL;
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class CallStatement extends Statement {
 
@@ -64,6 +65,17 @@ public class CallStatement extends Statement {
 		}
 
 		return decl.checkSemanticsIfNecessary(symbolTable);
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		int procedureNumber = procedure.procedureNumber(name.getString());
+
+		for (ActualParameter parameter : actualParameters) {
+			parameter.generateCode(procedure);
+		}
+
+		procedure.addInstruction(new CALL(procedureNumber));
 	}
 
 	@Override

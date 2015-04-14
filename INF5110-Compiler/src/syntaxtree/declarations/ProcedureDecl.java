@@ -8,14 +8,18 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.statements.ReturnStatement;
 import syntaxtree.statements.Statement;
+import bytecode.CodeFile;
+import bytecode.CodeProcedure;
+import bytecode.type.CodeType;
 
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.CodeGenerationError;
+import compiler.throwable.SemanticException;
 
 public class ProcedureDecl extends Decl {
 
-	private static final String MAIN = "Main";
+	public static final String MAIN = "Main";
 
 	private DataType returnType;
 	private List<ParameterDecl> parameterDecls;
@@ -103,6 +107,34 @@ public class ProcedureDecl extends Decl {
 	@Override
 	public void insertInto(SymbolTable symbolTable) throws SemanticException {
 		symbolTable.insert(this);
+	}
+
+	@Override
+	public void generateCode(CodeFile codeFile) {
+		codeFile.addProcedure(name.getString());
+		CodeType codeTypeReturn = returnType.getByteCodeType(codeFile);
+
+		CodeProcedure procedure = new CodeProcedure(name.getString(),
+				codeTypeReturn, codeFile);
+
+		for (ParameterDecl parameterDecl : parameterDecls) {
+			parameterDecl.generateCode(procedure);
+		}
+
+		for (Decl decl : subDecls) {
+			decl.generateCode(procedure);
+		}
+
+		for (Statement statement : subStatements) {
+			statement.generateCode(procedure);
+		}
+
+		codeFile.updateProcedure(procedure);
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		throw new CodeGenerationError("Procedure inside procedure not allowed");
 	}
 
 	@Override

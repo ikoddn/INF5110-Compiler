@@ -5,9 +5,13 @@ import java.util.List;
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
+import bytecode.CodeFile;
+import bytecode.CodeProcedure;
+import bytecode.CodeStruct;
 
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.CodeGenerationError;
+import compiler.throwable.SemanticException;
 
 public class ClassDecl extends Decl {
 
@@ -39,6 +43,24 @@ public class ClassDecl extends Decl {
 	@Override
 	public void insertInto(SymbolTable symbolTable) throws SemanticException {
 		symbolTable.insert(this);
+	}
+
+	@Override
+	public void generateCode(CodeFile codeFile) {
+		codeFile.addStruct(name.getString());
+
+		CodeStruct struct = new CodeStruct(name.getString());
+
+		for (VariableDecl variableDecl : variableDecls) {
+			variableDecl.generateCodeInStruct(struct, codeFile);
+		}
+
+		codeFile.updateStruct(struct);
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		throw new CodeGenerationError("Procedure inside class not allowed");
 	}
 
 	@Override

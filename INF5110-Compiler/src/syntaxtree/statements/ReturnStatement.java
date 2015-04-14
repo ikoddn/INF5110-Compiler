@@ -6,9 +6,10 @@ import syntaxtree.AstStringListBuilder;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
-
+import bytecode.CodeProcedure;
+import bytecode.instructions.RETURN;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class ReturnStatement extends Statement {
 
@@ -34,6 +35,15 @@ public class ReturnStatement extends Statement {
 		}
 
 		return new DataType(Type.VOID);
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		if (expression != null) {
+			expression.generateCode(procedure);
+		}
+
+		procedure.addInstruction(new RETURN());
 	}
 
 	@Override

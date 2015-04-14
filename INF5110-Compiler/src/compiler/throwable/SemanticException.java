@@ -1,4 +1,4 @@
-package compiler.exception;
+package compiler.throwable;
 
 import syntaxtree.Name;
 

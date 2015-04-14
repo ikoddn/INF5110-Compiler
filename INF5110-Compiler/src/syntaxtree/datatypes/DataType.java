@@ -3,9 +3,17 @@ package syntaxtree.datatypes;
 import syntaxtree.AstStringBuilder;
 import syntaxtree.Name;
 import syntaxtree.SimpleAstNode;
-
+import bytecode.CodeFile;
+import bytecode.CodeProcedure;
+import bytecode.type.BoolType;
+import bytecode.type.CodeType;
+import bytecode.type.FloatType;
+import bytecode.type.IntType;
+import bytecode.type.RefType;
+import bytecode.type.StringType;
+import bytecode.type.VoidType;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class DataType extends SimpleAstNode {
 
@@ -28,6 +36,42 @@ public class DataType extends SimpleAstNode {
 
 	public Type getType() {
 		return type;
+	}
+
+	private CodeType getPrimitiveByteCodeType() {
+		switch (type) {
+		case BOOL:
+			return BoolType.TYPE;
+		case FLOAT:
+			return FloatType.TYPE;
+		case INT:
+			return IntType.TYPE;
+		case STRING:
+			return StringType.TYPE;
+		case VOID:
+			return VoidType.TYPE;
+		case NULL:
+		default:
+			return null;
+		}
+	}
+
+	public CodeType getByteCodeType(CodeFile codeFile) {
+		if (type == Type.CLASS) {
+			int structNumber = codeFile.structNumber(name.getString());
+			return new RefType(structNumber);
+		}
+
+		return getPrimitiveByteCodeType();
+	}
+
+	public CodeType getByteCodeType(CodeProcedure procedure) {
+		if (type == Type.CLASS) {
+			int structNumber = procedure.structNumber(name.getString());
+			return new RefType(structNumber);
+		}
+
+		return getPrimitiveByteCodeType();
 	}
 
 	public boolean isA(DataType other) {

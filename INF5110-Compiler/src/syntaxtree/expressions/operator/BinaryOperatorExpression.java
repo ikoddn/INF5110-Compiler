@@ -5,6 +5,8 @@ import java.util.List;
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.expressions.Expression;
 import syntaxtree.operators.Operator;
+import bytecode.CodeProcedure;
+import bytecode.instructions.Instruction;
 
 public abstract class BinaryOperatorExpression<O extends Operator> extends
 		Expression {
@@ -33,8 +35,17 @@ public abstract class BinaryOperatorExpression<O extends Operator> extends
 	}
 
 	@Override
+	public final void generateCode(CodeProcedure procedure) {
+		leftExpression.generateCode(procedure);
+		rightExpression.generateCode(procedure);
+		procedure.addInstruction(getByteCodeInstruction());
+	}
+
+	@Override
 	public List<String> makeAstStringList() {
 		return new AstStringListBuilder(operator.makeAstLabel()).addIndented(
 				leftExpression, rightExpression).build();
 	}
+
+	protected abstract Instruction getByteCodeInstruction();
 }

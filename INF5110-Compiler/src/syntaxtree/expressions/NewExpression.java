@@ -5,10 +5,11 @@ import java.util.List;
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
-
+import bytecode.CodeProcedure;
+import bytecode.instructions.NEW;
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class NewExpression extends Expression {
 
@@ -33,6 +34,13 @@ public class NewExpression extends Expression {
 		symbolTable.lookupType(dataType);
 
 		return dataType;
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		String structName = dataType.getName().getString();
+		int structNumber = procedure.structNumber(structName);
+		procedure.addInstruction(new NEW(structNumber));
 	}
 
 	@Override

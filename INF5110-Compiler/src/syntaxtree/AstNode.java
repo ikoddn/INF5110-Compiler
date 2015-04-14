@@ -3,9 +3,8 @@ package syntaxtree;
 import java.util.List;
 
 import syntaxtree.datatypes.DataType;
-
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public abstract class AstNode {
 
@@ -15,14 +14,11 @@ public abstract class AstNode {
 		type = null;
 	}
 
-	public void setTypeManually(DataType type) {
+	public final void setTypeManually(DataType type) {
 		this.type = type;
 	}
 
-	protected abstract DataType checkSemantics(SymbolTable symbolTable)
-			throws SemanticException;
-
-	public DataType checkSemanticsIfNecessary(SymbolTable symbolTable)
+	public final DataType checkSemanticsIfNecessary(SymbolTable symbolTable)
 			throws SemanticException {
 		if (type == null) {
 			type = checkSemantics(symbolTable);
@@ -30,6 +26,9 @@ public abstract class AstNode {
 
 		return type;
 	}
+
+	protected abstract DataType checkSemantics(SymbolTable symbolTable)
+			throws SemanticException;
 
 	public abstract List<String> makeAstStringList();
 

@@ -6,10 +6,13 @@ import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
-
+import bytecode.CodeFile;
+import bytecode.CodeProcedure;
+import bytecode.CodeStruct;
+import bytecode.type.CodeType;
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.exception.SemanticException;
+import compiler.throwable.SemanticException;
 
 public class VariableDecl extends Decl {
 
@@ -41,6 +44,24 @@ public class VariableDecl extends Decl {
 	@Override
 	public void insertInto(SymbolTable symbolTable) throws SemanticException {
 		symbolTable.insert(this);
+	}
+
+	@Override
+	public void generateCode(CodeFile codeFile) {
+		CodeType codeType = dataType.getByteCodeType(codeFile);
+		codeFile.addVariable(name.getString());
+		codeFile.updateVariable(name.getString(), codeType);
+	}
+
+	@Override
+	public void generateCode(CodeProcedure procedure) {
+		CodeType codeType = dataType.getByteCodeType(procedure);
+		procedure.addLocalVariable(name.getString(), codeType);
+	}
+
+	public void generateCodeInStruct(CodeStruct struct, CodeFile codeFile) {
+		CodeType codeType = dataType.getByteCodeType(codeFile);
+		struct.addVariable(name.getString(), codeType);
 	}
 
 	@Override
