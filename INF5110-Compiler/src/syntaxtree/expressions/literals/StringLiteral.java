@@ -7,8 +7,6 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import bytecode.CodeProcedure;
 import bytecode.instructions.PUSHSTRING;
-import compiler.SymbolTable;
-import compiler.throwable.SemanticException;
 
 public class StringLiteral extends Literal {
 
@@ -23,8 +21,7 @@ public class StringLiteral extends Literal {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable parentSymbolTable)
-			throws SemanticException {
+	public DataType getDataType() {
 		return new DataType(Type.STRING);
 	}
 

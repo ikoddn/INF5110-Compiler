@@ -3,8 +3,8 @@ package compiler;
 public enum ErrorMessage {
 	ASSIGN_INVALID_TYPE("Cannot convert from %s to %s"),
 	DUPLICATE_DECLARATION("%s is declared multiple times"),
-	FIELD_PRIMITIVE_TYPE("Expression is not a class type"
-			+ " and does not have a field %s"),
+	FIELD_PRIMITIVE_TYPE(
+			"Expression is not a class type and does not have a field %s"),
 	INSTANTIATE_PRIMITIVE("Can't instantiate objects of type '%s'"),
 	MISSING_MAIN("Missing main procedure"),
 	MISSING_RETURN("Procedure must return a result of type %s"),
@@ -22,7 +22,8 @@ public enum ErrorMessage {
 	UNDECLARED_PROCEDURE("The procedure %s has not been declared"),
 	UNDECLARED_FIELD("%s is not a field of %s"),
 	UNDECLARED_TYPE("The type %s has not been declared"),
-	UNDECLARED_VARIABLE("The variable %s has not been declared");
+	UNDECLARED_VARIABLE("The variable %s has not been declared"),
+	UNDETERMINED_TYPE("Semantics must be analyzed before type is determined");
 
 	private String message;
 

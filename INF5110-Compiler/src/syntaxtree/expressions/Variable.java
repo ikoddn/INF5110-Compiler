@@ -19,12 +19,14 @@ import bytecode.instructions.STORELOCAL;
 
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
+import compiler.throwable.SemanticError;
 import compiler.throwable.SemanticException;
 
 public class Variable extends Expression {
 
 	private Name name;
 	private Expression expression;
+	private DataType dataType;
 
 	public Variable(Name name) {
 		this(name, null);
@@ -33,6 +35,7 @@ public class Variable extends Expression {
 	public Variable(Name name, Expression expression) {
 		this.name = name;
 		this.expression = expression;
+		dataType = null;
 	}
 
 	public Name getName() {
@@ -44,15 +47,26 @@ public class Variable extends Expression {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
-			throws SemanticException {
-		if (expression == null) {
-			return symbolTable.lookupVariable(name).checkSemanticsIfNecessary(
-					symbolTable);
+	public DataType getDataType() {
+		if (dataType == null) {
+			throw new SemanticError(ErrorMessage.UNDETERMINED_TYPE);
 		}
 
-		DataType expressionType = expression
-				.checkSemanticsIfNecessary(symbolTable);
+		return dataType;
+	}
+
+	@Override
+	public void checkSemantics(SymbolTable symbolTable)
+			throws SemanticException {
+		if (expression == null) {
+			VariableDecl decl = symbolTable.lookupVariable(name);
+			dataType = decl.getDataType();
+
+			return;
+		}
+
+		expression.checkSemantics(symbolTable);
+		DataType expressionType = expression.getDataType();
 
 		if (expressionType.getType() != Type.CLASS) {
 			throw new SemanticException(ErrorMessage.FIELD_PRIMITIVE_TYPE, name);
@@ -61,8 +75,10 @@ public class Variable extends Expression {
 		ClassDecl classDecl = symbolTable.lookupType(expressionType);
 
 		for (VariableDecl variableDecl : classDecl.getVariableDecls()) {
-			if (variableDecl.getName().equals(name)) {
-				return variableDecl.checkSemanticsIfNecessary(symbolTable);
+			if (name.equals(variableDecl.getName())) {
+				dataType = variableDecl.getDataType();
+
+				return;
 			}
 		}
 
@@ -76,9 +92,6 @@ public class Variable extends Expression {
 	}
 
 	public void generateCodeForLoad(CodeProcedure procedure) {
-		// reference to struct
-		// GETFIELD
-
 		Instruction instruction;
 
 		if (expression == null) {
@@ -91,15 +104,9 @@ public class Variable extends Expression {
 				instruction = new LOADLOCAL(number);
 			}
 		} else {
-			// TODO UNHACK THIS
-			DataType dataType = null;
-			try {
-				dataType = expression.checkSemanticsIfNecessary(null);
-			} catch (SemanticException e) {
-				e.printStackTrace();
-			}
+			DataType expressionType = expression.getDataType();
 
-			String structName = dataType.getName().getString();
+			String structName = expressionType.getName().getString();
 			int fieldNumber = procedure.fieldNumber(structName,
 					name.getString());
 			int structNumber = procedure.structNumber(structName);
@@ -123,15 +130,9 @@ public class Variable extends Expression {
 				instruction = new STORELOCAL(number);
 			}
 		} else {
-			// TODO UNHACK THIS
-			DataType dataType = null;
-			try {
-				dataType = expression.checkSemanticsIfNecessary(null);
-			} catch (SemanticException e) {
-				e.printStackTrace();
-			}
+			DataType expressionType = expression.getDataType();
 
-			String structName = dataType.getName().getString();
+			String structName = expressionType.getName().getString();
 			int fieldNumber = procedure.fieldNumber(structName,
 					name.getString());
 			int structNumber = procedure.structNumber(structName);

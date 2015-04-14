@@ -11,18 +11,22 @@ import syntaxtree.declarations.ParameterDecl;
 import syntaxtree.declarations.ProcedureDecl;
 import bytecode.CodeProcedure;
 import bytecode.instructions.CALL;
+
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
+import compiler.throwable.SemanticError;
 import compiler.throwable.SemanticException;
 
 public class CallStatement extends Statement {
 
 	private Name name;
 	private List<ActualParameter> actualParameters;
+	private DataType dataType;
 
 	public CallStatement(Name name, List<ActualParameter> actualParameters) {
 		this.name = name;
 		this.actualParameters = actualParameters;
+		dataType = null;
 	}
 
 	public Name getName() {
@@ -33,11 +37,20 @@ public class CallStatement extends Statement {
 		return actualParameters;
 	}
 
+	public DataType getDataType() {
+		if (dataType == null) {
+			throw new SemanticError(ErrorMessage.UNDETERMINED_TYPE);
+		}
+
+		return dataType;
+	}
+
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
+	public void checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
 		ProcedureDecl decl = symbolTable.lookupProcedure(name);
 		List<ParameterDecl> formalParameters = decl.getParameterDecls();
+		dataType = decl.getReturnType();
 
 		if (actualParameters.size() != formalParameters.size()) {
 			throw new SemanticException(ErrorMessage.NOT_MATCHING_SIGNATURE,
@@ -53,18 +66,15 @@ public class CallStatement extends Statement {
 						ErrorMessage.NOT_MATCHING_SIGNATURE, name);
 			}
 
-			DataType actualType = actualParam
-					.checkSemanticsIfNecessary(symbolTable);
-			DataType formalType = formalParam
-					.checkSemanticsIfNecessary(symbolTable);
+			actualParam.checkSemantics(symbolTable);
+			DataType actualType = actualParam.getDataType();
+			DataType formalType = formalParam.getDataType();
 
 			if (!actualType.isA(formalType)) {
 				throw new SemanticException(
 						ErrorMessage.NOT_MATCHING_SIGNATURE, name);
 			}
 		}
-
-		return decl.checkSemanticsIfNecessary(symbolTable);
 	}
 
 	@Override

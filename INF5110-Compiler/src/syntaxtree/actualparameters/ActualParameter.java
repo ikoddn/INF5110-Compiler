@@ -7,6 +7,7 @@ import syntaxtree.AstStringListBuilder;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.expressions.Expression;
 import bytecode.CodeProcedure;
+
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
 
@@ -28,14 +29,14 @@ public abstract class ActualParameter extends AstNode {
 		return expression;
 	}
 
-	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
-			throws SemanticException {
-		return expression.checkSemanticsIfNecessary(symbolTable);
+	public DataType getDataType() {
+		return expression.getDataType();
 	}
 
-	public void generateCode(CodeProcedure procedure) {
-		expression.generateCode(procedure);
+	@Override
+	public void checkSemantics(SymbolTable symbolTable)
+			throws SemanticException {
+		expression.checkSemantics(symbolTable);
 	}
 
 	@Override
@@ -43,4 +44,6 @@ public abstract class ActualParameter extends AstNode {
 		String label = reference ? "ACTUAL_PARAM ref" : "ACTUAL_PARAM";
 		return new AstStringListBuilder(label).addInline(expression).build();
 	}
+
+	public abstract void generateCode(CodeProcedure procedure);
 }

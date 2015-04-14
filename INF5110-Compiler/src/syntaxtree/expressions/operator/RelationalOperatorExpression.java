@@ -11,6 +11,7 @@ import bytecode.instructions.Instruction;
 import bytecode.instructions.LT;
 import bytecode.instructions.LTEQ;
 import bytecode.instructions.NEQ;
+
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
@@ -24,12 +25,18 @@ public class RelationalOperatorExpression extends
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
+	public DataType getDataType() {
+		return new DataType(Type.BOOL);
+	}
+
+	@Override
+	public void checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		DataType leftType = leftExpression
-				.checkSemanticsIfNecessary(symbolTable);
-		DataType rightType = rightExpression
-				.checkSemanticsIfNecessary(symbolTable);
+		leftExpression.checkSemantics(symbolTable);
+		rightExpression.checkSemantics(symbolTable);
+
+		DataType leftType = leftExpression.getDataType();
+		DataType rightType = rightExpression.getDataType();
 
 		if (!isAllowed(leftType) || !isAllowed(rightType)) {
 			throw new SemanticException(ErrorMessage.UNALLOWED_TYPE_RELATIONAL);
@@ -39,7 +46,6 @@ public class RelationalOperatorExpression extends
 			throw new SemanticException(ErrorMessage.UNALLOWED_TYPE_RELATIONAL);
 		}
 
-		return new DataType(Type.BOOL);
 	}
 
 	@Override

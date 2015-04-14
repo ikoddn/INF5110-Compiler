@@ -7,6 +7,7 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import bytecode.CodeProcedure;
 import bytecode.instructions.NEW;
+
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
@@ -19,12 +20,13 @@ public class NewExpression extends Expression {
 		this.dataType = dataType;
 	}
 
+	@Override
 	public DataType getDataType() {
 		return dataType;
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
+	public void checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
 		if (dataType.getType() != Type.CLASS) {
 			throw new SemanticException(ErrorMessage.INSTANTIATE_PRIMITIVE,
@@ -32,8 +34,6 @@ public class NewExpression extends Expression {
 		}
 
 		symbolTable.lookupType(dataType);
-
-		return dataType;
 	}
 
 	@Override

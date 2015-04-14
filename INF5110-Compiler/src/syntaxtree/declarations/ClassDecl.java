@@ -4,7 +4,6 @@ import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.Name;
-import syntaxtree.datatypes.DataType;
 import bytecode.CodeFile;
 import bytecode.CodeProcedure;
 import bytecode.CodeStruct;
@@ -28,16 +27,14 @@ public class ClassDecl extends Decl {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable parentSymbolTable)
+	public void checkSemantics(SymbolTable parentSymbolTable)
 			throws SemanticException {
 		SymbolTable symbolTable = new SymbolTable(parentSymbolTable);
 
 		for (VariableDecl variableDecl : variableDecls) {
 			symbolTable.insert(variableDecl);
-			variableDecl.checkSemanticsIfNecessary(symbolTable);
+			variableDecl.checkSemantics(symbolTable);
 		}
-
-		return new DataType(name);
 	}
 
 	@Override

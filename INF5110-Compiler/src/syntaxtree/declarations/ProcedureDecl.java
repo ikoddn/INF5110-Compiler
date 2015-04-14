@@ -58,7 +58,7 @@ public class ProcedureDecl extends Decl {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable parentSymbolTable)
+	public void checkSemantics(SymbolTable parentSymbolTable)
 			throws SemanticException {
 		SymbolTable symbolTable = new SymbolTable(parentSymbolTable);
 
@@ -72,22 +72,25 @@ public class ProcedureDecl extends Decl {
 
 		for (ParameterDecl parameterDecl : parameterDecls) {
 			symbolTable.insert(parameterDecl);
-			parameterDecl.checkSemanticsIfNecessary(symbolTable);
+			parameterDecl.checkSemantics(symbolTable);
 		}
 
 		for (Decl subDecl : subDecls) {
 			subDecl.insertInto(symbolTable);
-			subDecl.checkSemanticsIfNecessary(symbolTable);
+			subDecl.checkSemantics(symbolTable);
 		}
 
 		boolean lastStatementIsReturn = false;
 
 		for (Statement statement : subStatements) {
-			DataType type = statement.checkSemanticsIfNecessary(symbolTable);
+			statement.checkSemantics(symbolTable);
 
 			lastStatementIsReturn = statement instanceof ReturnStatement;
 
 			if (lastStatementIsReturn) {
+				ReturnStatement ret = (ReturnStatement) statement;
+				DataType type = ret.getReturnType();
+
 				if (!type.isA(returnType)) {
 					throw new SemanticException(
 							ErrorMessage.UNALLOWED_TYPE_RETURN);
@@ -99,8 +102,6 @@ public class ProcedureDecl extends Decl {
 			throw new SemanticException(ErrorMessage.MISSING_RETURN,
 					returnType.getName());
 		}
-
-		return returnType;
 	}
 
 	@Override
@@ -133,8 +134,7 @@ public class ProcedureDecl extends Decl {
 
 	@Override
 	public void generateCode(CodeProcedure procedure) {
-		// Procedures allowed inside procedures in Compila15, but the bytecode
-		// does not support it
+		// Procedures inside procedures not supported by bytecode
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package syntaxtree;
 
-import syntaxtree.datatypes.DataType;
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
 
@@ -17,9 +16,8 @@ public class Name extends SimpleAstNode {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
+	public void checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		throw new RuntimeException("Not implemented");
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 import bytecode.CodeProcedure;
 import bytecode.instructions.RETURN;
+
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
 
@@ -27,14 +28,20 @@ public class ReturnStatement extends Statement {
 		return expression;
 	}
 
-	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
-			throws SemanticException {
+	public DataType getReturnType() {
 		if (expression != null) {
-			return expression.checkSemanticsIfNecessary(symbolTable);
+			return expression.getDataType();
 		}
 
 		return new DataType(Type.VOID);
+	}
+
+	@Override
+	public void checkSemantics(SymbolTable symbolTable)
+			throws SemanticException {
+		if (expression != null) {
+			expression.checkSemantics(symbolTable);
+		}
 	}
 
 	@Override

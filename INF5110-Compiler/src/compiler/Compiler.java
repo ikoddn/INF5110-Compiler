@@ -15,6 +15,7 @@ import oblig1parser.ParserSyntaxException;
 import oblig1parser.parser;
 import syntaxtree.Program;
 import bytecode.CodeFile;
+
 import compiler.throwable.SemanticException;
 
 public class Compiler {
@@ -33,7 +34,7 @@ public class Compiler {
 		this.inFilename = inFilename;
 		this.astFilename = astFilename;
 		this.binFilename = binFilename;
-		
+
 		standardLibrary = new StandardLibrary();
 	}
 
@@ -60,13 +61,13 @@ public class Compiler {
 
 		try {
 			standardLibrary.insertInto(symbolTable);
-			program.checkSemanticsIfNecessary(symbolTable);
+			program.checkSemantics(symbolTable);
 		} catch (SemanticException e) {
 			return new Result(SEMANTIC_ERROR, e.getMessage());
 		}
 
 		writeAst(program);
-		
+
 		generateCode(program);
 
 		return new Result(SUCCESS, null);
@@ -87,10 +88,10 @@ public class Compiler {
 
 	private void generateCode(Program program) throws IOException {
 		CodeFile codeFile = new CodeFile();
-		
+
 		standardLibrary.generateCode(codeFile);
 		program.generateCode(codeFile);
-		
+
 		byte[] bytecode = codeFile.getBytecode();
 		DataOutputStream stream = new DataOutputStream(new FileOutputStream(
 				binFilename));

@@ -4,10 +4,10 @@ import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
 import syntaxtree.datatypes.DataType;
-import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 import syntaxtree.expressions.Variable;
 import bytecode.CodeProcedure;
+
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
@@ -31,18 +31,18 @@ public class AssignStatement extends Statement {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
+	public void checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		DataType leftType = leftHandSide.checkSemanticsIfNecessary(symbolTable);
-		DataType rightType = rightHandSide
-				.checkSemanticsIfNecessary(symbolTable);
+		leftHandSide.checkSemantics(symbolTable);
+		rightHandSide.checkSemantics(symbolTable);
+
+		DataType leftType = leftHandSide.getDataType();
+		DataType rightType = rightHandSide.getDataType();
 
 		if (!rightType.isA(leftType)) {
 			throw new SemanticException(ErrorMessage.ASSIGN_INVALID_TYPE,
 					leftType.getName(), rightType.getName());
 		}
-
-		return new DataType(Type.VOID);
 	}
 
 	@Override

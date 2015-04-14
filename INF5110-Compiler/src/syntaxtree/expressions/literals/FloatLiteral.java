@@ -7,8 +7,6 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import bytecode.CodeProcedure;
 import bytecode.instructions.PUSHFLOAT;
-import compiler.SymbolTable;
-import compiler.throwable.SemanticException;
 
 public class FloatLiteral extends Literal {
 
@@ -23,8 +21,7 @@ public class FloatLiteral extends Literal {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable parentSymbolTable)
-			throws SemanticException {
+	public DataType getDataType() {
 		return new DataType(Type.FLOAT);
 	}
 

@@ -7,14 +7,11 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import bytecode.CodeProcedure;
 import bytecode.instructions.PUSHNULL;
-import compiler.SymbolTable;
-import compiler.throwable.SemanticException;
 
 public class NullLiteral extends Literal {
 
 	@Override
-	protected DataType checkSemantics(SymbolTable parentSymbolTable)
-			throws SemanticException {
+	public DataType getDataType() {
 		return new DataType(Type.NULL);
 	}
 

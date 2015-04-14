@@ -10,6 +10,7 @@ import bytecode.CodeProcedure;
 import bytecode.instructions.JMP;
 import bytecode.instructions.JMPFALSE;
 import bytecode.instructions.NOP;
+
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
@@ -40,23 +41,22 @@ public class IfStatement extends Statement {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
+	public void checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		DataType dataType = expression.checkSemanticsIfNecessary(symbolTable);
+		expression.checkSemantics(symbolTable);
+		DataType conditionType = expression.getDataType();
 
-		if (dataType.getType() != Type.BOOL) {
+		if (conditionType.getType() != Type.BOOL) {
 			throw new SemanticException(ErrorMessage.NON_BOOL_EXPRESSION);
 		}
 
 		for (Statement statement : ifBodyStatements) {
-			statement.checkSemanticsIfNecessary(symbolTable);
+			statement.checkSemantics(symbolTable);
 		}
 
 		for (Statement statement : elseBodyStatements) {
-			statement.checkSemanticsIfNecessary(symbolTable);
+			statement.checkSemantics(symbolTable);
 		}
-
-		return new DataType(Type.VOID);
 	}
 
 	@Override

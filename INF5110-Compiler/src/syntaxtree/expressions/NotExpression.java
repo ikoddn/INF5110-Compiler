@@ -7,6 +7,7 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import bytecode.CodeProcedure;
 import bytecode.instructions.NOT;
+
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
@@ -24,16 +25,20 @@ public class NotExpression extends Expression {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
+	public DataType getDataType() {
+		return new DataType(Type.BOOL);
+	}
+
+	@Override
+	public void checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		DataType dataType = expression.checkSemanticsIfNecessary(symbolTable);
+		expression.checkSemantics(symbolTable);
+		DataType dataType = expression.getDataType();
 
 		if (dataType.getType() != Type.BOOL) {
 			throw new SemanticException(ErrorMessage.NOT_OPERATOR_UNDEFINED,
 					dataType.getName());
 		}
-
-		return new DataType(Type.BOOL);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.List;
 import syntaxtree.datatypes.DataType;
 import syntaxtree.statements.CallStatement;
 import bytecode.CodeProcedure;
+
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
 
@@ -21,9 +22,14 @@ public class CallStatementExpression extends Expression {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
+	public DataType getDataType() {
+		return callStatement.getDataType();
+	}
+
+	@Override
+	public void checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		return callStatement.checkSemanticsIfNecessary(symbolTable);
+		callStatement.checkSemantics(symbolTable);
 	}
 
 	@Override

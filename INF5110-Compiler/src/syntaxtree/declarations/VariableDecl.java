@@ -10,6 +10,7 @@ import bytecode.CodeFile;
 import bytecode.CodeProcedure;
 import bytecode.CodeStruct;
 import bytecode.type.CodeType;
+
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
@@ -28,7 +29,7 @@ public class VariableDecl extends Decl {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
+	public void checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
 		if (!isAllowed(dataType)) {
 			throw new SemanticException(ErrorMessage.UNALLOWED_TYPE_VARIABLE);
@@ -37,8 +38,6 @@ public class VariableDecl extends Decl {
 		if (dataType.getType() == Type.CLASS) {
 			symbolTable.lookupType(dataType);
 		}
-
-		return dataType;
 	}
 
 	@Override

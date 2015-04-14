@@ -10,39 +10,52 @@ import bytecode.instructions.EXP;
 import bytecode.instructions.Instruction;
 import bytecode.instructions.MUL;
 import bytecode.instructions.SUB;
+
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
+import compiler.throwable.SemanticError;
 import compiler.throwable.SemanticException;
 
 public class ArithmeticOperatorExpression extends
 		BinaryOperatorExpression<ArithmeticOperator> {
 
+	private DataType dataType;
+
 	public ArithmeticOperatorExpression(Expression leftExpression,
 			ArithmeticOperator operator, Expression rightExpression) {
 		super(leftExpression, operator, rightExpression);
+		dataType = null;
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
+	public DataType getDataType() {
+		if (dataType == null) {
+			throw new SemanticError(ErrorMessage.UNDETERMINED_TYPE);
+		}
+
+		return dataType;
+	}
+
+	@Override
+	public void checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		Type leftType = leftExpression.checkSemanticsIfNecessary(symbolTable)
-				.getType();
-		Type rightType = rightExpression.checkSemanticsIfNecessary(symbolTable)
-				.getType();
+		leftExpression.checkSemantics(symbolTable);
+		rightExpression.checkSemantics(symbolTable);
+
+		DataType leftType = leftExpression.getDataType();
+		DataType rightType = rightExpression.getDataType();
 
 		if (!isAllowed(leftType) || !isAllowed(rightType)) {
 			throw new SemanticException(ErrorMessage.UNALLOWED_TYPE_ARITHMETIC);
 		}
 
-		if (operator == ArithmeticOperator.EXPONENTIATION) {
-			return new DataType(Type.FLOAT);
+		if (operator == ArithmeticOperator.EXPONENTIATION
+				|| leftType.getType() == Type.FLOAT
+				|| rightType.getType() == Type.FLOAT) {
+			dataType = new DataType(Type.FLOAT);
+		} else {
+			dataType = new DataType(Type.INT);
 		}
-
-		if (leftType == Type.FLOAT || rightType == Type.FLOAT) {
-			return new DataType(Type.FLOAT);
-		}
-
-		return new DataType(Type.INT);
 	}
 
 	@Override
@@ -63,7 +76,8 @@ public class ArithmeticOperatorExpression extends
 		}
 	}
 
-	private static boolean isAllowed(Type type) {
+	private static boolean isAllowed(DataType dataType) {
+		Type type = dataType.getType();
 		return type == Type.INT || type == Type.FLOAT;
 	}
 }

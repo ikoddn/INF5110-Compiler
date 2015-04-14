@@ -12,6 +12,7 @@ import bytecode.type.IntType;
 import bytecode.type.RefType;
 import bytecode.type.StringType;
 import bytecode.type.VoidType;
+
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
 
@@ -91,9 +92,8 @@ public class DataType extends SimpleAstNode {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
+	public void checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		return this;
 	}
 
 	@Override

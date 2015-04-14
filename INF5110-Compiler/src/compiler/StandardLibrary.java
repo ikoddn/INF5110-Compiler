@@ -36,7 +36,6 @@ public class StandardLibrary {
 	public void insertInto(SymbolTable symbolTable) throws SemanticException {
 		for (ProcedureSignature signature : list) {
 			ProcedureDecl decl = signature.buildDecl();
-			decl.setTypeManually(decl.getReturnType());
 			symbolTable.insert(decl);
 		}
 	}

@@ -10,6 +10,7 @@ import bytecode.CodeProcedure;
 import bytecode.instructions.JMP;
 import bytecode.instructions.JMPFALSE;
 import bytecode.instructions.NOP;
+
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
@@ -33,35 +34,34 @@ public class WhileStatement extends Statement {
 	}
 
 	@Override
-	protected DataType checkSemantics(SymbolTable symbolTable)
+	public void checkSemantics(SymbolTable symbolTable)
 			throws SemanticException {
-		DataType dataType = expression.checkSemanticsIfNecessary(symbolTable);
+		expression.checkSemantics(symbolTable);
+		DataType conditionType = expression.getDataType();
 
-		if (dataType.getType() != Type.BOOL) {
+		if (conditionType.getType() != Type.BOOL) {
 			throw new SemanticException(ErrorMessage.NON_BOOL_EXPRESSION);
 		}
 
 		for (Statement statement : statements) {
-			statement.checkSemanticsIfNecessary(symbolTable);
+			statement.checkSemantics(symbolTable);
 		}
-
-		return new DataType(Type.VOID);
 	}
 
 	@Override
 	public void generateCode(CodeProcedure procedure) {
 		int start = procedure.addInstruction(new NOP());
-		
+
 		expression.generateCode(procedure);
-		
+
 		int whileAction = procedure.addInstruction(new NOP());
-		
+
 		for (Statement statement : statements) {
 			statement.generateCode(procedure);
 		}
-		
+
 		procedure.addInstruction(new JMP(start));
-		
+
 		int afterPosition = procedure.addInstruction(new NOP());
 		procedure.replaceInstruction(whileAction, new JMPFALSE(afterPosition));
 	}
