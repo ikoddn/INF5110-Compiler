@@ -14,7 +14,6 @@ import bytecode.type.CodeType;
 
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
-import compiler.throwable.CodeGenerationError;
 import compiler.throwable.SemanticException;
 
 public class ProcedureDecl extends Decl {
@@ -134,7 +133,8 @@ public class ProcedureDecl extends Decl {
 
 	@Override
 	public void generateCode(CodeProcedure procedure) {
-		throw new CodeGenerationError("Procedure inside procedure not allowed");
+		// Procedures allowed inside procedures in Compila15, but the bytecode
+		// does not support it
 	}
 
 	@Override
