@@ -23,16 +23,16 @@ public class ProcedureSignature {
 		parameters = new LinkedList<ParameterDecl>();
 	}
 
+	public ProcedureSignature(String name, Type returnType) {
+		this(name, new DataType(returnType));
+	}
+
 	public Name getName() {
 		return name;
 	}
 
 	public DataType getReturnType() {
 		return returnType;
-	}
-
-	public ProcedureSignature(String name, Type returnType) {
-		this(name, new DataType(returnType));
 	}
 
 	public ProcedureSignature addParameter(boolean reference, String paramName,

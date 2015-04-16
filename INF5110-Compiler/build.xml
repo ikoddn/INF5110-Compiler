@@ -3,10 +3,14 @@
 <project name="INF5110/INF9110 Obligatory exercise" default="menu" basedir=".">
 	<target name="menu">
 		<echo>Targets</echo>
-		<echo>clean                		- Cleans up the project</echo>
-		<echo>build                		- Build compiler</echo>
-		<echo>build-alt					- Build compiler with unambiguous grammar</echo>
-		<echo>run                  		- Run compiler</echo>
+		<echo>clean                     - Cleans up the project</echo>
+		<echo>build                     - Build compiler</echo>
+		<echo>build-alt                 - Build compiler with unambiguous grammar</echo>
+		<echo>build-test                - Build semantics testing classes</echo>
+		<echo>test                      - Run semantics tests</echo>
+		<echo>compile-runme             - Compile 'code-examples/RunMe.cmp'</echo>
+		<echo>list-runme                - Bytecode listing for RunMe</echo>
+		<echo>run-runme                 - Execute RunMe</echo>
 	</target>
 
 	<!-- Path definitions -->
@@ -52,11 +56,6 @@
 		<mkdir dir="${dir.classes}" />
 	</target>
 
-	<!-- Generic compile target -->
-	<target name="generic-compile" depends="">
-		<javac srcdir="${dir.src-gen}" destdir="${dir.classes}" debug="true" includes="${package-name}/*.java" classpathref="path-cup" />
-	</target>
-
 	<!-- Generate scanner and parser using JFlex and CUP  -->
 	<target name="generate" depends="mkdir">
 		<jflex file="./grammars/oblig1.lex" destdir="src-gen" />
@@ -68,73 +67,54 @@
 		<cup srcfile="./grammars/oblig1-unambiguous.cup" destdir="src-gen" interface="true" />
 	</target>
 
-	<!-- Compile Java Files and store in /build/classes directory  -->
-	<target name="compile" depends="generate">
+	<!-- Compile Java files and store in /build/classes directory -->
+	<target name="build" depends="generate">
 		<javac includeantruntime="false" srcdir="${dir.src}" destdir="${dir.classes}" debug="true" includes="**/*.java" classpathref="path-cup" sourcepath="${dir.src-gen}" />
 		<javac includeantruntime="false" srcdir="${dir.src-gen}" destdir="${dir.classes}" debug="true" includes="**/*.java" classpathref="path-cup" sourcepath="${dir.src}" />
 	</target>
 
-	<target name="compile-alt" depends="generate-alt">
+	<target name="build-alt" depends="generate-alt">
 		<javac includeantruntime="false" srcdir="${dir.src}" destdir="${dir.classes}" debug="true" includes="**/*.java" classpathref="path-cup" sourcepath="${dir.src-gen}" />
 		<javac includeantruntime="false" srcdir="${dir.src-gen}" destdir="${dir.classes}" debug="true" includes="**/*.java" classpathref="path-cup" sourcepath="${dir.src}" />
 	</target>
 
-	<!-- Main target  -->
-	<target name="build" depends="compile" />
-
-	<target name="build-alt" depends="compile-alt" />
-
-	<!-- Run the system  -->
-	<target name="run" depends="init">
-		<java classname="compiler.Compiler" classpathref="path-run">
-			<arg value="compila-code/Compila.cmp" />
-			<arg value="compila-ast/Compila.ast" />
-			<arg value="compila-ast/Compila.bin" />
-		</java>
-	</target>
-
-	<!-- Compile test classes -->
-	<target name="compile-test" depends="mkdir">
-		<javac includeantruntime="false" srcdir="${dir.src}" destdir="${dir.classes}" debug="true"
-			includes="test/*.java" classpathref="path-cup" />
+	<!-- Build test classes -->
+	<target name="build-test" depends="mkdir">
+		<javac includeantruntime="false" srcdir="${dir.src}" destdir="${dir.classes}" debug="true" includes="test/*.java" classpathref="path-cup" />
 	</target>
 
 	<!-- Run tests -->
-	<target name="test" depends="compile-test">
-		<java classname="test.Tester" classpathref="path-run" >
-			<arg value="tests"/>
+	<target name="test" depends="build-test">
+		<java classname="test.Tester" classpathref="path-run">
+			<arg value="tests" />
 		</java>
 	</target>
 
 	<!-- Run compiler on example RunMe -->
 	<target name="compile-runme" depends="init">
 		<java classname="compiler.Compiler" classpathref="path-run">
-			<arg value="code-examples/RunMe.cmp"/>
-			<arg value="code-examples/RunMe.ast"/>
-			<arg value="code-examples/RunMe.bin"/>
+			<arg value="code-examples/RunMe.cmp" />
+			<arg value="code-examples/RunMe.ast" />
+			<arg value="code-examples/RunMe.bin" />
 		</java>
 	</target>
 
 	<!-- List example RunMe -->
 	<target name="list-runme" depends="init">
 		<java classname="runtime.VirtualMachine" classpathref="path-run">
-			<arg value="-l"/>
-			<arg value="code-examples/RunMe.bin"/>
+			<arg value="-l" />
+			<arg value="code-examples/RunMe.bin" />
 		</java>
 	</target>
 
 	<!-- Run vm on example RunMe -->
 	<target name="run-runme" depends="init">
 		<java classname="runtime.VirtualMachine" classpathref="path-run">
-			<arg value="code-examples/RunMe.bin"/>
+			<arg value="code-examples/RunMe.bin" />
 		</java>
 	</target>
 
-	<!-- Parser tests -->
-	<target name="mkdir-parsertests" depends="init">
-		<mkdir dir="${dir.testclasses}" />
-	</target>
-
+	<!-- Parser testing -->
 	<path id="path-run-parsertests">
 		<path refid="path-cup" />
 		<pathelement location="build/testclasses" />
@@ -147,7 +127,11 @@
 		<pathelement location="./lib/hamcrest-core-1.3.jar" />
 	</path>
 
-	<target name="build-parsertests" depends="mkdir-parsertests">
+	<target name="mkdir-test-parser" depends="init">
+		<mkdir dir="${dir.testclasses}" />
+	</target>
+
+	<target name="build-test-parser" depends="mkdir-test-parser">
 		<!-- Compile test parser generator -->
 		<javac includeantruntime="false" srcdir="${dir.test}/tools" destdir="${dir.testclasses}" debug="true" includes="**/*.java" classpathref="path-cup" />
 
@@ -158,7 +142,7 @@
 		<javac includeantruntime="false" srcdir="${dir.test}" destdir="${dir.testclasses}" debug="true" includes="**/*.java" classpathref="path-junit" sourcepath="${dir.test-gen}" />
 	</target>
 
-	<target name="test-parser" depends="build-parsertests">
+	<target name="test-parser" depends="build-test-parser">
 		<junit outputtoformatters="true">
 			<classpath>
 				<path refid="path-junit" />
