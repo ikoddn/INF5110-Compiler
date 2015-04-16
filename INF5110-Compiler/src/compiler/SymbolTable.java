@@ -9,6 +9,7 @@ import syntaxtree.declarations.ClassDecl;
 import syntaxtree.declarations.Decl;
 import syntaxtree.declarations.ProcedureDecl;
 import syntaxtree.declarations.VariableDecl;
+
 import compiler.throwable.SemanticException;
 
 public class SymbolTable {
@@ -71,15 +72,15 @@ public class SymbolTable {
 		return result;
 	}
 
-	public void insert(ClassDecl decl) throws SemanticException {
-		insert(decl, customTypes);
-	}
-
-	public void insert(ProcedureDecl decl) throws SemanticException {
+	public void insertProcedure(ProcedureDecl decl) throws SemanticException {
 		insert(decl, procedures);
 	}
 
-	public void insert(VariableDecl decl) throws SemanticException {
+	public void insertType(ClassDecl decl) throws SemanticException {
+		insert(decl, customTypes);
+	}
+
+	public void insertVariable(VariableDecl decl) throws SemanticException {
 		insert(decl, variables);
 	}
 

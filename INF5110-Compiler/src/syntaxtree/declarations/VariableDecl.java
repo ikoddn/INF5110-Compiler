@@ -42,7 +42,7 @@ public class VariableDecl extends Decl {
 
 	@Override
 	public void insertInto(SymbolTable symbolTable) throws SemanticException {
-		symbolTable.insert(this);
+		symbolTable.insertVariable(this);
 	}
 
 	@Override

@@ -73,7 +73,7 @@ public class ProcedureDecl extends Decl {
 		}
 
 		for (ParameterDecl parameterDecl : parameterDecls) {
-			symbolTable.insert(parameterDecl);
+			symbolTable.insertVariable(parameterDecl);
 			parameterDecl.checkSemantics(symbolTable);
 		}
 
@@ -108,7 +108,7 @@ public class ProcedureDecl extends Decl {
 
 	@Override
 	public void insertInto(SymbolTable symbolTable) throws SemanticException {
-		symbolTable.insert(this);
+		symbolTable.insertProcedure(this);
 	}
 
 	@Override

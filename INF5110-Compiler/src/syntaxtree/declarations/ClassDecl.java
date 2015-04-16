@@ -32,14 +32,14 @@ public class ClassDecl extends Decl {
 		SymbolTable symbolTable = new SymbolTable(parentSymbolTable);
 
 		for (VariableDecl variableDecl : variableDecls) {
-			symbolTable.insert(variableDecl);
+			symbolTable.insertVariable(variableDecl);
 			variableDecl.checkSemantics(symbolTable);
 		}
 	}
 
 	@Override
 	public void insertInto(SymbolTable symbolTable) throws SemanticException {
-		symbolTable.insert(this);
+		symbolTable.insertType(this);
 	}
 
 	@Override
