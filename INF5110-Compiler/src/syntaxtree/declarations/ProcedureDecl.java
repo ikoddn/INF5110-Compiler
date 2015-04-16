@@ -1,5 +1,6 @@
 package syntaxtree.declarations;
 
+import java.util.Iterator;
 import java.util.List;
 
 import syntaxtree.AstStringListBuilder;
@@ -10,6 +11,7 @@ import syntaxtree.statements.ReturnStatement;
 import syntaxtree.statements.Statement;
 import bytecode.CodeFile;
 import bytecode.CodeProcedure;
+import bytecode.instructions.RETURN;
 import bytecode.type.CodeType;
 
 import compiler.ErrorMessage;
@@ -125,8 +127,16 @@ public class ProcedureDecl extends Decl {
 			decl.generateCode(procedure);
 		}
 
-		for (Statement statement : subStatements) {
-			statement.generateCode(procedure);
+		Statement subStatement = null;
+
+		Iterator<Statement> it = subStatements.iterator();
+		while (it.hasNext()) {
+			subStatement = it.next();
+			subStatement.generateCode(procedure);
+		}
+
+		if (subStatement == null || !(subStatement instanceof ReturnStatement)) {
+			procedure.addInstruction(new RETURN());
 		}
 
 		codeFile.updateProcedure(procedure);
