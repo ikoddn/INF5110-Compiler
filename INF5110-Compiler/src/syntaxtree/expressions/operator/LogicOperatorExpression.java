@@ -4,9 +4,12 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 import syntaxtree.operators.LogicOperator;
-import bytecode.instructions.AND;
-import bytecode.instructions.Instruction;
-import bytecode.instructions.OR;
+import bytecode.CodeProcedure;
+import bytecode.instructions.JMP;
+import bytecode.instructions.JMPFALSE;
+import bytecode.instructions.JMPTRUE;
+import bytecode.instructions.NOP;
+import bytecode.instructions.PUSHBOOL;
 
 import compiler.ErrorMessage;
 import compiler.SymbolTable;
@@ -40,12 +43,22 @@ public class LogicOperatorExpression extends
 	}
 
 	@Override
-	protected Instruction getByteCodeInstruction() {
+	public void generateCode(CodeProcedure procedure) {
+		leftExpression.generateCode(procedure);
+		int shortCircuit = procedure.addInstruction(new NOP());
+		rightExpression.generateCode(procedure);
+		int regularJump = procedure.addInstruction(new NOP());
+		int pushBool;
+
 		if (operator == LogicOperator.AND) {
-			return new AND();
+			pushBool = procedure.addInstruction(new PUSHBOOL(false));
+			procedure.replaceInstruction(shortCircuit, new JMPFALSE(pushBool));
+		} else {
+			pushBool = procedure.addInstruction(new PUSHBOOL(true));
+			procedure.replaceInstruction(shortCircuit, new JMPTRUE(pushBool));
 		}
 
-		return new OR();
+		procedure.replaceInstruction(regularJump, new JMP(pushBool + 1));
 	}
 
 	private static boolean isAllowed(DataType type) {

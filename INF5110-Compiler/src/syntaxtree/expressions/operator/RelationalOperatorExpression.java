@@ -4,6 +4,7 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 import syntaxtree.operators.RelationalOperator;
+import bytecode.CodeProcedure;
 import bytecode.instructions.EQ;
 import bytecode.instructions.GT;
 import bytecode.instructions.GTEQ;
@@ -49,7 +50,13 @@ public class RelationalOperatorExpression extends
 	}
 
 	@Override
-	protected Instruction getByteCodeInstruction() {
+	public void generateCode(CodeProcedure procedure) {
+		leftExpression.generateCode(procedure);
+		rightExpression.generateCode(procedure);
+		procedure.addInstruction(getByteCodeInstruction());
+	}
+
+	private Instruction getByteCodeInstruction() {
 		switch (operator) {
 		case EQUAL:
 			return new EQ();

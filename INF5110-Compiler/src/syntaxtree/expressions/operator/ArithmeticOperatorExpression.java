@@ -4,6 +4,7 @@ import syntaxtree.datatypes.DataType;
 import syntaxtree.datatypes.Type;
 import syntaxtree.expressions.Expression;
 import syntaxtree.operators.ArithmeticOperator;
+import bytecode.CodeProcedure;
 import bytecode.instructions.ADD;
 import bytecode.instructions.DIV;
 import bytecode.instructions.EXP;
@@ -59,7 +60,13 @@ public class ArithmeticOperatorExpression extends
 	}
 
 	@Override
-	protected Instruction getByteCodeInstruction() {
+	public void generateCode(CodeProcedure procedure) {
+		leftExpression.generateCode(procedure);
+		rightExpression.generateCode(procedure);
+		procedure.addInstruction(getByteCodeInstruction());
+	}
+
+	private Instruction getByteCodeInstruction() {
 		switch (operator) {
 		case ADDITION:
 			return new ADD();
