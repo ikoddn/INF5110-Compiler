@@ -49,7 +49,7 @@ public class Compiler {
 			program = (Program) parser.parse().value;
 		} catch (ParserSyntaxException e) {
 			error = e.getMessage();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			error = e.getMessage();
 		}
 

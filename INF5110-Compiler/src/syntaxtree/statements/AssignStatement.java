@@ -41,7 +41,7 @@ public class AssignStatement extends Statement {
 
 		if (!rightType.isA(leftType)) {
 			throw new SemanticException(ErrorMessage.ASSIGN_INVALID_TYPE,
-					leftType.getName(), rightType.getName());
+					rightType.getName(), leftType.getName());
 		}
 	}
 
