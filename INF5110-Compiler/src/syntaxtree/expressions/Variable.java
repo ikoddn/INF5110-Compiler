@@ -104,6 +104,8 @@ public class Variable extends Expression {
 				instruction = new LOADLOCAL(number);
 			}
 		} else {
+			expression.generateCode(procedure);
+
 			DataType expressionType = expression.getDataType();
 
 			String structName = expressionType.getName().getString();
@@ -130,6 +132,8 @@ public class Variable extends Expression {
 				instruction = new STORELOCAL(number);
 			}
 		} else {
+			expression.generateCode(procedure);
+
 			DataType expressionType = expression.getDataType();
 
 			String structName = expressionType.getName().getString();
