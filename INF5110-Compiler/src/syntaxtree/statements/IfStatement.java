@@ -74,15 +74,14 @@ public class IfStatement extends Statement {
 		if (elseBodyStatements.isEmpty()) {
 			procedure.replaceInstruction(ifAction, new JMPFALSE(ifBodyDone));
 		} else {
-			int elseBodyStart = procedure.addInstruction(new NOP());
-
 			for (Statement statement : elseBodyStatements) {
 				statement.generateCode(procedure);
 			}
 
 			int elseBodyDone = procedure.addInstruction(new NOP());
 
-			procedure.replaceInstruction(ifAction, new JMPFALSE(elseBodyStart));
+			procedure
+					.replaceInstruction(ifAction, new JMPFALSE(ifBodyDone + 1));
 			procedure.replaceInstruction(ifBodyDone, new JMP(elseBodyDone));
 		}
 	}

@@ -60,10 +60,8 @@ public class WhileStatement extends Statement {
 			statement.generateCode(procedure);
 		}
 
-		procedure.addInstruction(new JMP(start));
-
-		int afterPosition = procedure.addInstruction(new NOP());
-		procedure.replaceInstruction(whileAction, new JMPFALSE(afterPosition));
+		int jump = procedure.addInstruction(new JMP(start));
+		procedure.replaceInstruction(whileAction, new JMPFALSE(jump + 1));
 	}
 
 	@Override
