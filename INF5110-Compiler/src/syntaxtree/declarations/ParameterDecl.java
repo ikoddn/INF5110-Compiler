@@ -9,6 +9,7 @@ import bytecode.CodeFile;
 import bytecode.CodeProcedure;
 import bytecode.type.CodeType;
 
+import compiler.ErrorMessage;
 import compiler.throwable.CodeGenerationError;
 
 public class ParameterDecl extends VariableDecl {
@@ -27,8 +28,7 @@ public class ParameterDecl extends VariableDecl {
 
 	@Override
 	public void generateCode(CodeFile codeFile) {
-		throw new CodeGenerationError(
-				"Parameter outside procedure declaration not allowed");
+		throw new CodeGenerationError(ErrorMessage.PARAMDECL_NOT_IN_PROCEDURE);
 	}
 
 	@Override

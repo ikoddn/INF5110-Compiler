@@ -8,6 +8,7 @@ import bytecode.CodeFile;
 import bytecode.CodeProcedure;
 import bytecode.CodeStruct;
 
+import compiler.ErrorMessage;
 import compiler.SymbolTable;
 import compiler.throwable.CodeGenerationError;
 import compiler.throwable.SemanticException;
@@ -57,7 +58,7 @@ public class ClassDecl extends Decl {
 
 	@Override
 	public void generateCode(CodeProcedure procedure) {
-		throw new CodeGenerationError("Procedure inside class not allowed");
+		throw new CodeGenerationError(ErrorMessage.PROCEDURE_IN_CLASS);
 	}
 
 	@Override

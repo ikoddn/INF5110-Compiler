@@ -9,9 +9,11 @@ import syntaxtree.expressions.Expression;
 import bytecode.CodeProcedure;
 import bytecode.instructions.JMP;
 import bytecode.instructions.JMPFALSE;
+import bytecode.instructions.JMPTRUE;
 import bytecode.instructions.NOP;
 
 import compiler.ErrorMessage;
+import compiler.JumpPlaceholder;
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
 
@@ -52,7 +54,7 @@ public class WhileStatement extends Statement {
 	public void generateCode(CodeProcedure procedure) {
 		int start = procedure.addInstruction(new NOP());
 
-		expression.generateCode(procedure);
+		JumpPlaceholder placeholder = expression.generateBoolCode(procedure);
 
 		int whileAction = procedure.addInstruction(new NOP());
 
@@ -60,8 +62,18 @@ public class WhileStatement extends Statement {
 			statement.generateCode(procedure);
 		}
 
-		int jump = procedure.addInstruction(new JMP(start));
-		procedure.replaceInstruction(whileAction, new JMPFALSE(jump + 1));
+		int jump = procedure.addInstruction(new JMP(start + 1));
+
+		if (placeholder != null && placeholder.isInverted()) {
+			procedure.replaceInstruction(whileAction, new JMPTRUE(jump + 1));
+		} else {
+			procedure.replaceInstruction(whileAction, new JMPFALSE(jump + 1));
+		}
+
+		if (placeholder != null) {
+			placeholder.jumpOnFalseTo(jump + 1);
+			placeholder.jumpOnTrueTo(whileAction + 1);
+		}
 	}
 
 	@Override

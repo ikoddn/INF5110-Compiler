@@ -12,6 +12,9 @@ public enum ErrorMessage {
 	NOT_MATCHING_SIGNATURE(
 			"The parameters does not match the signature of '%s'"),
 	NOT_OPERATOR_UNDEFINED("The 'not' operator is undefined for '%s'"),
+	PARAMDECL_NOT_IN_PROCEDURE(
+			"Parameter declaration outside procedure declaration not allowed"),
+	PROCEDURE_IN_CLASS("Procedure inside class not allowed"),
 	UNALLOWED_TYPE_ARITHMETIC("Unallowed type in arithmetic expression"),
 	UNALLOWED_TYPE_LOGIC("Unallowed type in logical expression"),
 	UNALLOWED_TYPE_PARAM("Unallowed type in procedure parameter"),

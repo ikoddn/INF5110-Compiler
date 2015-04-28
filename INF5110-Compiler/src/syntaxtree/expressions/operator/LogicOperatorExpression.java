@@ -12,6 +12,7 @@ import bytecode.instructions.NOP;
 import bytecode.instructions.PUSHBOOL;
 
 import compiler.ErrorMessage;
+import compiler.JumpPlaceholder;
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
 
@@ -59,6 +60,24 @@ public class LogicOperatorExpression extends
 		}
 
 		procedure.replaceInstruction(regularJump, new JMP(pushBool + 1));
+	}
+
+	@Override
+	public JumpPlaceholder generateBoolCode(CodeProcedure procedure) {
+		leftExpression.generateCode(procedure);
+		int shortCircuit = procedure.addInstruction(new NOP());
+		rightExpression.generateCode(procedure);
+
+		JumpPlaceholder placeholder = new JumpPlaceholder(procedure,
+				shortCircuit);
+
+		if (operator == LogicOperator.AND) {
+			placeholder.jumpOnFalse();
+		} else {
+			placeholder.jumpOnTrue();
+		}
+
+		return placeholder;
 	}
 
 	private static boolean isAllowed(DataType type) {

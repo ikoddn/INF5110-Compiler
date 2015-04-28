@@ -9,6 +9,7 @@ import bytecode.CodeProcedure;
 import bytecode.instructions.NOT;
 
 import compiler.ErrorMessage;
+import compiler.JumpPlaceholder;
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
 
@@ -45,6 +46,19 @@ public class NotExpression extends Expression {
 	public void generateCode(CodeProcedure procedure) {
 		expression.generateCode(procedure);
 		procedure.addInstruction(new NOT());
+	}
+
+	@Override
+	public JumpPlaceholder generateBoolCode(CodeProcedure procedure) {
+		JumpPlaceholder placeholder = expression.generateBoolCode(procedure);
+
+		if (placeholder != null) {
+			placeholder.invert();
+		} else {
+			procedure.addInstruction(new NOT());
+		}
+
+		return placeholder;
 	}
 
 	@Override

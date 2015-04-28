@@ -9,9 +9,11 @@ import syntaxtree.expressions.Expression;
 import bytecode.CodeProcedure;
 import bytecode.instructions.JMP;
 import bytecode.instructions.JMPFALSE;
+import bytecode.instructions.JMPTRUE;
 import bytecode.instructions.NOP;
 
 import compiler.ErrorMessage;
+import compiler.JumpPlaceholder;
 import compiler.SymbolTable;
 import compiler.throwable.SemanticException;
 
@@ -61,7 +63,7 @@ public class IfStatement extends Statement {
 
 	@Override
 	public void generateCode(CodeProcedure procedure) {
-		expression.generateCode(procedure);
+		JumpPlaceholder placeholder = expression.generateBoolCode(procedure);
 
 		int ifAction = procedure.addInstruction(new NOP());
 
@@ -71,18 +73,26 @@ public class IfStatement extends Statement {
 
 		int ifBodyDone = procedure.addInstruction(new NOP());
 
-		if (elseBodyStatements.isEmpty()) {
-			procedure.replaceInstruction(ifAction, new JMPFALSE(ifBodyDone));
-		} else {
+		if (!elseBodyStatements.isEmpty()) {
 			for (Statement statement : elseBodyStatements) {
 				statement.generateCode(procedure);
 			}
 
 			int elseBodyDone = procedure.addInstruction(new NOP());
 
+			procedure.replaceInstruction(ifBodyDone, new JMP(elseBodyDone));
+		}
+
+		if (placeholder != null && placeholder.isInverted()) {
+			procedure.replaceInstruction(ifAction, new JMPTRUE(ifBodyDone + 1));
+		} else {
 			procedure
 					.replaceInstruction(ifAction, new JMPFALSE(ifBodyDone + 1));
-			procedure.replaceInstruction(ifBodyDone, new JMP(elseBodyDone));
+		}
+
+		if (placeholder != null) {
+			placeholder.jumpOnFalseTo(ifBodyDone + 1);
+			placeholder.jumpOnTrueTo(ifAction + 1);
 		}
 	}
 
