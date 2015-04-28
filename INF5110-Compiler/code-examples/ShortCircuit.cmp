@@ -1,0 +1,30 @@
+program
+{
+	class Complex {
+		var Real : float;
+		var Imag : float;
+	}
+
+	proc Main() {
+		var b : bool;
+		var complex : Complex;
+		b := true;
+		complex := null;
+		
+		if true || complex.Real > 0 then {
+			printline("OR short-circuit ok");
+		} else {
+			printline("OR short-circuit fail");
+		}
+		
+		if false && complex.Real > 0 then {
+			printline("AND short-circuit fail");
+		} else {
+			printline("AND short-circuit ok");
+		}
+		
+		while not (b || complex.Imag > 0) do {
+			printline("not supposed to be here");
+		}
+	}
+}
